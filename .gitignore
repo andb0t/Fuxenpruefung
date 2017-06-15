@@ -3,3 +3,4 @@ dist*
 !dist\Fuxenpruefung.exe
 __pycache__*
 *.spec
+Fuxenpruefung.txt

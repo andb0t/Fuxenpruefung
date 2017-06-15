@@ -1,6 +1,11 @@
-#defaultdict
 
-print("Fuxenpruefung!")
+import windows_popup
+windows_popup.balloon_tip("Achtung FM!", "Neue Fuxenpruefung wird erstellt!",3)
+# #defaultdict
+# print("test")
+
+
+
 
 number_D=2
 number_M=2
