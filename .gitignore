@@ -1,0 +1,5 @@
+build*
+dist*
+!dist\Fuxenpruefung.exe
+__pycache__*
+*.spec
