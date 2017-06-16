@@ -18,7 +18,8 @@ categories=((1000,'Permanente Fragen','P'),
             (4,'Kleine Fragen','K'),
             (3,'Mittlere Fragen','M'),
             (2,'Grosse Fragen','G'),
-            (1,'Scherzfragen','S'))
+            (1,'Scherzfragen','S'),
+            (0,'Archiv','A'))
 
 
 
@@ -38,7 +39,7 @@ class InitWindow:
         col_idx=0
         row_count=3
         for default,lg_name,short_name in categories:
-            if short_name == 'P': continue
+            if short_name == 'P' or short_name == 'A': continue
             Label(master,text=lg_name).grid(row=row_count-2,column=col_idx)
             self.string_val = StringVar()
             self.string_val.set(default)
@@ -150,17 +151,14 @@ if useGUI:
     root.mainloop()
     task_var=app.radio_var.get()
     for default,lg_name,short_name in categories:
-        if short_name == 'P':
-            quest_numbers[short_name]=default
-        else:
+        try:
             quest_numbers[short_name]=int((app.input_dict)[short_name].get())
+        except KeyError:
+            quest_numbers[short_name]=default
     root.destroy() # optional; see description below
 else:
-    quest_numbers['G']=1
-    quest_numbers['M']=2
-    quest_numbers['K']=3
-    quest_numbers['S']=1
-    quest_numbers['P']=10000
+    for default,lg_name,short_name in categories:
+        quest_numbers[short_name]=default
 
 print('Gewaehlte Aufgabe:',dict_init[task_var])
 
