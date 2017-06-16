@@ -8,17 +8,19 @@ dict_init[0]='Erstelle neue Fuxenpruefung'
 dict_init[1]='Zeige Fragenstatistik'
 dict_init[2]='Zeige alle Fragen'
 
-fox_png=r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\fox.png'
-fox_ico=r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\fox.ico'
-question_file=r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\Fragensammlung.txt'
+base_path=''
+# base_path=r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\\'
+fox_png=base_path+'fox.png'
+fox_ico=base_path+'fox.ico'
+question_file=base_path+'Fragensammlung.txt'
 answer_file='Fuxenloesung.txt'
 test_file='Fuxenpruefung.txt'
 
 categories=((1000,'Permanente Fragen','P'),
-            (4,'Kleine Fragen','K'),
-            (3,'Mittlere Fragen','M'),
-            (2,'Grosse Fragen','G'),
-            (1,'Scherzfragen','S'),
+            (16,'Kleine Fragen','K'),
+            (6,'Mittlere Fragen','M'),
+            (4,'Grosse Fragen','G'),
+            (5,'Scherzfragen','S'),
             (0,'Archiv','A'))
 
 
@@ -213,12 +215,13 @@ elif task_var == 1:
     tot_n_questions = len(qdicts_all)
     #create message
     lines=[]
-    lines.append('Fragenstatistik nach Schwierigkeit')
+    lines.append('Fragenpool nach Schwierigkeit')
     lines.append(('Kategorie','Anzahl','Anteil'))
     for default,lg_name,short_name in categories:
         lines.append((lg_name+': ',str(len(qdicts[short_name])),'{:.2f}'.format(len(qdicts[short_name])/tot_n_questions)))
 
-    lines.append('Fragenstatistik nach Kategorie')
+    lines.append('Fragenpool nach Thema')
+    lines.append(('Kategorie','Anzahl','Anteil'))
     count_dict=Counter([x[2] for x in qdicts_all.values()])
     keys=list(count_dict.keys())
     keys.sort()
