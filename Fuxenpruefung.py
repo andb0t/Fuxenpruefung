@@ -14,6 +14,14 @@ question_file=r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\Fra
 answer_file='Fuxenloesung.txt'
 test_file='Fuxenpruefung.txt'
 
+categories=((1000,'Permanente Fragen','P'),
+            (4,'Kleine Fragen','K'),
+            (3,'Mittlere Fragen','M'),
+            (2,'Grosse Fragen','G'),
+            (1,'Scherzfragen','S'))
+
+
+
 class InitWindow:
 
     def __init__(self, master):
@@ -25,40 +33,56 @@ class InitWindow:
         self.w = Label(master, image=photo)
         self.w.photo = photo
         self.w.grid(row=0,columnspan=2)
+        self.input_dict={}
+
+        col_idx=0
+        row_count=3
+        for default,lg_name,short_name in categories:
+            if short_name == 'P': continue
+            Label(master,text=lg_name).grid(row=row_count-2,column=col_idx)
+            self.string_val = StringVar()
+            self.string_val.set(default)
+            e=Entry(master, textvariable=self.string_val,width=5).grid(row=row_count-1,column=col_idx)
+            self.input_dict[short_name]=self.string_val
+            col_idx = (col_idx + 1) % 2
+            if (col_idx == 0):
+                row_count += 2
 
         self.radio_var = IntVar()
         for key in dict_init.keys():
-            Radiobutton(master, text=dict_init[key], variable=self.radio_var, value=key).grid(row=key+1,columnspan=2)
+            rad=Radiobutton(master, text=dict_init[key], variable=self.radio_var, value=key)
+            rad.grid(row=row_count,columnspan=2)
+            row_count += 1
 
         # self.a_var = IntVar()
         # self.a_button = Checkbutton(master, text="Neue Fuxenpruefung", variable=self.a_var)
         # self.a_button.grid(row=1,columnspan=2)
 
         self.start_button = Button(master, text="Start", fg="green", command=master.quit)
-        self.start_button.grid(row=len(dict_init)+1,column=0)
-
+        self.start_button.grid(row=row_count,column=0)
         self.quit_button = Button(master, text="Abbruch", fg="red", command=self.quit)
-        self.quit_button.grid(row=len(dict_init)+1,column=1)
+        self.quit_button.grid(row=row_count,column=1)
+        row_count+= 1
 
     def quit(self):
         sys.exit()
 
 class InfoWindow:
 
-    def __init__(self, master,header,lines):
-        self.w = Message(master, text=header,width=200)
-        self.w.grid(row=0,columnspan=3)
-
-        row_count=1
+    def __init__(self, master,lines):
+        row_count=0
         col_count=0
         widths=(200,50,50)
         stickys=(W,None,None)
         for line in lines:
-            col_count = 0
-            for item in line:
-                mymsg=Message(master,text=line[col_count],width=widths[col_count])
-                mymsg.grid(row=row_count,column=col_count,sticky=stickys[col_count])
-                col_count += 1
+            if isinstance(line, str):
+                Message(master, text=line,width=200).grid(row=row_count,columnspan=3)
+            elif isinstance(line, tuple):
+                col_count = 0
+                for item in line:
+                    mymsg=Message(master,text=line[col_count],width=widths[col_count])
+                    mymsg.grid(row=row_count,column=col_count,sticky=stickys[col_count])
+                    col_count += 1
             row_count += 1
 
         self.OK_button = Button(master, text="OK", command=master.quit)
@@ -67,57 +91,89 @@ class InfoWindow:
 def sticky_gen(count):
     if count > 0:
         return W
-
+def make_on_configure(canvas):
+    def on_configure(event):
+        # update scrollregion after starting 'mainloop'
+        # when all widgets are in canvas
+        canvas.configure(scrollregion=canvas.bbox('all'))
+    return on_configure
 class TextWindow:
 
     def __init__(self, master,header,lines):
-        self.w = Message(master, text=header,width=400)
-        self.w.grid(row=0,columnspan=len(lines[0]),sticky=None)
 
-        row_count=1
+        self.label = Label(master, text=header)
+        self.label.pack(side=TOP)
+
+        # --- create canvas with scrollbar ---
+        self.canvas = Canvas(master, width=1200, height=600)
+        self.canvas.pack(side=LEFT)
+        self.scrollbar = Scrollbar(master, command=self.canvas.yview)
+        self.scrollbar.pack(side=LEFT, fill='y')
+        self.canvas.configure(yscrollcommand = self.scrollbar.set)
+        # update scrollregion after starting 'mainloop'
+        # when all widgets are in canvas
+        self.canvas.bind('<Configure>', make_on_configure(self.canvas))
+        # --- put frame in canvas ---
+        self.frame = Frame(self.canvas)
+        self.canvas.create_window((0,0), window=self.frame, anchor='nw')
+        # --- add widgets in frame ---
+        line_count=0
         col_count=0
-        widths=(5,60,60,15)
+        widths=(5,110,60,10,10)
         for line in lines:
             col_count=0
             line=list(line)
-            line.insert(0,str(row_count))
+            if line_count:
+                line.insert(0,str(line_count))
+            else:
+                line.insert(0,'#')
             for item in line:
                 mytext = StringVar(value=item)
-                myentry=Entry(master, textvariable=mytext, state='readonly',width=widths[col_count])
-                myentry.grid(row=row_count,column=col_count, sticky=sticky_gen(col_count))
+                myentry=Entry(self.frame, textvariable=mytext, state='readonly',width=widths[col_count])
+                # myentry.pack(side=LEFT)
+                myentry.grid(row=line_count,column=col_count, sticky=sticky_gen(col_count))
                 col_count += 1
-                col_start_str=''
-            row_count += 1
+            line_count += 1
 
         self.OK_button = Button(master, text="OK", command=master.quit)
-        self.OK_button.grid(row=row_count,columnspan=len(lines[0]))
+        self.OK_button.pack(side=TOP)
 
-root = Tk()
-root.iconbitmap(fox_ico)
-root.title('Fux!')
-app = InitWindow(root)
-root.mainloop()
-task_var=app.radio_var.get()
-root.destroy() # optional; see description below
+useGUI = True
+task_var=0
+quest_numbers={}
+
+if useGUI:
+    root = Tk()
+    root.iconbitmap(fox_ico)
+    root.title('Fux!')
+    app = InitWindow(root)
+    root.mainloop()
+    task_var=app.radio_var.get()
+    for default,lg_name,short_name in categories:
+        if short_name == 'P':
+            quest_numbers[short_name]=default
+        else:
+            quest_numbers[short_name]=int((app.input_dict)[short_name].get())
+    root.destroy() # optional; see description below
+else:
+    quest_numbers['G']=1
+    quest_numbers['M']=2
+    quest_numbers['K']=3
+    quest_numbers['S']=1
+    quest_numbers['P']=10000
 
 print('Gewaehlte Aufgabe:',dict_init[task_var])
 
 
 
 
-
-#user defined parameters
-number_D=2
-number_M=2
-number_E=3
-number_F=1
-
-
 #Read in data
-qdict_D={}
-qdict_M={}
-qdict_E={}
-qdict_F={}
+qdicts={}
+for key in quest_numbers.keys():
+    qdicts[key]= {}
+qdicts_all={}
+
+quest_counter=0
 with open(question_file) as data:
     for line in data:
         if line.startswith('#'): continue
@@ -126,69 +182,56 @@ with open(question_file) as data:
             difficulty, question, answer, category=line.split(":",3)
         except ValueError:
             continue
-        if difficulty == 'D':
-            qdict_D[len(qdict_D)]=question,answer,category
-        elif difficulty == 'M':
-            qdict_M[len(qdict_M)]=question,answer,category
-        elif difficulty == 'E':
-            qdict_E[len(qdict_E)]=question,answer,category
-        elif difficulty == 'F':
-            qdict_F[len(qdict_F)]=question,answer,category
+        qdicts[difficulty][len(qdicts[difficulty])]=question,answer,category
+        qdicts_all[quest_counter]=question,answer,category,difficulty
+        quest_counter += 1
+
 
 
 
 if task_var == 0:
 
     import random
-    keys_D =  list(qdict_D.keys())
-    keys_M =  list(qdict_M.keys())
-    keys_E =  list(qdict_E.keys())
-    keys_F =  list(qdict_F.keys())
 
-    random.shuffle(keys_D)
-    random.shuffle(keys_M)
-    random.shuffle(keys_E)
-    random.shuffle(keys_F)
-
-    QnA_D = [qdict_D[key][:2] for key in keys_D][:number_D]
-    QnA_M = [qdict_M[key][:2] for key in keys_M][:number_M]
-    QnA_E = [qdict_E[key][:2] for key in keys_E][:number_E]
-    QnA_F = [qdict_F[key][:2] for key in keys_F][:number_F]
+    ran_qdicts={}
+    for qdict_str in qdicts:
+        qdict=qdicts[qdict_str]
+        keys = list(qdict.keys())
+        random.shuffle(keys)
+        ran_QnA = [qdict[key][:2] for key in keys][:quest_numbers[qdict_str]]
+        ran_qdicts[qdict_str]=ran_QnA
 
     myfile = open(test_file, 'w')
     print("Fuxenpruefung",file=myfile)
     count=0
-    for question,answer in QnA_D:
-        count += 1
-        print('{}.'.format(count),question,file=myfile)
-    for question,answer in QnA_M:
-        count += 1
-        print('{}.'.format(count),question,file=myfile)
-    for question,answer in QnA_E:
-        count += 1
-        print('{}.'.format(count),question,file=myfile)
-    for question,answer in QnA_F:
-        count += 1
-        print('{}.'.format(count),question,file=myfile)
+    for qdict_str in ran_qdicts:
+        for question,answer in ran_qdicts[qdict_str]:
+            count += 1
+            print('{}.'.format(count),question,file=myfile)
+
 
 elif task_var == 1:
-
-    tot_n_questions= len(qdict_D)+ len(qdict_M)+ len(qdict_E)+ len(qdict_F)
-
+    from collections import Counter
+    tot_n_questions = len(qdicts_all)
     #create message
-    header='Fragenstatistik'
     lines=[]
+    lines.append('Fragenstatistik nach Schwierigkeit')
     lines.append(('Kategorie','Anzahl','Anteil'))
-    lines.append(('Fragen "D": ',str(len(qdict_D)),'{:.2f}'.format(len(qdict_D)/tot_n_questions)))
-    lines.append(('Fragen "M": ',str(len(qdict_M)),'{:.2f}'.format(len(qdict_M)/tot_n_questions)))
-    lines.append(('Fragen "E": ',str(len(qdict_E)),'{:.2f}'.format(len(qdict_E)/tot_n_questions)))
-    lines.append(('Fragen "F": ',str(len(qdict_F)),'{:.2f}'.format(len(qdict_F)/tot_n_questions)))
+    for default,lg_name,short_name in categories:
+        lines.append((lg_name+': ',str(len(qdicts[short_name])),'{:.2f}'.format(len(qdicts[short_name])/tot_n_questions)))
+
+    lines.append('Fragenstatistik nach Kategorie')
+    count_dict=Counter([x[2] for x in qdicts_all.values()])
+    keys=list(count_dict.keys())
+    keys.sort()
+    for key in keys:
+        lines.append((key+': ',str(count_dict[key]),'{:.2f}'.format(count_dict[key]/tot_n_questions)))
 
     #create the window
     root = Tk()
     root.iconbitmap(fox_ico)
     root.title('Fux!')
-    app = InfoWindow(root,header,lines)
+    app = InfoWindow(root,lines)
     root.mainloop()
     root.destroy() # optional; see description below
 
@@ -197,15 +240,17 @@ elif task_var == 2:
 
     header = 'Alle verfuegbaren Fragen und Antworten'
     lines=[]
-    for item in qdict_D: lines.append(qdict_D[item])
-    for item in qdict_M: lines.append(qdict_M[item])
-    for item in qdict_E: lines.append(qdict_E[item])
-    for item in qdict_F: lines.append(qdict_F[item])
+    lines.append(('Frage','Antwort','Kateg.','Schw.'))
+    for key in qdicts_all: lines.append((qdicts_all[key][0],qdicts_all[key][1],qdicts_all[key][2],qdicts_all[key][3]))
 
-    #create the window
+
     root = Tk()
     root.iconbitmap(fox_ico)
     root.title('Fux!')
+
+
+
+
     app = TextWindow(root,header,lines)
     root.mainloop()
     root.destroy() # optional; see description below
