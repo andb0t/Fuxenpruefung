@@ -2,6 +2,8 @@
 import sys
 import random
 from tkinter import *
+from tkinter import filedialog
+
 
 #user interface
 dict_init={}
@@ -13,9 +15,10 @@ base_path=''
 # base_path=r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\\'
 fox_png=base_path+'fox.png'
 fox_ico=base_path+'fox.ico'
-question_file=base_path+'Fragensammlung.txt'
 answer_file='Fuxenloesung.txt'
 test_file='Fuxenpruefung.txt'
+question_file=''
+
 
 categories=[
             [16,'Kleine Fragen','K'],
@@ -159,6 +162,10 @@ while True:
         mainroot = Tk()
         mainroot.iconbitmap(fox_ico)
         mainroot.title('Fux!')
+
+        FILEOPENOPTIONS = dict(initialdir='.',defaultextension='.txt', filetypes=[('Text files','*.txt')])
+        if not question_file: question_file=filedialog.askopenfilename(parent=mainroot,**FILEOPENOPTIONS)
+
         mainapp = InitWindow(mainroot,task_var)
         mainroot.mainloop()
         task_var=mainapp.radio_var.get()
@@ -169,10 +176,10 @@ while True:
             except KeyError:
                 quest_numbers[short_name]=default
             categories[idx][0]=quest_numbers[short_name]
-            print(idx,categories[idx])
             idx += 1
         mainroot.destroy()
     else:
+        question_file=base_path+'Fragensammlung.txt'
         task_var=0
         for default,lg_name,short_name in categories:
             quest_numbers[short_name]=default
@@ -180,7 +187,16 @@ while True:
 
 
     print('Gewaehlte Aufgabe:',dict_init[task_var])
-
+    if not question_file:
+        root = Tk()
+        root.iconbitmap(fox_ico)
+        root.title('Fehler!')
+        lines = []
+        lines.append('Keine Fragensammlung ausgewaehlt! Nochmal!')
+        app = InfoWindow(root,lines)
+        root.mainloop()
+        root.destroy()
+        continue
 
 
 
