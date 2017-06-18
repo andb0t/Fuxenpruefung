@@ -70,11 +70,11 @@ class InitWindow:
 
         self.start_button = Button(master, text="Start", fg="green", command=master.quit)
         self.start_button.grid(row=row_count,column=0)
-        self.quit_button = Button(master, text="Schliessen", fg="red", command=self.quit)
+        self.quit_button = Button(master, text="Schliessen", fg="red", command=self.exit)
         self.quit_button.grid(row=row_count,column=1)
         row_count+= 1
 
-    def quit(self):
+    def exit(self):
         sys.exit()
 
 class InfoWindow:
