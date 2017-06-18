@@ -1,5 +1,6 @@
 
 import sys
+import random
 from tkinter import *
 
 #user interface
@@ -27,7 +28,7 @@ categories=((1000,'Permanente Fragen','P'),
 
 class InitWindow:
 
-    def __init__(self, master):
+    def __init__(self, master,radioinit=0):
 
         self.master=master
 
@@ -56,6 +57,7 @@ class InitWindow:
             rad=Radiobutton(master, text=dict_init[key], variable=self.radio_var, value=key)
             rad.grid(row=row_count,columnspan=2)
             row_count += 1
+        self.radio_var.set(radioinit)
 
         # self.a_var = IntVar()
         # self.a_button = Checkbutton(master, text="Neue Fuxenpruefung", variable=self.a_var)
@@ -63,7 +65,7 @@ class InitWindow:
 
         self.start_button = Button(master, text="Start", fg="green", command=master.quit)
         self.start_button.grid(row=row_count,column=0)
-        self.quit_button = Button(master, text="Abbruch", fg="red", command=self.quit)
+        self.quit_button = Button(master, text="Schliessen", fg="red", command=self.quit)
         self.quit_button.grid(row=row_count,column=1)
         row_count+= 1
 
@@ -141,117 +143,109 @@ class TextWindow:
         self.OK_button = Button(master, text="OK", command=master.quit)
         self.OK_button.pack(side=TOP)
 
-useGUI = True
-task_var=0
-quest_numbers={}
 
-if useGUI:
-    root = Tk()
-    root.iconbitmap(fox_ico)
-    root.title('Fux!')
-    app = InitWindow(root)
-    root.mainloop()
-    task_var=app.radio_var.get()
+
+
+
+
+task_var=0
+while True:
+
+    mainroot = Tk()
+    mainroot.iconbitmap(fox_ico)
+    mainroot.title('Fux!')
+    mainapp = InitWindow(mainroot,task_var)
+    mainroot.mainloop()
+    task_var=mainapp.radio_var.get()
+    quest_numbers={}
     for default,lg_name,short_name in categories:
         try:
-            quest_numbers[short_name]=int((app.input_dict)[short_name].get())
+            quest_numbers[short_name]=int((mainapp.input_dict)[short_name].get())
         except KeyError:
             quest_numbers[short_name]=default
-    root.destroy() # optional; see description below
-else:
-    for default,lg_name,short_name in categories:
-        quest_numbers[short_name]=default
+    mainroot.destroy()
 
-print('Gewaehlte Aufgabe:',dict_init[task_var])
+    print('Gewaehlte Aufgabe:',dict_init[task_var])
 
 
 
 
-#Read in data
-qdicts={}
-for key in quest_numbers.keys():
-    qdicts[key]= {}
-qdicts_all={}
+    #Read in data
+    qdicts={}
+    for key in quest_numbers.keys():
+        qdicts[key]= {}
+    qdicts_all={}
 
-quest_counter=0
-with open(question_file) as data:
-    for line in data:
-        if line.startswith('#'): continue
-        line = line.rstrip()
-        try:
-            difficulty, question, answer, category=line.split(":",3)
-        except ValueError:
-            continue
-        qdicts[difficulty][len(qdicts[difficulty])]=question,answer,category
-        qdicts_all[quest_counter]=question,answer,category,difficulty
-        quest_counter += 1
+    quest_counter=0
+    with open(question_file) as data:
+        for line in data:
+            if line.startswith('#'): continue
+            line = line.rstrip()
+            try:
+                difficulty, question, answer, category=line.split(":",3)
+            except ValueError:
+                continue
+            qdicts[difficulty][len(qdicts[difficulty])]=question,answer,category
+            qdicts_all[quest_counter]=question,answer,category,difficulty
+            quest_counter += 1
 
-
-
-
-if task_var == 0:
-
-    import random
-
-    ran_qdicts={}
-    for qdict_str in qdicts:
-        qdict=qdicts[qdict_str]
-        keys = list(qdict.keys())
-        random.shuffle(keys)
-        ran_QnA = [qdict[key][:2] for key in keys][:quest_numbers[qdict_str]]
-        ran_qdicts[qdict_str]=ran_QnA
-
-    myfile = open(test_file, 'w')
-    print("Fuxenpruefung",file=myfile)
-    count=0
-    for qdict_str in ran_qdicts:
-        for question,answer in ran_qdicts[qdict_str]:
-            count += 1
-            print('{}.'.format(count),question,file=myfile)
+    print()
 
 
-elif task_var == 1:
-    from collections import Counter
-    tot_n_questions = len(qdicts_all)
-    #create message
-    lines=[]
-    lines.append('Fragenpool nach Schwierigkeit')
-    lines.append(('Kategorie','Anzahl','Anteil'))
-    for default,lg_name,short_name in categories:
-        lines.append((lg_name+': ',str(len(qdicts[short_name])),'{:.2f}'.format(len(qdicts[short_name])/tot_n_questions)))
+    if task_var == 0:
+        ran_qdicts={}
+        for qdict_str in qdicts:
+            qdict=qdicts[qdict_str]
+            keys = list(qdict.keys())
+            random.shuffle(keys)
+            ran_QnA = [qdict[key][:2] for key in keys][:quest_numbers[qdict_str]]
+            ran_qdicts[qdict_str]=ran_QnA
 
-    lines.append('Fragenpool nach Thema')
-    lines.append(('Kategorie','Anzahl','Anteil'))
-    count_dict=Counter([x[2] for x in qdicts_all.values()])
-    keys=list(count_dict.keys())
-    keys.sort()
-    for key in keys:
-        lines.append((key+': ',str(count_dict[key]),'{:.2f}'.format(count_dict[key]/tot_n_questions)))
-
-    #create the window
-    root = Tk()
-    root.iconbitmap(fox_ico)
-    root.title('Fux!')
-    app = InfoWindow(root,lines)
-    root.mainloop()
-    root.destroy() # optional; see description below
+        myfile = open(test_file, 'w')
+        print("Fuxenpruefung",file=myfile)
+        count=0
+        for qdict_str in ran_qdicts:
+            for question,answer in ran_qdicts[qdict_str]:
+                count += 1
+                print('{}.'.format(count),question,file=myfile)
 
 
-elif task_var == 2:
+    elif task_var == 1:
+        from collections import Counter
+        tot_n_questions = len(qdicts_all)
+        #create message
+        lines=[]
+        lines.append('Fragenpool nach Schwierigkeit')
+        lines.append(('Kategorie','Anzahl','Anteil'))
+        for default,lg_name,short_name in categories:
+            lines.append((lg_name+': ',str(len(qdicts[short_name])),'{:.2f}'.format(len(qdicts[short_name])/tot_n_questions)))
 
-    header = 'Alle verfuegbaren Fragen und Antworten'
-    lines=[]
-    lines.append(('Frage','Antwort','Kateg.','Schw.'))
-    for key in qdicts_all: lines.append((qdicts_all[key][0],qdicts_all[key][1],qdicts_all[key][2],qdicts_all[key][3]))
+        lines.append('Fragenpool nach Thema')
+        lines.append(('Kategorie','Anzahl','Anteil'))
+        count_dict=Counter([x[2] for x in qdicts_all.values()])
+        keys=list(count_dict.keys())
+        keys.sort()
+        for key in keys:
+            lines.append((key+': ',str(count_dict[key]),'{:.2f}'.format(count_dict[key]/tot_n_questions)))
+
+        root = Tk()
+        root.iconbitmap(fox_ico)
+        root.title('Fux!')
+        app = InfoWindow(root,lines)
+        root.mainloop()
+        root.destroy()
 
 
-    root = Tk()
-    root.iconbitmap(fox_ico)
-    root.title('Fux!')
+    elif task_var == 2:
 
+        header = 'Alle verfuegbaren Fragen und Antworten'
+        lines=[]
+        lines.append(('Frage','Antwort','Kateg.','Schw.'))
+        for key in qdicts_all: lines.append((qdicts_all[key][0],qdicts_all[key][1],qdicts_all[key][2],qdicts_all[key][3]))
 
-
-
-    app = TextWindow(root,header,lines)
-    root.mainloop()
-    root.destroy() # optional; see description below
+        root = Tk()
+        root.iconbitmap(fox_ico)
+        root.title('Fux!')
+        app = TextWindow(root,header,lines)
+        root.mainloop()
+        root.destroy()
