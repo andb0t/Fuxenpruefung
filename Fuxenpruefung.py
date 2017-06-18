@@ -17,12 +17,14 @@ question_file=base_path+'Fragensammlung.txt'
 answer_file='Fuxenloesung.txt'
 test_file='Fuxenpruefung.txt'
 
-categories=((1000,'Permanente Fragen','P'),
+categories=(
             (16,'Kleine Fragen','K'),
             (6,'Mittlere Fragen','M'),
             (4,'Grosse Fragen','G'),
+            (1000,'Permanente Fragen','P'),
             (5,'Scherzfragen','S'),
-            (0,'Archiv','A'))
+            (0,'Archiv','A')
+            )
 
 
 
@@ -108,6 +110,8 @@ class TextWindow:
 
         self.label = Label(master, text=header)
         self.label.pack(side=TOP)
+        self.OK_button = Button(master, text="OK", command=master.quit)
+        self.OK_button.pack(side=TOP)
 
         # --- create canvas with scrollbar ---
         self.canvas = Canvas(master, width=1200, height=600)
@@ -124,7 +128,7 @@ class TextWindow:
         # --- add widgets in frame ---
         line_count=0
         col_count=0
-        widths=(5,110,60,10,10)
+        widths=(5,110,60,10,5,5)
         for line in lines:
             col_count=0
             line=list(line)
@@ -140,9 +144,6 @@ class TextWindow:
                 col_count += 1
             line_count += 1
 
-        self.OK_button = Button(master, text="OK", command=master.quit)
-        self.OK_button.pack(side=TOP)
-
 
 
 
@@ -151,19 +152,27 @@ class TextWindow:
 task_var=0
 while True:
 
-    mainroot = Tk()
-    mainroot.iconbitmap(fox_ico)
-    mainroot.title('Fux!')
-    mainapp = InitWindow(mainroot,task_var)
-    mainroot.mainloop()
-    task_var=mainapp.radio_var.get()
+    useGUI = True
     quest_numbers={}
-    for default,lg_name,short_name in categories:
-        try:
-            quest_numbers[short_name]=int((mainapp.input_dict)[short_name].get())
-        except KeyError:
+    if useGUI:
+        mainroot = Tk()
+        mainroot.iconbitmap(fox_ico)
+        mainroot.title('Fux!')
+        mainapp = InitWindow(mainroot,task_var)
+        mainroot.mainloop()
+        task_var=mainapp.radio_var.get()
+        for default,lg_name,short_name in categories:
+            try:
+                quest_numbers[short_name]=int((mainapp.input_dict)[short_name].get())
+            except KeyError:
+                quest_numbers[short_name]=default
+        mainroot.destroy()
+    else:
+        task_var=0
+        for default,lg_name,short_name in categories:
             quest_numbers[short_name]=default
-    mainroot.destroy()
+
+
 
     print('Gewaehlte Aufgabe:',dict_init[task_var])
 
@@ -182,14 +191,17 @@ while True:
             if line.startswith('#'): continue
             line = line.rstrip()
             try:
-                difficulty, question, answer, category=line.split(":",3)
+                difficulty, question, answer, category, vspace=line.split(":",4)
             except ValueError:
                 continue
-            qdicts[difficulty][len(qdicts[difficulty])]=question,answer,category
-            qdicts_all[quest_counter]=question,answer,category,difficulty
+            qdicts[difficulty][len(qdicts[difficulty])]=question,answer,category,vspace
+            qdicts_all[quest_counter]=question,answer,category,difficulty,vspace
             quest_counter += 1
 
-    print()
+
+
+
+
 
 
     if task_var == 0:
@@ -198,17 +210,18 @@ while True:
             qdict=qdicts[qdict_str]
             keys = list(qdict.keys())
             random.shuffle(keys)
-            ran_QnA = [qdict[key][:2] for key in keys][:quest_numbers[qdict_str]]
+            ran_QnA = [(qdict[key][:2]+(qdict[key][3],)) for key in keys][:quest_numbers[qdict_str]]
             ran_qdicts[qdict_str]=ran_QnA
 
-        myfile = open(test_file, 'w')
-        print("Fuxenpruefung",file=myfile)
-        count=0
-        for qdict_str in ran_qdicts:
-            for question,answer in ran_qdicts[qdict_str]:
-                count += 1
-                print('{}.'.format(count),question,file=myfile)
-
+        with open(test_file, 'w') as myfile:
+            print("Fuxenpruefung\n",file=myfile)
+            count=0
+            for default,lg_name,short_name in categories:
+                for question,answer,vspace in ran_qdicts[short_name]:
+                    count += 1
+                    print('{}.'.format(count),question,file=myfile)
+                    vert_space='\n'*3
+                    print('\n'*int(vspace),file=myfile)
 
     elif task_var == 1:
         from collections import Counter
@@ -240,8 +253,8 @@ while True:
 
         header = 'Alle verfuegbaren Fragen und Antworten'
         lines=[]
-        lines.append(('Frage','Antwort','Kateg.','Schw.'))
-        for key in qdicts_all: lines.append((qdicts_all[key][0],qdicts_all[key][1],qdicts_all[key][2],qdicts_all[key][3]))
+        lines.append(('Frage','Antwort','Kateg.','Schw.','Platz'))
+        for key in qdicts_all: lines.append((qdicts_all[key][0],qdicts_all[key][1],qdicts_all[key][2],qdicts_all[key][3],qdicts_all[key][4]))
 
         root = Tk()
         root.iconbitmap(fox_ico)
@@ -249,3 +262,5 @@ while True:
         app = TextWindow(root,header,lines)
         root.mainloop()
         root.destroy()
+
+    if not useGUI: break
