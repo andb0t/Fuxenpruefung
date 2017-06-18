@@ -17,14 +17,14 @@ question_file=base_path+'Fragensammlung.txt'
 answer_file='Fuxenloesung.txt'
 test_file='Fuxenpruefung.txt'
 
-categories=(
-            (16,'Kleine Fragen','K'),
-            (6,'Mittlere Fragen','M'),
-            (4,'Grosse Fragen','G'),
-            (1000,'Permanente Fragen','P'),
-            (5,'Scherzfragen','S'),
-            (0,'Archiv','A')
-            )
+categories=[
+            [16,'Kleine Fragen','K'],
+            [6,'Mittlere Fragen','M'],
+            [4,'Grosse Fragen','G'],
+            [1000,'Permanente Fragen','P'],
+            [5,'Scherzfragen','S'],
+            [0,'Archiv','A'],
+            ]
 
 
 
@@ -98,6 +98,8 @@ class InfoWindow:
 def sticky_gen(count):
     if count > 0:
         return W
+def mystrip(a):
+    return a.strip()
 def make_on_configure(canvas):
     def on_configure(event):
         # update scrollregion after starting 'mainloop'
@@ -148,7 +150,6 @@ class TextWindow:
 
 
 
-
 task_var=0
 while True:
 
@@ -161,11 +162,15 @@ while True:
         mainapp = InitWindow(mainroot,task_var)
         mainroot.mainloop()
         task_var=mainapp.radio_var.get()
+        idx=0
         for default,lg_name,short_name in categories:
             try:
                 quest_numbers[short_name]=int((mainapp.input_dict)[short_name].get())
             except KeyError:
                 quest_numbers[short_name]=default
+            categories[idx][0]=quest_numbers[short_name]
+            print(idx,categories[idx])
+            idx += 1
         mainroot.destroy()
     else:
         task_var=0
@@ -188,12 +193,15 @@ while True:
     quest_counter=0
     with open(question_file) as data:
         for line in data:
-            if line.startswith('#'): continue
             line = line.rstrip()
+            if line.startswith('#') or not len(line): continue
+            splitlist=[]
             try:
-                difficulty, question, answer, category, vspace=line.split(":",4)
+                splitlist=line.split("#",4)
             except ValueError:
                 continue
+            splitlist=[x for x in map(mystrip,splitlist)]
+            difficulty, question, answer, category, vspace=splitlist
             qdicts[difficulty][len(qdicts[difficulty])]=question,answer,category,vspace
             qdicts_all[quest_counter]=question,answer,category,difficulty,vspace
             quest_counter += 1
@@ -219,8 +227,10 @@ while True:
             for default,lg_name,short_name in categories:
                 for question,answer,vspace in ran_qdicts[short_name]:
                     count += 1
-                    print('{}.'.format(count),question,file=myfile)
-                    vert_space='\n'*3
+                    questionlines=question.split("\\\\")
+                    print('{}.'.format(count),questionlines[0],file=myfile)
+                    for item in questionlines[1:]:
+                        print('\to '+item,file=myfile)
                     print('\n'*int(vspace),file=myfile)
 
     elif task_var == 1:
