@@ -5,3 +5,6 @@ __pycache__*
 *.spec
 Fuxenpruefung.txt
 Fragensammlung.txt
+.dropbox
+*.zip
+desktop.ini
