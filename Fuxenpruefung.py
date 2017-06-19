@@ -2,11 +2,12 @@ import sys
 import random
 from tkinter import *
 from tkinter import filedialog
+import webbrowser
 
 
 # user interface
 dict_init = {}
-dict_init[0] = 'Erstelle neue Fuxenpruefung'
+dict_init[0] = 'Erstelle neue Fuxenprüfung'
 dict_init[1] = 'Zeige Fragenstatistik'
 dict_init[2] = 'Zeige alle Fragen'
 
@@ -21,11 +22,15 @@ question_file = ''
 categories = [
               [16, 'Kleine Fragen', 'K'],
               [6, 'Mittlere Fragen', 'M'],
-              [4, 'Grosse Fragen', 'G'],
+              [4, 'Große Fragen', 'G'],
               [1000, 'Permanente Fragen', 'P'],
               [5, 'Scherzfragen', 'S'],
               [0, 'Archiv', 'A'],
              ]
+
+
+def callback(event):
+    webbrowser.open_new(r"https://github.com/andb0t/Fuxenpruefung/releases")
 
 
 class InitWindow:
@@ -34,15 +39,21 @@ class InitWindow:
 
         self.input_dict = {}
         self.radio_var = IntVar()
+        _row_count = 0
+
+        _head_label = Label(master, text='Fuxenprüfungsgenerator', font=("Helvetica", 16))
+        _head_label.grid(row=_row_count, columnspan=2)
+        _row_count += 1
 
         _photo = PhotoImage(file=fox_png)
         _photo = _photo.subsample(5, 5)
         _photo_label = Label(master, image=_photo)
         _photo_label.photo = _photo
-        _photo_label.grid(row=0, columnspan=2)
+        _photo_label.grid(row=_row_count, columnspan=2)
+        _row_count += 1
 
         _col_idx = 0
-        _row_count = 3
+        _row_count += 2
         for default, lg_name, short_name in categories:
             if short_name == 'P' or short_name == 'A':
                 continue
@@ -51,7 +62,7 @@ class InitWindow:
             string_val = StringVar()
             string_val.set(default)
             cat_entry = Entry(master, textvariable=string_val, width=5)
-            cat_entry.grid(row=_row_count - 1, column=_col_idx)
+            cat_entry.grid(row=_row_count-1, column=_col_idx)
             self.input_dict[short_name] = string_val
             _col_idx = (_col_idx + 1) % 2
             if (_col_idx == 0):
@@ -67,10 +78,16 @@ class InitWindow:
         _start_button = Button(master, text="Start", fg="green",
                                command=master.quit)
         _start_button.grid(row=_row_count, column=0)
-        _quit_button = Button(master, text="Schliessen", fg="red",
+        _quit_button = Button(master, text="Schließen", fg="red",
                               command=self.exit)
         _quit_button.grid(row=_row_count, column=1)
         _row_count += 1
+
+        _link_label = Label(master, text="Open on GitHub", fg="blue",
+                            cursor="hand2")
+        _link_label.grid(row=_row_count, column=0, columnspan=2)
+        _link_label.bind("<Button-1>", callback)
+
 
     def exit(self):
         sys.exit()
@@ -240,7 +257,7 @@ while True:
             ran_qdicts[qdict_str] = ran_QnA
 
         with open(test_file, 'w') as myfile:
-            print("Fuxenpruefung\n", file=myfile)
+            print("Fuxenprüfung\n", file=myfile)
             count = 0
             for default, lg_name, short_name in categories:
                 for question, answer, vspace in ran_qdicts[short_name]:
@@ -280,7 +297,7 @@ while True:
 
     elif task_var == 2:
 
-        header = 'Alle verfuegbaren Fragen und Antworten'
+        header = 'Alle verfügbaren Fragen und Antworten'
         lines = []
         lines.append(('Frage', 'Antwort', 'Kateg.', 'Schw.', 'Platz'))
         for key in qdicts_all:
