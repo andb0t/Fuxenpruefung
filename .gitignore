@@ -1,7 +1,6 @@
 build*
 dist*
 __pycache__*
-*.spec
 Fuxenpruefung.txt
 Fragensammlung.txt
 .dropbox

@@ -1,4 +1,5 @@
 import sys
+import os
 import random
 from tkinter import *
 from tkinter import filedialog
@@ -18,6 +19,22 @@ fox_ico = base_path+'fox.ico'
 answer_file = 'Fuxenloesung.txt'
 test_file = 'Fuxenpruefung.txt'
 question_file = ''
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
+fox_png = resource_path(fox_png)
+fox_ico = resource_path(fox_ico)
+
 
 categories = [
               [16, 'Kleine Fragen', 'K'],
