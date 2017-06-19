@@ -10,7 +10,7 @@ parser.add_option("-p", "--public", dest="ispublic", default=True,
 
 command = '7z a -tzip'
 archivename = 'Fuxenpruefung.zip'
-files = ['fox.png', 'fox.ico', r'"C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\dist\Fuxenpruefung.exe"']
+files = [r'"C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\dist\Fuxenpruefung.exe"']
 question_file = ""
 if options.ispublic:
     question_file = 'Fragensammlung_Beispiel.txt'
