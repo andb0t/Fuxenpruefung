@@ -38,18 +38,18 @@ P # Wann und in welchem Land fand die Oktoberrevolution statt? # Im Oktober nat�
 P # Was war das größte Germanenvolk?\\Die Goten\\Die Kelten\\Die Cherusker\\Die Franken # Die Goten # Geschichte # 0
 A # Was folgte auf die Jungsteinzeit? # Die Bronzezeit # Geschichte # 1
 A # Was führte Papst Gregor der XIII im Jahre 1582 ein? # Den gregorianischen Kalender # Geschichte # 1
-S # Wer ist hier der Boss? # Der FM # TestKategorie # 1
-S # Wie fett ist der fetteste Mann der Welt auf einer Skala von 1 bis fett? # Fett # TestKategorie # 1
-K # Wieviele Zimmer gibt es im Wohnheim? # 17 # TestKategorie # 1
-M # Wie alt bist du? # 20 # TestKategorie # 1
-M # Wie gross bist du? # 1.75 m # TestKategorie # 1
-M # Wie cool ist Dr. Freshness? # Wie kalte Limo bei Hitze # TestKategorie # 1
-S # Was trinkt man am besten in 1/2 Liter Quanta? # Buttermilch # TestKategorie # 1
-K # Was ist 1+1? # 2 # TestKategorie # 1
-K # Was ist 2*2? # 4 # TestKategorie # 1
-S # Erzaehle einen Witz! # Nein # TestKategorie # 1
-S # Erzaehle keinen Witz! # Ja # TestKategorie # 1
-S # Erzaehle! # Es war einmal... # TestKategorie # 1
+S # Wer ist hier der Boss? # Der FM # Schmarrn # 1
+S # Wie fett ist der fetteste Mann der Welt auf einer Skala von 1 bis fett? # Fett # Schmarrn # 1
+K # Wieviele Zimmer gibt es im Wohnheim? # 17 # Schmarrn # 1
+M # Wie alt bist du? # 20 # Schmarrn # 1
+M # Wie gross bist du? # 1.75 m # Schmarrn # 1
+M # Wie cool ist Dr. Freshness? # Wie kalte Limo bei Hitze # Schmarrn # 1
+S # Was trinkt man am besten in 1/2 Liter Quanta? # Buttermilch # Schmarrn # 1
+K # Was ist 1+1? # 2 # Schmarrn # 1
+K # Was ist 2*2? # 4 # Schmarrn # 1
+S # Erzaehle einen Witz! # Nein # Schmarrn # 1
+S # Erzaehle keinen Witz! # Ja # Schmarrn # 1
+S # Erzaehle! # Es war einmal... # Schmarrn # 1
 G # Was war der Vorgänger der Jungsteinzeit? # Altsteinzeit # Geschichte # 1
 G # Was war die Folge des Prager Fenstersturzes? # Der 30jährige Krieg # Geschichte # 1
 K # Was war kennzeichnend für die Jungsteinzeit? # Die Sesshaftwerdung der Menschen und Betreiben von Landwirtschaft # Geschichte # 1
