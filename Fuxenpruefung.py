@@ -4,6 +4,7 @@ import random
 from tkinter import *
 from tkinter import filedialog
 import webbrowser
+import subprocess
 
 
 # user interface
@@ -104,7 +105,6 @@ class InitWindow:
                             cursor="hand2")
         _link_label.grid(row=_row_count, column=0, columnspan=2)
         _link_label.bind("<Button-1>", callback)
-
 
     def exit(self):
         sys.exit()
@@ -248,7 +248,7 @@ while True:
     qdicts_all = {}
 
     quest_counter = 0
-    with open(question_file) as data:
+    with open(question_file, 'r', encoding='utf8') as data:
         for line in data:
             line = line.rstrip()
             if line.startswith('#') or not len(line):
@@ -273,7 +273,7 @@ while True:
             ran_QnA = [(qdict[key][:2]+(qdict[key][3],)) for key in keys][:quest_numbers[qdict_str]]
             ran_qdicts[qdict_str] = ran_QnA
 
-        with open(test_file, 'w') as myfile:
+        with open(test_file, 'w', encoding='utf8') as myfile:
             print("Fuxenprüfung\n", file=myfile)
             count = 0
             for default, lg_name, short_name in categories:
@@ -284,6 +284,10 @@ while True:
                     for item in questionlines[1:]:
                         print('\to '+item, file=myfile)
                     print('\n'*int(vspace), file=myfile)
+
+        sys_command = 'notepad '+test_file
+        # os.system(sys_command)
+        subprocess.Popen(sys_command)
 
     elif task_var == 1:
         from collections import Counter
