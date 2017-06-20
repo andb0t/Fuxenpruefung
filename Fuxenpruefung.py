@@ -55,7 +55,7 @@ class InitWindow:
 
     def __init__(self, master, radioinit=0):
 
-        master.protocol("WM_DELETE_WINDOW", exit)
+        master.protocol("WM_DELETE_WINDOW", sys.exit)
 
         self.input_dict = {}
         self.radio_var = IntVar()
