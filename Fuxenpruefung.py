@@ -55,6 +55,8 @@ class InitWindow:
 
     def __init__(self, master, radioinit=0):
 
+        master.protocol("WM_DELETE_WINDOW", exit)
+
         self.input_dict = {}
         self.radio_var = IntVar()
         _row_count = 0
@@ -97,7 +99,7 @@ class InitWindow:
                                command=master.quit)
         _start_button.grid(row=_row_count, column=0)
         _quit_button = Button(master, text="Schließen", fg="red",
-                              command=self.exit)
+                              command=sys.exit)
         _quit_button.grid(row=_row_count, column=1)
         _row_count += 1
 
@@ -106,13 +108,13 @@ class InitWindow:
         _link_label.grid(row=_row_count, column=0, columnspan=2)
         _link_label.bind("<Button-1>", callback)
 
-    def exit(self):
-        sys.exit()
-
 
 class InfoWindow:
 
     def __init__(self, master, lines):
+
+        master.protocol("WM_DELETE_WINDOW", master.quit)
+
         _row_count = 0
         _col_count = 0
         _widths = (200, 50, 50)
@@ -155,6 +157,8 @@ def make_on_configure(canvas):
 class TextWindow:
 
     def __init__(self, master, header, lines):
+
+        master.protocol("WM_DELETE_WINDOW", master.quit)
 
         _head_label = Label(master, text=header)
         _head_label.pack(side=TOP)
