@@ -209,12 +209,6 @@ while True:
         mainroot = Tk()
         mainroot.iconbitmap(fox_ico)
         mainroot.title('Fux!')
-
-        FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt',
-                               filetypes=[('Text files', '*.txt')])
-        if not question_file:
-            question_file = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
-
         mainapp = InitWindow(mainroot, task_var)
         mainroot.mainloop()
         task_var = mainapp.radio_var.get()
@@ -226,7 +220,15 @@ while True:
                 quest_numbers[short_name] = default
             categories[idx][0] = quest_numbers[short_name]
             idx += 1
+
+        # ask for question file
+        FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt',
+                               filetypes=[('Text files', '*.txt')])
+        if not question_file:
+            question_file = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
+
         mainroot.destroy()
+
     else:
         question_file = base_path+'Fragensammlung.txt'
         task_var = 0
