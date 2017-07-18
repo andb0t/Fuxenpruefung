@@ -7,6 +7,7 @@ import webbrowser
 import subprocess
 import zipfile
 from time import sleep
+from i18n import I18N
 
 
 base_path = ''
