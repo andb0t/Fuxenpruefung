@@ -8,7 +8,6 @@ import subprocess
 import zipfile
 
 
-
 base_path = ''
 # base_path = r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\\'
 fox_png = base_path+'fox.png'
@@ -18,28 +17,16 @@ github_button_png = base_path+'github.png'
 answer_file = 'Fuxenloesung.txt'
 test_file = 'Fuxenpruefung.txt'
 question_file = ''
+
+
+reinit = False
 current_lang = 'ger'
 
-
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
-
-fox_png = resource_path(fox_png)
-fox_ico = resource_path(fox_ico)
-language_button_png = resource_path(language_button_png)
-github_button_png = resource_path(github_button_png)
-
 categories = []
-lg_names = {'ger': ['Kleine Frage', 'Mittlere Frage', 'Große Frage', 'Permanente Frage', 'Scherzfrage', 'Archiv'],
-            'eng': ['Small question', 'Medium question', 'Hard question', 'Permanent question', 'Joke question', 'Archive']}
+lg_names = {'ger': ['Kleine Frage', 'Mittlere Frage', 'Große Frage', 'Permanente Frage',
+                    'Scherzfrage', 'Archiv'],
+            'eng': ['Small question', 'Medium question', 'Hard question', 'Permanent question',
+                    'Joke question', 'Archive']}
 short_names = {'ger': ['S', 'M', 'H', 'P', 'J', 'A'],
                'eng': ['S', 'M', 'H', 'P', 'J', 'A']}
 start_button_text = []
@@ -79,17 +66,6 @@ password_text = []
 password_texts = {'ger': ['Passwort', 'Datei ist verschlüsselt! Bitte Passwort eingeben:'],
                   'eng': ['Password', 'File is encryoted! Please enter password:']}
 
-reinit = False
-
-
-def switchLanguage():
-    if current_lang == 'ger':
-        setLanguage('eng')
-    elif current_lang == 'eng':
-        setLanguage('ger')
-    global reinit
-    reinit = True
-
 
 def setLanguage(key='ger'):
     global current_lang
@@ -127,6 +103,31 @@ def setLanguage(key='ger'):
     app_header = app_headers[key]
     global password_text
     password_text = password_texts[key]
+
+
+def switchLanguage():
+    if current_lang == 'ger':
+        setLanguage('eng')
+    elif current_lang == 'eng':
+        setLanguage('ger')
+    global reinit
+    reinit = True
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+
+fox_png = resource_path(fox_png)
+fox_ico = resource_path(fox_ico)
+language_button_png = resource_path(language_button_png)
+github_button_png = resource_path(github_button_png)
 
 
 def combine_funcs(*funcs):
@@ -187,16 +188,16 @@ class InitWindow:
             _row_count += 1
         self.radio_var.set(radioinit)
 
-        _start_button = Button(master, text=start_button_text[0], fg="green", command=master.quit)
+        _start_button = Button(master, text=start_button_text[0], fg="green", font="bold", command=master.quit)
         _start_button.grid(row=_row_count, column=0, columnspan=2)
-        _quit_button = Button(master, text=start_button_text[1], fg="red", command=sys.exit)
+        _quit_button = Button(master, text=start_button_text[1], fg="red", font="bold", command=sys.exit)
         _quit_button.grid(row=_row_count, column=2, columnspan=2)
         _row_count += 1
 
         _language_button = Button(master, command=combine_funcs(switchLanguage, master.quit))
         _language_button_image = PhotoImage(file=language_button_png)
         _language_button_image = _language_button_image.subsample(3, 3)
-        _language_button.config(image=_language_button_image, width=40, height=20)
+        _language_button.config(image=_language_button_image, width=30, height=20)
         _language_button._language_button_image = _language_button_image
         _language_button.grid(row=_row_count, column=0)
 
