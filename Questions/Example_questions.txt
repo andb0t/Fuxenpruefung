@@ -11,7 +11,51 @@
 # S # Please chose one:\\A\\B\\C # A # Example # 0
 ##############################################################################
 
-S # What is 1 + 1? # 2 # Maths # 1
 H # Why is the log of an exponential equal to the argument? # Per definition.  # Maths # 1
 M # What colors does a Zebra have? # White and black. # Nature # 1
+M # How many legs does an elephant have? # Four. # Nature # 1
 J # How many monkeys do you need to write a novel? # Many # Nature # 1
+J # Who wrote the best program every written? # Dr. AH Freshness # Technology # 1
+J # How old will you become? # 12 # Nature # 1
+S # What is 1 + 1? # 2 # Maths # 1
+S # What is 2 * 2? # 4 # Maths # 1
+S # In 1986 the prime minister of which European country was assassinated on his way home from the cinema with his wife? # Sweden (Olof Palme) # Politics # 1
+S # Who was the first Windsor monarch of the UK? # George V (reigned 1910-1936) # History # 1
+S # What was the nickname of President Duvalier of Haiti, who died in 1971? # Papa Doc # History # 1
+S # Which battle of 1571 marked the end of the Ottoman naval supremacy in the Mediterranean? # The Battle of Lepanto # History # 1
+S # Nearly how many years did it take Sir Francis Drake to complete the first circumnavigation of the globe in 1580? # 3 # History # 1
+S # Name the most famous battle of 1346? # Crecy # History # 1
+S # In 1979 which English art historian was exposed as a one-time Soviet spy and stripped of his knighthood? # Anthony Blunt # History # 1
+M # In 1816 which US state was admitted to the Union as the 20th state? # Mississippi # History # 1
+M # In which year did the demolition of the Berlin Wall begin? # 1989 # History # 1
+M # Holy Roman Emperor Charles VI created which principality in 1719? # Lichtenstein # History # 1
+M # Saloth Sar, born 19 May 1925, is better known by what name? # Pol Pot # History # 1
+M # What tax was introduced in England and Wales in 1696 and repealed in 1851? # Window tax # History # 1
+H # Which book was published in London on April 25th, 1719? # Robinson Crusoe # History # 1
+H # Who founded the Salvation Army in London, 1865? # William Booth # History # 1
+H # Who designed Regent’s Park in London in 1811? # John Nash # History # 1
+P # Southern Rhodesia became what country in 1980? # Zimbabwe (The Independent Nation of Zimbabwe) # History # 1
+P # The first day of which battle was the worst day in the history of the British Army, which suffered 60,000 casualties? # Battle of the Somme # History # 1
+P # Who became president after the assassination of Abraham Lincoln? # Andrew Johnson # History # 1
+A # Which Egyptian president ordered the seizure of the Suez Canal in 1956? # President Nassar # History # 1
+A # Which city is normally accepted as being the ancient capital of Wessex? # Winchester # History # 1
+S # In which year was the death of Queen Elizabeth I? # 1603 # History # 1
+S # In 1297, at which battle did William Wallace defeat the English? # Battle of Stirling Bridge # History # 1
+S # Who discovered the vaccination against smallpox in 1796? # Edward Jenner # History # 1
+S # Which is the oldest University in the USA? # Harvard (founded 1636, in Cambridge Massachusetts) # History # 1
+S # Who was the cult leader of the Waco Siege in 1993? # David Koresh # History # 1
+S # Name the second largest city in Britain during the Black Death? # Bristol # History # 1
+S # In which war was The Battle of Agincourt? # Hundred Years War # History # 1
+S # Which English scholar, well known for his translation of the Bible into English, was executed in Antwerp in 1536? # William Tyndale # History # 1
+S # Which country was first to operate an old age pension scheme? # Germany (1891) # History # 1
+S # The Battle of Rorke’s Drift in 1879 featured in which war? # Zulu War (or Zulu Wars) # History # 1
+M # In which European city did composer Richard Wagner die in 1883? # Venice # History # 1
+M # What nationality was Karl Marx? # German # History # 1
+M # What’s the better known name given to the Great Rising of 1381? # The Peasants’ Revolt # History # 1
+H # The loss of Calais was during which queen’s reign? # Mary I # History # 1
+H # What song, popular in the First World War, was written by George and Felix Powell? # Pack up your Troubles in your Old Kit Bag # History # 1
+H # In which year did the Titanic sink? # 1912 # History # 1
+H # What Apollo 13 astronaut contacted Mission Control with the words, “Houston, we’ve had a problem here..” ? # Jack Swigert # History # 1
+H # Who commanded the British Expeditionary Force in World War One? # Field Marshal Douglas Haig # History # 1
+M # Which country did Britain fight in the War of Jenkins’s Ear? # Spain # History # 1
+S # What was the better known name of Charles I, the King of the Franks, who united most of Western Europe during the Middle Ages? # Charlemagne # History # 1
