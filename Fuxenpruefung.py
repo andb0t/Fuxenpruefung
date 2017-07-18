@@ -2,9 +2,11 @@ import sys
 import os
 import random
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog, simpledialog
 import webbrowser
 import subprocess
+import zipfile
+
 
 
 base_path = ''
@@ -50,8 +52,8 @@ error_title = ''
 error_titles = {'ger': 'Fehler!',
                 'eng': 'Error!'}
 error_text = []
-error_texts = {'ger': 'Keine Fragensammlung ausgewaehlt! Nochmal!',
-               'eng': 'No question file selected. Retry!'}
+error_texts = {'ger': ['Keine Fragensammlung ausgewaehlt! Nochmal!', 'Falsches Passwort! Nochmal!'],
+               'eng': ['No question file selected. Retry!', 'Bad password. Retry!']}
 dict_init = []
 dict_inits = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen'],
               'eng': ['Compile new exam', 'Show question statistics', 'Show all questions']}
@@ -73,6 +75,9 @@ allquestions_colheaders = {'ger': ['Frage', 'Antwort', 'Kateg.', 'Schw.', 'Platz
 app_header = ''
 app_headers = {'ger': 'Fuxenprüfungsgenerator',
                'eng': 'Exam generator'}
+password_text = []
+password_texts = {'ger': ['Passwort', 'Datei ist verschlüsselt! Bitte Passwort eingeben:'],
+                  'eng': ['Password', 'File is encryoted! Please enter password:']}
 
 reinit = False
 
@@ -120,6 +125,8 @@ def setLanguage(key='ger'):
     allquestions_colheader = allquestions_colheaders[key]
     global app_header
     app_header = app_headers[key]
+    global password_text
+    password_text = password_texts[key]
 
 
 def combine_funcs(*funcs):
@@ -298,6 +305,7 @@ class TextWindow:
 
 
 task_var = 0
+zip_passwd = ''
 while True:
 
     setLanguage(current_lang)
@@ -324,9 +332,29 @@ while True:
             idx += 1
 
         # ask for question file
-        FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt', filetypes=[('Text files', '*.txt')])
+        FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt', filetypes=[('', '*.txt;*.zip')])
         if not question_file:
             question_file = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
+
+        password_error = False
+        if question_file.endswith('.zip'):
+            zf = zipfile.ZipFile(question_file)
+            for zinfo in zf.infolist():
+                is_encrypted = zinfo.flag_bits & 0x1
+            if is_encrypted and zip_passwd == '':
+                zip_passwd = simpledialog.askstring(password_text[0], password_text[1], show='*')
+                try:
+                    zip_passwd_bytes = str.encode(zip_passwd)
+                except TypeError:
+                    zip_passwd_bytes = b'1234'
+                print(os.path.splitext(question_file)[0])
+                base = os.path.basename(question_file)
+                try:
+                    with zf.open(os.path.splitext(base)[0]+'.txt', pwd=zip_passwd_bytes) as data:
+                        pass
+                except RuntimeError:
+                    print('Bad password!')
+                    password_error = True
 
         mainroot.destroy()
 
@@ -336,17 +364,25 @@ while True:
         for default, lg_name, short_name in categories:
             quest_numbers[short_name] = default
 
-    print('Selected task:', dict_init[task_var])
-    if not question_file:
+    if not question_file or password_error:
+        error_idx = 0
+        if not question_file:
+            error_idx = 0
+        elif password_error:
+            error_idx = 1
         root = Tk()
         root.iconbitmap(fox_ico)
         root.title(error_title)
         lines = []
-        lines.append(error_text)
+        lines.append(error_text[error_idx])
         app = InfoWindow(root, lines)
         root.mainloop()
         root.destroy()
+        zip_passwd = ''
+        question_file = ''
         continue
+
+    print('Selected task:', dict_init[task_var])
 
     # Read in data
     qdicts = {}
@@ -355,21 +391,32 @@ while True:
     qdicts_all = {}
 
     quest_counter = 0
-    with open(question_file, 'r', encoding='utf8') as data:
-        for line in data:
-            line = line.rstrip()
-            if line.startswith('#') or not len(line):
-                continue
-            splitlist = []
-            try:
-                splitlist = line.split("#", 4)
-            except ValueError:
-                continue
-            splitlist = [x for x in map(mystrip, splitlist)]
-            difficulty, question, answer, category, vspace = splitlist
-            qdicts[difficulty][len(qdicts[difficulty])] = question, answer, category, vspace
-            qdicts_all[quest_counter] = question, answer, category, difficulty, vspace
-            quest_counter += 1
+    question_lines = []
+    if question_file.endswith('.zip'):
+        base = os.path.basename(question_file)
+        with zf.open(os.path.splitext(base)[0]+'.txt', pwd=zip_passwd_bytes) as data:
+            for byte_line in data:
+                line = byte_line.decode('utf8')
+                question_lines.append(line)
+    else:
+        with open(question_file, 'r', encoding='utf8') as data:
+            for line in data:
+                question_lines.append(line)
+
+    for line in question_lines:
+        line = line.rstrip()
+        if line.startswith('#') or not len(line):
+            continue
+        splitlist = []
+        try:
+            splitlist = line.split("#", 4)
+        except ValueError:
+            continue
+        splitlist = [x for x in map(mystrip, splitlist)]
+        difficulty, question, answer, category, vspace = splitlist
+        qdicts[difficulty][len(qdicts[difficulty])] = question, answer, category, vspace
+        qdicts_all[quest_counter] = question, answer, category, difficulty, vspace
+        quest_counter += 1
 
     if task_var == 0:
         ran_qdicts = {}
