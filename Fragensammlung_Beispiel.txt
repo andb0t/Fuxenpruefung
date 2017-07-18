@@ -2,57 +2,57 @@
 ############# Fragensammlung fuer den Fuxenpruefungsgenerator ################
 ##############################################################################
 # Hier werden alle Fragen nacheinander aufgeschrieben.
-# Die Schwierigkeit der Frage muss mit
-# G(gross), M(mittel), K(klein), S(Scherz), P(permanent), A(archiviert)
-# angegeben werden, abgetrennt mit einem Doppelpunkt von der eigentlichen
-# Frage.
+# Die Schwierigkeit/Arbeitszeit einer Frage muss mit
+# H(high), M(medium), S(small), J(joke), P(permanent), A(archiviert)
+# angegeben werden, abgetrennt mit einem Hash (#) vom Rest der Frage.
 ##############################################################################
 # [Schwierigkeit] # [Frage] # [Antwort] # [Kategorie] # [Platz fuer Antwort]
-# Fuer Multiple Choice benutze "\\" fuer jede Option,zB:
-# K # Bitte ankreuzen:\\A\\B\\C # A # AGV # 0
+# Fuer Multiple Choice benutze "\\" fuer jede Option, z.B.:
+# S # Bitte ankreuzen:\\A\\B\\C # A # AGV # 0
 ##############################################################################
 
-K # Auf welche italienische Insel wurde Napoleon verbannt? # Elba # Geschichte # 1
-G # Auf welchen Burgen wurde Richard Löwenherz bei seiner Rückreise vom 3.Kreuzzug festgehalten? # Burg Dürnstein (Österreich) und Burg Trifels (Pfalz)  # Geschichte # 1
-K # Auf wen ist das Scherbengericht zurückzuführen? # Kleisthenes, Staatsmann von Athen 487 v.Chr. # Geschichte # 1
-K # Aus welchem Geschlecht stammte der König und Kaiser Friedrich Barbarossa? # Staufer # Geschichte # 1
-K # Aus welcher Stadt stammte Kolumbus? # Genua # Geschichte # 1
+
+S # Auf welche italienische Insel wurde Napoleon verbannt? # Elba # Geschichte # 1
+H # Auf welchen Burgen wurde Richard Löwenherz bei seiner Rückreise vom 3.Kreuzzug festgehalten? # Burg Dürnstein (Österreich) und Burg Trifels (Pfalz)  # Geschichte # 1
+S # Auf wen ist das Scherbengericht zurückzuführen? # Kleisthenes, Staatsmann von Athen 487 v.Chr. # Geschichte # 1
+S # Aus welchem Geschlecht stammte der König und Kaiser Friedrich Barbarossa? # Staufer # Geschichte # 1
+S # Aus welcher Stadt stammte Kolumbus? # Genua # Geschichte # 1
 M # Der wievielte Präsident der USA war Abraham Lincoln? # Der 16. # Geschichte # 1
 M # Durch was wurde der Zehnte später abgelöst? # Durch Steuer # Geschichte # 1
-K # Durch was wurde Pompeji zerstört? # Ausbruch des Vesuv # Geschichte # 1
+S # Durch was wurde Pompeji zerstört? # Ausbruch des Vesuv # Geschichte # 1
 M # Durch wen wurde der letzte Sultan in der Türkei gestürzt? # Kemal Atatuerk # Geschichte # 1
-K # Für welches Land unternahm Kolumbus seine Reisen? # Spanien # Geschichte # 1
-K # In welchem Jahr fand die Gründung der Bundesrepublik Deutschland statt? # 1949 # Geschichte # 1
-K # In welchem Jahr wurde Pompeji zerstört? # 79 # Geschichte # 1
-G # In welchem Staat wurde Tansu Ciller als erste Frau zum Ministerpräsidenten gewählt? # Tuerkei # Geschichte # 1
+S # Für welches Land unternahm Kolumbus seine Reisen? # Spanien # Geschichte # 1
+S # In welchem Jahr fand die Gründung der Bundesrepublik Deutschland statt? # 1949 # Geschichte # 1
+S # In welchem Jahr wurde Pompeji zerstört? # 79 # Geschichte # 1
+H # In welchem Staat wurde Tansu Ciller als erste Frau zum Ministerpräsidenten gewählt? # Tuerkei # Geschichte # 1
 M # In welcher schwäbischen Stadt befand sich die Stammburg von Götz von Berlichingen? # Jagsthausen # Geschichte # 1
 M # In welcher Zeit lernten die Menschen Eisen zu gewinnen und zu Verarbeiten? # Eisenzeit (800v.Chr. bis 0) # Geschichte # 1
-G # Mit wie vielen Jahren wurde Pu Yi Kaiser von China? # Mit drei Jahren # Geschichte # 1
-K # Nach welchem germanischen Volksstamm bezeichnet man noch heute sinnlose Beschädigungen? # Vandalen # Geschichte # 1
-K # Von welchem Land trennte sich Norwegen 1905? # Schweden # Geschichte # 1
+H # Mit wie vielen Jahren wurde Pu Yi Kaiser von China? # Mit drei Jahren # Geschichte # 1
+S # Nach welchem germanischen Volksstamm bezeichnet man noch heute sinnlose Beschädigungen? # Vandalen # Geschichte # 1
+S # Von welchem Land trennte sich Norwegen 1905? # Schweden # Geschichte # 1
 M # Von welchem Land war "König Johann ohne Land" der König? # England 1199-1216 # Geschichte # 1
-K # Wann fand die Reichskristallnacht statt? # am 09.11.1938 # Geschichte # 1
+S # Wann fand die Reichskristallnacht statt? # am 09.11.1938 # Geschichte # 1
 M # Wann fand die Schlacht bei Waterloo statt? # 1815 # Geschichte # 1
 P # Wann und in welchem Land fand die Novemberrevolution statt? # Natürlich im November, im Jahr 1918, im Deutschen Reich # Geschichte # 1
 P # Wann und in welchem Land fand die Oktoberrevolution statt? # Im Oktober natürlich, 1917 in Russland # Geschichte # 1
 P # Was war das größte Germanenvolk?\\Die Goten\\Die Kelten\\Die Cherusker\\Die Franken # Die Goten # Geschichte # 0
 A # Was folgte auf die Jungsteinzeit? # Die Bronzezeit # Geschichte # 1
 A # Was führte Papst Gregor der XIII im Jahre 1582 ein? # Den gregorianischen Kalender # Geschichte # 1
-S # Wer ist hier der Boss? # Der FM # Schmarrn # 1
-S # Wie fett ist der fetteste Mann der Welt auf einer Skala von 1 bis fett? # Fett # Schmarrn # 1
-K # Wieviele Zimmer gibt es im Wohnheim? # 17 # Schmarrn # 1
+J # Wer ist hier der Boss? # Der FM # Schmarrn # 1
+J # Wie fett ist der fetteste Mann der Welt auf einer Skala von 1 bis fett? # Fett # Schmarrn # 1
+S # Wieviele Zimmer gibt es im Wohnheim? # 17 # Schmarrn # 1
 M # Wie alt bist du? # 20 # Schmarrn # 1
 M # Wie gross bist du? # 1.75 m # Schmarrn # 1
 M # Wie cool ist Dr. Freshness? # Wie kalte Limo bei Hitze # Schmarrn # 1
-S # Was trinkt man am besten in 1/2 Liter Quanta? # Buttermilch # Schmarrn # 1
-K # Was ist 1+1? # 2 # Schmarrn # 1
-K # Was ist 2*2? # 4 # Schmarrn # 1
-S # Erzaehle einen Witz! # Nein # Schmarrn # 1
-S # Erzaehle keinen Witz! # Ja # Schmarrn # 1
-S # Erzaehle! # Es war einmal... # Schmarrn # 1
-G # Was war der Vorgänger der Jungsteinzeit? # Altsteinzeit # Geschichte # 1
-G # Was war die Folge des Prager Fenstersturzes? # Der 30jährige Krieg # Geschichte # 1
-K # Was war kennzeichnend für die Jungsteinzeit? # Die Sesshaftwerdung der Menschen und Betreiben von Landwirtschaft # Geschichte # 1
-K # Was waren die Tudors? # Din englisches Adelsgeschlecht # Geschichte # 1
-K # Was waren die typischen Reichsinsignien einer Kaiserkrönung im alten deutschen Reich? # Krone, Zepter, Reichsapfel # Geschichte # 1
-K # Was waren die Welfen? # Ein deutsches Fürstengeschlecht # Geschichte # 1
+J # Was trinkt man am besten in 1/2 Liter Quanta? # Buttermilch # Schmarrn # 1
+S # Was ist 1+1? # 2 # Schmarrn # 1
+S # Was ist 2*2? # 4 # Schmarrn # 1
+J # Erzaehle einen Witz! # Nein # Schmarrn # 1
+J # Erzaehle keinen Witz! # Ja # Schmarrn # 1
+J # Erzaehle! # Es war einmal... # Schmarrn # 1
+H # Was war der Vorgänger der Jungsteinzeit? # Altsteinzeit # Geschichte # 1
+H # Was war die Folge des Prager Fenstersturzes? # Der 30jährige Krieg # Geschichte # 1
+S # Was war kennzeichnend für die Jungsteinzeit? # Die Sesshaftwerdung der Menschen und Betreiben von Landwirtschaft # Geschichte # 1
+S # Was waren die Tudors? # Din englisches Adelsgeschlecht # Geschichte # 1
+S # Was waren die typischen Reichsinsignien einer Kaiserkrönung im alten deutschen Reich? # Krone, Zepter, Reichsapfel # Geschichte # 1
+S # Was waren die Welfen? # Ein deutsches Fürstengeschlecht # Geschichte # 1

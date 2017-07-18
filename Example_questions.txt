@@ -1,0 +1,17 @@
+##############################################################################
+###### Example question collection for the Fuxenpruefungsgenerator ###########
+##############################################################################
+# This is the collection of all possible questions.
+# The difficulty/work intensity related with a question is set via
+# H(high), M(medium), S(small), J(joke), P(permanent), A(archived)
+# and is separated with a hash (#) from the rest of the question.
+##############################################################################
+# [Difficulty] # [Question] # [Answer] # [Category] # [Empty lines for answer]
+# For Multiple Choice questions use "\\" for every option, e.g.:
+# S # Please chose one:\\A\\B\\C # A # Example # 0
+##############################################################################
+
+S # What is 1 + 1? # 2 # Maths # 1
+H # Why is the log of an exponential equal to the argument? # Per definition.  # Maths # 1
+M # What colors does a Zebra have? # White and black. # Nature # 1
+J # How many monkeys do you need to write a novel? # Many # Nature # 1

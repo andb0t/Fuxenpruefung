@@ -7,19 +7,16 @@ import webbrowser
 import subprocess
 
 
-# user interface
-dict_init = {}
-dict_init[0] = 'Erstelle neue Fuxenprüfung'
-dict_init[1] = 'Zeige Fragenstatistik'
-dict_init[2] = 'Zeige alle Fragen'
-
 base_path = ''
 # base_path = r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\\'
 fox_png = base_path+'fox.png'
 fox_ico = base_path+'fox.ico'
+language_button_png = base_path+'language.png'
+github_button_png = base_path+'github.png'
 answer_file = 'Fuxenloesung.txt'
 test_file = 'Fuxenpruefung.txt'
 question_file = ''
+current_lang = 'ger'
 
 
 def resource_path(relative_path):
@@ -35,20 +32,109 @@ def resource_path(relative_path):
 
 fox_png = resource_path(fox_png)
 fox_ico = resource_path(fox_ico)
+language_button_png = resource_path(language_button_png)
+github_button_png = resource_path(github_button_png)
+
+categories = []
+lg_names = {'ger': ['Kleine Frage', 'Mittlere Frage', 'Große Frage', 'Permanente Frage', 'Scherzfrage', 'Archiv'],
+            'eng': ['Small question', 'Medium question', 'Hard question', 'Permanent question', 'Joke question', 'Archive']}
+short_names = {'ger': ['S', 'M', 'H', 'P', 'J', 'A'],
+               'eng': ['S', 'M', 'H', 'P', 'J', 'A']}
+start_button_text = []
+start_button_texts = {'ger': ['Start', 'Schließen'],
+                      'eng': ['Go!', 'Close']}
+link_label_text = ''
+link_label_texts = {'ger': 'AGV Webseite öffnen',
+                    'eng': 'Open AGV website'}
+error_title = ''
+error_titles = {'ger': 'Fehler!',
+                'eng': 'Error!'}
+error_text = []
+error_texts = {'ger': 'Keine Fragensammlung ausgewaehlt! Nochmal!',
+               'eng': 'No question file selected. Retry!'}
+dict_init = []
+dict_inits = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen'],
+              'eng': ['Compile new exam', 'Show question statistics', 'Show all questions']}
+exam_title = ''
+exam_titles = {'ger': 'Fuxenprüfung',
+               'eng': 'Exam'}
+statistics_header = []
+statistics_headers = {'ger': ['Fragenpool nach Schwierigkeit', 'Fragenpool nach Thema'],
+                      'eng': ['Question pool by difficulty', 'Question pool by topic']}
+statistics_colheader = []
+statistics_colheaders = {'ger': ['Kategorie', 'Anzahl', 'Anteil'],
+                         'eng': ['Category', 'Number', 'Fraction']}
+allquestions_header = ''
+allquestions_headers = {'ger': 'Alle verfügbaren Fragen und Antworten',
+                        'eng': 'All available questions and answers'}
+allquestions_colheader = []
+allquestions_colheaders = {'ger': ['Frage', 'Antwort', 'Kateg.', 'Schw.', 'Platz'],
+                           'eng': ['Question', 'Answer', 'Categ.', 'Diff.', 'Space']}
+app_header = ''
+app_headers = {'ger': 'Fuxenprüfungsgenerator',
+               'eng': 'Exam generator'}
+
+reinit = False
 
 
-categories = [
-              [16, 'Kleine Fragen', 'K'],
-              [6, 'Mittlere Fragen', 'M'],
-              [4, 'Große Fragen', 'G'],
-              [1000, 'Permanente Fragen', 'P'],
-              [5, 'Scherzfragen', 'S'],
-              [0, 'Archiv', 'A'],
-             ]
+def switchLanguage():
+    if current_lang == 'ger':
+        setLanguage('eng')
+    elif current_lang == 'eng':
+        setLanguage('ger')
+    global reinit
+    reinit = True
 
 
-def callback(event):
+def setLanguage(key='ger'):
+    global current_lang
+    current_lang = key
+    global categories
+    categories = [
+                  [16, lg_names[key][0], short_names[key][0]],
+                  [6, lg_names[key][1], short_names[key][1]],
+                  [4, lg_names[key][2], short_names[key][2]],
+                  [1000, lg_names[key][3], short_names[key][3]],
+                  [5, lg_names[key][4], short_names[key][4]],
+                  [0, lg_names[key][5], short_names[key][5]],
+                 ]
+    global start_button_text
+    start_button_text = start_button_texts[key]
+    global link_label_text
+    link_label_text = link_label_texts[key]
+    global error_title
+    error_title = error_titles[key]
+    global error_text
+    error_text = error_texts[key]
+    global dict_init
+    dict_init = dict_inits[key]
+    global exam_title
+    exam_title = exam_titles[key]
+    global statistics_header
+    statistics_header = statistics_headers[key]
+    global statistics_colheader
+    statistics_colheader = statistics_colheaders[key]
+    global allquestions_header
+    allquestions_header = allquestions_headers[key]
+    global allquestions_colheader
+    allquestions_colheader = allquestions_colheaders[key]
+    global app_header
+    app_header = app_headers[key]
+
+
+def combine_funcs(*funcs):
+    def combined_func(*args, **kwargs):
+        for f in funcs:
+            f(*args, **kwargs)
+    return combined_func
+
+
+def callback_GitHub(event):
     webbrowser.open_new(r"https://github.com/andb0t/Fuxenpruefung/releases")
+
+
+def callback_AGV(event):
+    webbrowser.open_new(r"http://agv-muenchen.de/")
 
 
 class InitWindow:
@@ -61,15 +147,15 @@ class InitWindow:
         self.radio_var = IntVar()
         _row_count = 0
 
-        _head_label = Label(master, text='Fuxenprüfungsgenerator', font=("Helvetica", 16))
-        _head_label.grid(row=_row_count, columnspan=2)
+        _head_label = Label(master, text=app_header, font=("Helvetica", 16))
+        _head_label.grid(row=_row_count, columnspan=4)
         _row_count += 1
 
         _photo = PhotoImage(file=fox_png)
         _photo = _photo.subsample(5, 5)
         _photo_label = Label(master, image=_photo)
         _photo_label.photo = _photo
-        _photo_label.grid(row=_row_count, columnspan=2)
+        _photo_label.grid(row=_row_count, columnspan=4)
         _row_count += 1
 
         _col_idx = 0
@@ -78,35 +164,46 @@ class InitWindow:
             if short_name == 'P' or short_name == 'A':
                 continue
             cat_label = Label(master, text=lg_name)
-            cat_label.grid(row=_row_count-2, column=_col_idx)
+            cat_label.grid(row=_row_count-2, column=_col_idx+1)
             string_val = StringVar()
             string_val.set(default)
             cat_entry = Entry(master, textvariable=string_val, width=5)
-            cat_entry.grid(row=_row_count-1, column=_col_idx)
+            cat_entry.grid(row=_row_count-1, column=_col_idx+1)
             self.input_dict[short_name] = string_val
             _col_idx = (_col_idx + 1) % 2
             if (_col_idx == 0):
                 _row_count += 2
 
-        for key in dict_init.keys():
-            rad = Radiobutton(master, text=dict_init[key],
-                              variable=self.radio_var, value=key)
-            rad.grid(row=_row_count, columnspan=2)
+        for idx, task in enumerate(dict_init):
+            rad = Radiobutton(master, text=task, variable=self.radio_var, value=idx)
+            rad.grid(row=_row_count, columnspan=4)
             _row_count += 1
         self.radio_var.set(radioinit)
 
-        _start_button = Button(master, text="Start", fg="green",
-                               command=master.quit)
-        _start_button.grid(row=_row_count, column=0)
-        _quit_button = Button(master, text="Schließen", fg="red",
-                              command=sys.exit)
-        _quit_button.grid(row=_row_count, column=1)
+        _start_button = Button(master, text=start_button_text[0], fg="green", command=master.quit)
+        _start_button.grid(row=_row_count, column=0, columnspan=2)
+        _quit_button = Button(master, text=start_button_text[1], fg="red", command=sys.exit)
+        _quit_button.grid(row=_row_count, column=2, columnspan=2)
         _row_count += 1
 
-        _link_label = Label(master, text="Open on GitHub", fg="blue",
-                            cursor="hand2")
-        _link_label.grid(row=_row_count, column=0, columnspan=2)
-        _link_label.bind("<Button-1>", callback)
+        _language_button = Button(master, command=combine_funcs(switchLanguage, master.quit))
+        _language_button_image = PhotoImage(file=language_button_png)
+        _language_button_image = _language_button_image.subsample(3, 3)
+        _language_button.config(image=_language_button_image, width=40, height=20)
+        _language_button._language_button_image = _language_button_image
+        _language_button.grid(row=_row_count, column=0)
+
+        _github_button = Button(master)
+        _github_button_image = PhotoImage(file=github_button_png)
+        _github_button_image = _github_button_image.subsample(7, 7)
+        _github_button.config(image=_github_button_image, width=60, height=20)
+        _github_button._github_button_image = _github_button_image
+        _github_button.bind("<Button-1>", callback_GitHub)
+        _github_button.grid(row=_row_count, column=3)
+
+        _link_label = Label(master, text=link_label_text, fg="blue", cursor="hand2")
+        _link_label.grid(row=_row_count, column=1, columnspan=2)
+        _link_label.bind("<Button-1>", callback_AGV)
 
 
 class InfoWindow:
@@ -203,6 +300,7 @@ class TextWindow:
 task_var = 0
 while True:
 
+    setLanguage(current_lang)
     useGUI = True
     quest_numbers = {}
     if useGUI:
@@ -211,6 +309,10 @@ while True:
         mainroot.title('Fux!')
         mainapp = InitWindow(mainroot, task_var)
         mainroot.mainloop()
+        if reinit:
+            reinit = False
+            mainroot.destroy()
+            continue
         task_var = mainapp.radio_var.get()
         idx = 0
         for default, lg_name, short_name in categories:
@@ -222,8 +324,7 @@ while True:
             idx += 1
 
         # ask for question file
-        FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt',
-                               filetypes=[('Text files', '*.txt')])
+        FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt', filetypes=[('Text files', '*.txt')])
         if not question_file:
             question_file = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
 
@@ -235,13 +336,13 @@ while True:
         for default, lg_name, short_name in categories:
             quest_numbers[short_name] = default
 
-    print('Gewaehlte Aufgabe:', dict_init[task_var])
+    print('Selected task:', dict_init[task_var])
     if not question_file:
         root = Tk()
         root.iconbitmap(fox_ico)
-        root.title('Fehler!')
+        root.title(error_title)
         lines = []
-        lines.append('Keine Fragensammlung ausgewaehlt! Nochmal!')
+        lines.append(error_text)
         app = InfoWindow(root, lines)
         root.mainloop()
         root.destroy()
@@ -280,7 +381,7 @@ while True:
             ran_qdicts[qdict_str] = ran_QnA
 
         with open(test_file, 'w', encoding='utf8') as myfile:
-            print("Fuxenprüfung\n", file=myfile)
+            print(exam_title+"\n", file=myfile)
             count = 0
             for default, lg_name, short_name in categories:
                 for question, answer, vspace in ran_qdicts[short_name]:
@@ -300,14 +401,14 @@ while True:
         tot_n_questions = len(qdicts_all)
         # create message
         lines = []
-        lines.append('Fragenpool nach Schwierigkeit')
-        lines.append(('Kategorie', 'Anzahl', 'Anteil'))
+        lines.append(statistics_header[0])
+        lines.append(statistics_colheaders)
         for default, lg_name, short_name in categories:
             lines.append((lg_name+': ', str(len(qdicts[short_name])),
                          '{:.0f} %'.format(100*len(qdicts[short_name])/tot_n_questions)))
 
-        lines.append('Fragenpool nach Thema')
-        lines.append(('Kategorie', 'Anzahl', 'Anteil'))
+        lines.append(statistics_header[1])
+        lines.append(statistics_colheaders)
         count_dict = Counter([x[2] for x in qdicts_all.values()])
         keys = list(count_dict.keys())
         keys.sort()
@@ -324,9 +425,9 @@ while True:
 
     elif task_var == 2:
 
-        header = 'Alle verfügbaren Fragen und Antworten'
+        header = allquestions_header
         lines = []
-        lines.append(('Frage', 'Antwort', 'Kateg.', 'Schw.', 'Platz'))
+        lines.append(allquestions_colheader)
         for key in qdicts_all:
             lines.append((qdicts_all[key][0],
                           qdicts_all[key][1],

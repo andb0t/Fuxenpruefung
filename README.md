@@ -11,5 +11,4 @@
 # This program is primarily written for compiling exams
 #
 # Languages:
-# The program interface is still only available in German
-# but the English version will come shortly.
+# The program is available in English and German
