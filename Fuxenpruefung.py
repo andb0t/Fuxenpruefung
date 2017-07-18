@@ -6,6 +6,7 @@ from tkinter import filedialog, simpledialog
 import webbrowser
 import subprocess
 import zipfile
+from time import sleep
 
 
 base_path = ''
@@ -14,8 +15,6 @@ fox_png = base_path+'fox.png'
 fox_ico = base_path+'fox.ico'
 language_button_png = base_path+'language.png'
 github_button_png = base_path+'github.png'
-answer_file = 'Fuxenloesung.txt'
-test_file = 'Fuxenpruefung.txt'
 question_file = ''
 
 
@@ -44,9 +43,9 @@ error_texts = {'ger': ['Keine Fragensammlung ausgewaehlt! Nochmal!', 'Falsches P
 dict_init = []
 dict_inits = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen'],
               'eng': ['Compile new exam', 'Show question statistics', 'Show all questions']}
-exam_title = ''
-exam_titles = {'ger': 'Fuxenprüfung',
-               'eng': 'Exam'}
+exam_title = []
+exam_titles = {'ger': ['Fuxenprüfung', 'Fuxenlösung'],
+               'eng': ['Exam', 'Solution']}
 statistics_header = []
 statistics_headers = {'ger': ['Fragenpool nach Schwierigkeit', 'Fragenpool nach Thema'],
                       'eng': ['Question pool by difficulty', 'Question pool by topic']}
@@ -65,6 +64,9 @@ app_headers = {'ger': 'Fuxenprüfungsgenerator',
 password_text = []
 password_texts = {'ger': ['Passwort', 'Datei ist verschlüsselt! Bitte Passwort eingeben:'],
                   'eng': ['Password', 'File is encryoted! Please enter password:']}
+exam_file = []
+exam_files = {'ger': ['Fuxenpruefung.txt', 'Fuxenloesung.txt'],
+              'eng': ['Exam.txt', 'Solution.txt']}
 
 
 def setLanguage(key='ger'):
@@ -103,6 +105,8 @@ def setLanguage(key='ger'):
     app_header = app_headers[key]
     global password_text
     password_text = password_texts[key]
+    global exam_file
+    exam_file = exam_files[key]
 
 
 def switchLanguage():
@@ -428,8 +432,8 @@ while True:
             ran_QnA = [(qdict[key][:2]+(qdict[key][3],)) for key in keys][:quest_numbers[qdict_str]]
             ran_qdicts[qdict_str] = ran_QnA
 
-        with open(test_file, 'w', encoding='utf8') as myfile:
-            print(exam_title+"\n", file=myfile)
+        with open(exam_file[0], 'w', encoding='utf8') as myfile:
+            print(exam_title[0]+"\n", file=myfile)
             count = 0
             for default, lg_name, short_name in categories:
                 for question, answer, vspace in ran_qdicts[short_name]:
@@ -440,8 +444,19 @@ while True:
                         print('\to '+item, file=myfile)
                     print('\n'*int(vspace), file=myfile)
 
-        sys_command = 'notepad '+test_file
-        # os.system(sys_command)
+
+        with open(exam_file[1], 'w', encoding='utf8') as myfile:
+            print(exam_title[1]+"\n", file=myfile)
+            count = 0
+            for default, lg_name, short_name in categories:
+                for question, answer, vspace in ran_qdicts[short_name]:
+                    count += 1
+                    print('{}.'.format(count), answer, file=myfile)
+
+        sys_command = 'notepad '+exam_file[1]
+        subprocess.Popen(sys_command)
+        sleep(0.1)
+        sys_command = 'notepad '+exam_file[0]
         subprocess.Popen(sys_command)
 
     elif task_var == 1:
