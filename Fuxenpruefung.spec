@@ -18,6 +18,8 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 a.datas += [('fox.ico', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\fox.ico', 'DATA')]
 a.datas += [('fox.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\fox.png', 'DATA')]
+a.datas += [('github.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\github.png', 'DATA')]
+a.datas += [('language.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\language.png', 'DATA')]
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
