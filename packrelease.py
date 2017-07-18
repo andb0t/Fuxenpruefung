@@ -11,17 +11,17 @@ parser.add_option("-p", "--public", dest="ispublic", default=True,
 
 # First pack release in unencrypted zip
 command = '7z a -tzip'
-archivename = 'Fuxenpruefung.zip'
-files = [r'"C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\dist\Fuxenpruefung.exe"']
+archivename = 'fuxenpruefung.zip'
+files = [r'"C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\dist\fuxenpruefung.exe"']
 question_file = ""
-question_file = 'Questions/Fragensammlung_Beispiel.txt'
+question_file = 'questions/fragensammlung_beispiel.txt'
 files.append(question_file)
-question_file = 'Questions/Example_questions.txt'
+question_file = 'questions/example_questions.txt'
 files.append(question_file)
-question_file = 'Questions/Fragensammlung_Beispiel.zip'
+question_file = 'questions/fragensammlung_beispiel.zip'
 files.append(question_file)
 if not options.ispublic:
-    question_file = 'Questions/Fragensammlung.txt'
+    question_file = 'questions/fragensammlung.txt'
     files.append(question_file)
 allfiles = functools.reduce(lambda a, b: a + ' ' + b, files)
 os.system('del '+archivename)
@@ -30,9 +30,9 @@ os.system(command+' '+archivename+' '+allfiles)
 # then encrypt secret question file
 print('Also recreate encrypted question file? (Y/n):')
 if input() == 'Y':
-    archivename = 'Fragensammlung.zip'
+    archivename = 'fragensammlung.zip'
     os.system('del '+archivename)
     print('Enter password to encrypt question file:')
     passwd = input()
-    command = 'cd Questions & 7z a -tzip -p'+passwd+' '+archivename+' Fragensammlung.txt'
+    command = 'cd questions & 7z a -tzip -p'+passwd+' '+archivename+' fragensammlung.txt'
     os.system(command)

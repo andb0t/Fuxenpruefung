@@ -11,10 +11,10 @@ from time import sleep
 
 base_path = ''
 # base_path = r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\\'
-fox_png = base_path+r'Images\fox.png'
-fox_ico = base_path+r'Images\fox.ico'
-language_button_png = base_path+'Images\language.png'
-github_button_png = base_path+'Images\github.png'
+fox_png = base_path+r'images\fox.png'
+fox_ico = base_path+r'images\fox.ico'
+language_button_png = base_path+'images\language.png'
+github_button_png = base_path+'images\github.png'
 question_file = ''
 
 
@@ -65,8 +65,8 @@ password_text = []
 password_texts = {'ger': ['Passwort', 'Datei ist verschlüsselt! Bitte Passwort eingeben:'],
                   'eng': ['Password', 'File is encryoted! Please enter password:']}
 exam_file = []
-exam_files = {'ger': ['Fuxenpruefung.txt', 'Fuxenloesung.txt'],
-              'eng': ['Exam.txt', 'Solution.txt']}
+exam_files = {'ger': ['fuxenpruefung.txt', 'fuxenloesung.txt'],
+              'eng': ['exam.txt', 'solution.txt']}
 
 
 def setLanguage(key='ger'):
