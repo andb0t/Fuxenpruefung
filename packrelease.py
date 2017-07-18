@@ -14,12 +14,14 @@ command = '7z a -tzip'
 archivename = 'Fuxenpruefung.zip'
 files = [r'"C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\dist\Fuxenpruefung.exe"']
 question_file = ""
-question_file = 'Fragensammlung_Beispiel.txt'
+question_file = 'Questions/Fragensammlung_Beispiel.txt'
 files.append(question_file)
-question_file = 'Example_questions.txt'
+question_file = 'Questions/Example_questions.txt'
+files.append(question_file)
+question_file = 'Questions/Fragensammlung_Beispiel.zip'
 files.append(question_file)
 if not options.ispublic:
-    question_file = 'Fragensammlung.txt'
+    question_file = 'Questions/Fragensammlung.txt'
     files.append(question_file)
 allfiles = functools.reduce(lambda a, b: a + ' ' + b, files)
 os.system('del '+archivename)
@@ -32,5 +34,5 @@ if input() == 'Y':
     os.system('del '+archivename)
     print('Enter password to encrypt question file:')
     passwd = input()
-    command = '7z a -tzip -p'+passwd+' '+archivename+' Fragensammlung.txt'
+    command = 'cd Questions & 7z a -tzip -p'+passwd+' '+archivename+' Fragensammlung.txt'
     os.system(command)

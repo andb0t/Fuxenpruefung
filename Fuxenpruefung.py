@@ -11,10 +11,10 @@ from time import sleep
 
 base_path = ''
 # base_path = r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\\'
-fox_png = base_path+'fox.png'
-fox_ico = base_path+'fox.ico'
-language_button_png = base_path+'language.png'
-github_button_png = base_path+'github.png'
+fox_png = base_path+r'Images\fox.png'
+fox_ico = base_path+r'Images\fox.ico'
+language_button_png = base_path+'Images\language.png'
+github_button_png = base_path+'Images\github.png'
 question_file = ''
 
 
