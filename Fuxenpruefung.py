@@ -1,7 +1,7 @@
 import sys
 import os
 import random
-from tkinter import *
+import tkinter as tk
 from tkinter import filedialog, simpledialog
 import webbrowser
 import subprocess
@@ -156,16 +156,16 @@ class InitWindow:
         master.protocol("WM_DELETE_WINDOW", sys.exit)
 
         self.input_dict = {}
-        self.radio_var = IntVar()
+        self.radio_var = tk.IntVar()
         _row_count = 0
 
-        _head_label = Label(master, text=app_header, font=("Helvetica", 16))
+        _head_label = tk.Label(master, text=app_header, font=("Helvetica", 16))
         _head_label.grid(row=_row_count, columnspan=4)
         _row_count += 1
 
-        _photo = PhotoImage(file=fox_png)
+        _photo = tk.PhotoImage(file=fox_png)
         _photo = _photo.subsample(5, 5)
-        _photo_label = Label(master, image=_photo)
+        _photo_label = tk.Label(master, image=_photo)
         _photo_label.photo = _photo
         _photo_label.grid(row=_row_count, columnspan=4)
         _row_count += 1
@@ -175,11 +175,11 @@ class InitWindow:
         for default, lg_name, short_name in categories:
             if short_name == 'P' or short_name == 'A':
                 continue
-            cat_label = Label(master, text=lg_name)
+            cat_label = tk.Label(master, text=lg_name)
             cat_label.grid(row=_row_count-2, column=_col_idx+1)
-            string_val = StringVar()
+            string_val = tk.StringVar()
             string_val.set(default)
-            cat_entry = Entry(master, textvariable=string_val, width=5)
+            cat_entry = tk.Entry(master, textvariable=string_val, width=5)
             cat_entry.grid(row=_row_count-1, column=_col_idx+1)
             self.input_dict[short_name] = string_val
             _col_idx = (_col_idx + 1) % 2
@@ -187,33 +187,33 @@ class InitWindow:
                 _row_count += 2
 
         for idx, task in enumerate(dict_init):
-            rad = Radiobutton(master, text=task, variable=self.radio_var, value=idx)
+            rad = tk.Radiobutton(master, text=task, variable=self.radio_var, value=idx)
             rad.grid(row=_row_count, columnspan=4)
             _row_count += 1
         self.radio_var.set(radioinit)
 
-        _start_button = Button(master, text=start_button_text[0], fg="green", font="bold", command=master.quit)
+        _start_button = tk.Button(master, text=start_button_text[0], fg="green", font="bold", command=master.quit)
         _start_button.grid(row=_row_count, column=0, columnspan=2)
-        _quit_button = Button(master, text=start_button_text[1], fg="red", font="bold", command=sys.exit)
+        _quit_button = tk.Button(master, text=start_button_text[1], fg="red", font="bold", command=sys.exit)
         _quit_button.grid(row=_row_count, column=2, columnspan=2)
         _row_count += 1
 
-        _language_button = Button(master, command=combine_funcs(switchLanguage, master.quit))
-        _language_button_image = PhotoImage(file=language_button_png)
+        _language_button = tk.Button(master, command=combine_funcs(switchLanguage, master.quit))
+        _language_button_image = tk.PhotoImage(file=language_button_png)
         _language_button_image = _language_button_image.subsample(3, 3)
         _language_button.config(image=_language_button_image, width=30, height=20)
         _language_button._language_button_image = _language_button_image
         _language_button.grid(row=_row_count, column=0)
 
-        _github_button = Button(master)
-        _github_button_image = PhotoImage(file=github_button_png)
+        _github_button = tk.Button(master)
+        _github_button_image = tk.PhotoImage(file=github_button_png)
         _github_button_image = _github_button_image.subsample(7, 7)
         _github_button.config(image=_github_button_image, width=60, height=20)
         _github_button._github_button_image = _github_button_image
         _github_button.bind("<Button-1>", callback_GitHub)
         _github_button.grid(row=_row_count, column=3)
 
-        _link_label = Label(master, text=link_label_text, fg="blue", cursor="hand2")
+        _link_label = tk.Label(master, text=link_label_text, fg="blue", cursor="hand2")
         _link_label.grid(row=_row_count, column=1, columnspan=2)
         _link_label.bind("<Button-1>", callback_AGV)
 
@@ -227,28 +227,28 @@ class InfoWindow:
         _row_count = 0
         _col_count = 0
         _widths = (200, 50, 50)
-        _stickys = (W, None, None)
+        _stickys = (tk.W, None, None)
         for line in lines:
             if isinstance(line, str):
-                one_msg = Message(master, text=line, width=200)
+                one_msg = tk.Message(master, text=line, width=200)
                 one_msg.grid(row=_row_count, columnspan=3)
             elif isinstance(line, tuple):
                 _col_count = 0
                 for item in line:
-                    multi_msg = Message(master, text=line[_col_count],
-                                        width=_widths[_col_count])
+                    multi_msg = tk.Message(master, text=line[_col_count],
+                                           width=_widths[_col_count])
                     multi_msg.grid(row=_row_count, column=_col_count,
                                    sticky=_stickys[_col_count])
                     _col_count += 1
             _row_count += 1
 
-        _OK_button = Button(master, text="OK", command=master.quit)
+        _OK_button = tk.Button(master, text="OK", command=master.quit)
         _OK_button.grid(row=_row_count, columnspan=3)
 
 
 def sticky_gen(count):
     if count > 0:
-        return W
+        return tk.W
 
 
 def mystrip(a):
@@ -269,23 +269,23 @@ class TextWindow:
 
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
-        _head_label = Label(master, text=header)
-        _head_label.pack(side=TOP)
+        _head_label = tk.Label(master, text=header)
+        _head_label.pack(side=tk.TOP)
 
-        _OK_button = Button(master, text="OK", command=master.quit)
-        _OK_button.pack(side=TOP)
+        _OK_button = tk.Button(master, text="OK", command=master.quit)
+        _OK_button.pack(side=tk.TOP)
 
         # --- create canvas with scrollbar ---
-        _canvas = Canvas(master, width=1200, height=600)
-        _canvas.pack(side=LEFT)
-        _scrollbar = Scrollbar(master, command=_canvas.yview)
-        _scrollbar.pack(side=LEFT, fill='y')
+        _canvas = tk.Canvas(master, width=1200, height=600)
+        _canvas.pack(side=tk.LEFT)
+        _scrollbar = tk.Scrollbar(master, command=_canvas.yview)
+        _scrollbar.pack(side=tk.LEFT, fill='y')
         _canvas.configure(yscrollcommand=_scrollbar.set)
         # update scrollregion after starting 'mainloop'
         # when all widgets are in canvas
         _canvas.bind('<Configure>', make_on_configure(_canvas))
         # --- put frame in canvas ---
-        _frame = Frame(_canvas)
+        _frame = tk.Frame(_canvas)
         _canvas.create_window((0, 0), window=_frame, anchor='nw')
         # --- add widgets in frame ---
         _line_count = 0
@@ -299,8 +299,8 @@ class TextWindow:
             else:
                 line.insert(0, '#')
             for item in line:
-                mytext = StringVar(value=item)
-                text_entry = Entry(_frame, textvariable=mytext,
+                mytext = tk.StringVar(value=item)
+                text_entry = tk.Entry(_frame, textvariable=mytext,
                                    state='readonly', width=_widths[_col_count])
                 # text_entry.pack(side = LEFT)
                 text_entry.grid(row=_line_count, column=_col_count,
@@ -317,7 +317,7 @@ while True:
     useGUI = True
     quest_numbers = {}
     if useGUI:
-        mainroot = Tk()
+        mainroot = tk.Tk()
         mainroot.iconbitmap(fox_ico)
         mainroot.title('Fux!')
         mainapp = InitWindow(mainroot, task_var)
@@ -375,7 +375,7 @@ while True:
             error_idx = 0
         elif password_error:
             error_idx = 1
-        root = Tk()
+        root = tk.Tk()
         root.iconbitmap(fox_ico)
         root.title(error_title)
         lines = []
@@ -444,7 +444,6 @@ while True:
                         print('\to '+item, file=myfile)
                     print('\n'*int(vspace), file=myfile)
 
-
         with open(exam_file[1], 'w', encoding='utf8') as myfile:
             print(exam_title[1]+"\n", file=myfile)
             count = 0
@@ -479,7 +478,7 @@ while True:
             lines.append((key+': ', str(count_dict[key]),
                          '{:.0f} %'.format(100*count_dict[key]/tot_n_questions)))
 
-        root = Tk()
+        root = tk.Tk()
         root.iconbitmap(fox_ico)
         root.title('Fux!')
         app = InfoWindow(root, lines)
@@ -499,7 +498,7 @@ while True:
                           qdicts_all[key][4],
                           ))
 
-        root = Tk()
+        root = tk.Tk()
         root.iconbitmap(fox_ico)
         root.title('Fux!')
         app = TextWindow(root, header, lines)
