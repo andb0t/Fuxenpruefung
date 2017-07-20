@@ -230,9 +230,23 @@ class InitWindow:
         _link_label.grid(row=_row_count, column=1, columnspan=2)
         _link_label.bind("<Button-1>", callback_AGV)
 
+        thisradio = self.radio_var
+
+        def _toggleup(self):
+            old = thisradio.get()
+            new = max(old - 1, 0)
+            thisradio.set(new)
+
+        def _toggledown(self):
+            old = thisradio.get()
+            new = min(old + 1, len(dict_init)-1)
+            thisradio.set(new)
+
         def _quit(self):
             master.quit()
         master.bind('<Escape>', sys.exit)
+        master.bind('<Up>', _toggleup)
+        master.bind('<Down>',  _toggledown)
         master.bind('<Return>', _quit)
 
 
