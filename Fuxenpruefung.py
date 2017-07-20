@@ -7,7 +7,7 @@ import webbrowser
 import subprocess
 import zipfile
 from time import sleep
-from i18n import I18N
+# from i18n import I18N
 
 
 base_path = ''
@@ -150,9 +150,21 @@ def callback_AGV(event):
     webbrowser.open_new(r"http://agv-muenchen.de/")
 
 
+def center_window(root, xdist=0, ydist=0):
+    # get screen width and height
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    # calculate position x and y coordinates
+    x = (screen_width*xdist)
+    y = (screen_height*ydist)
+    root.geometry('+%d+%d' % (x, y))
+
+
 class InitWindow:
 
     def __init__(self, master, radioinit=0):
+
+        center_window(master)
 
         master.protocol("WM_DELETE_WINDOW", sys.exit)
 
@@ -223,6 +235,8 @@ class InfoWindow:
 
     def __init__(self, master, lines):
 
+        center_window(master)
+
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
         _row_count = 0
@@ -268,6 +282,8 @@ class TextWindow:
 
     def __init__(self, master, header, lines):
 
+        center_window(master)
+
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
         _head_label = tk.Label(master, text=header)
@@ -301,8 +317,7 @@ class TextWindow:
                 line.insert(0, '#')
             for item in line:
                 mytext = tk.StringVar(value=item)
-                text_entry = tk.Entry(_frame, textvariable=mytext,
-                                   state='readonly', width=_widths[_col_count])
+                text_entry = tk.Entry(_frame, textvariable=mytext, state='readonly', width=_widths[_col_count])
                 # text_entry.pack(side = LEFT)
                 text_entry.grid(row=_line_count, column=_col_count,
                                 sticky=sticky_gen(_col_count))
