@@ -282,23 +282,12 @@ class InfoWindow:
         def _quit(self):
             master.quit()
         master.bind('<Return>', _quit)
+        master.bind('<Escape>', _quit)
 
 
 def sticky_gen(count):
     if count > 0:
         return tk.W
-
-
-def mystrip(a):
-    return a.strip()
-
-
-def make_on_configure(canvas):
-    def on_configure(event):
-        # update scrollregion after starting 'mainloop'
-        # when all widgets are in canvas
-        canvas.configure(scrollregion=canvas.bbox('all'))
-    return on_configure
 
 
 class TextWindow:
@@ -323,7 +312,7 @@ class TextWindow:
         _canvas.configure(yscrollcommand=_scrollbar.set)
         # update scrollregion after starting 'mainloop'
         # when all widgets are in canvas
-        _canvas.bind('<Configure>', make_on_configure(_canvas))
+        _canvas.bind('<Configure>', lambda event: _canvas.configure(scrollregion=_canvas.bbox('all')))
         # --- put frame in canvas ---
         _frame = tk.Frame(_canvas)
         _canvas.create_window((0, 0), window=_frame, anchor='nw')
@@ -350,6 +339,16 @@ class TextWindow:
         def _quit(self):
             master.quit()
         master.bind('<Return>', _quit)
+        master.bind('<Escape>', _quit)
+
+        _canvas.bind("<Up>", lambda event: _canvas.yview_scroll(-1, "units"))
+        _canvas.bind("<Down>", lambda event: _canvas.yview_scroll(1, "units"))
+        _canvas.bind_all("<MouseWheel>", lambda event: _canvas.yview_scroll(-1*int(event.delta/50), "units"))
+        _canvas.focus_set()
+
+
+def mystrip(a):
+    return a.strip()
 
 
 task_var = 0
