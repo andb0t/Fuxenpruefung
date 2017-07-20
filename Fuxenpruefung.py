@@ -230,6 +230,11 @@ class InitWindow:
         _link_label.grid(row=_row_count, column=1, columnspan=2)
         _link_label.bind("<Button-1>", callback_AGV)
 
+        def _quit(self):
+            master.quit()
+        master.bind('<Escape>', sys.exit)
+        master.bind('<Return>', _quit)
+
 
 class InfoWindow:
 
@@ -259,6 +264,10 @@ class InfoWindow:
 
         _OK_button = tk.Button(master, text="OK", command=master.quit)
         _OK_button.grid(row=_row_count, columnspan=3)
+
+        def _quit(self):
+            master.quit()
+        master.bind('<Return>', _quit)
 
 
 def sticky_gen(count):
@@ -324,6 +333,10 @@ class TextWindow:
                 _col_count += 1
             _line_count += 1
 
+        def _quit(self):
+            master.quit()
+        master.bind('<Return>', _quit)
+
 
 task_var = 0
 zip_passwd = ''
@@ -337,6 +350,7 @@ while True:
         mainroot.iconbitmap(fox_ico)
         mainroot.title('Fux!')
         mainapp = InitWindow(mainroot, task_var)
+        mainroot.focus_force()
         mainroot.mainloop()
         if reinit:
             reinit = False
@@ -498,6 +512,7 @@ while True:
         root.iconbitmap(fox_ico)
         root.title('Fux!')
         app = InfoWindow(root, lines)
+        root.focus_force()
         root.mainloop()
         root.destroy()
 
@@ -518,6 +533,7 @@ while True:
         root.iconbitmap(fox_ico)
         root.title('Fux!')
         app = TextWindow(root, header, lines)
+        root.focus_force()
         root.mainloop()
         root.destroy()
 
