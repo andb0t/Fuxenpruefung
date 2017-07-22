@@ -23,7 +23,6 @@ def resource_path(base_path, relative_path):
 
 
 fox_ico = resource_path('', r'images\fox.ico')
-
 fox_png = resource_path('', r'images\fox.png')
 language_button_png = resource_path('', 'images\language.png')
 github_button_png = resource_path('', 'images\github.png')
@@ -34,6 +33,8 @@ def switch_language(lang):
     if lang == 'ger':
         return 'eng'
     elif lang == 'eng':
+        return 'bay'
+    elif lang == 'bay':
         return 'ger'
 
 
