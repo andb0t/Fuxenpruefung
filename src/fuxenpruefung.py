@@ -9,7 +9,7 @@ import tkinter as tk
 from tkinter import filedialog, simpledialog
 
 import i18n
-import tkwindows
+import gui
 
 
 def resource_path(base_path, relative_path):
@@ -30,7 +30,7 @@ github_button_png = resource_path('', 'images\github.png')
 png_list = [fox_png, language_button_png, github_button_png]
 
 
-def switchLanguage(lang):
+def switch_language(lang):
     if lang == 'ger':
         return 'eng'
     elif lang == 'eng':
@@ -53,11 +53,11 @@ while True:
     mainroot = tk.Tk()
     mainroot.iconbitmap(fox_ico)
     mainroot.title('Fux!')
-    mainapp = tkwindows.InitWindow(mainroot, categories, lang, png_list, task_var)
+    mainapp = gui.InitWindow(mainroot, categories, lang, png_list, task_var)
     mainroot.focus_force()
     mainroot.mainloop()
     if mainapp.switch_lang.get():
-        lang = switchLanguage(lang)
+        lang = switch_language(lang)
     if mainapp.reinit.get():
         mainroot.destroy()
         continue
@@ -111,7 +111,7 @@ while True:
         root.title(i18n.error_title[lang])
         lines = []
         lines.append(i18n.error_text[lang][error_idx])
-        app = tkwindows.InfoWindow(root, lines)
+        app = gui.InfoWindow(root, lines)
         root.focus_force()
         root.mainloop()
         root.destroy()
@@ -213,7 +213,7 @@ while True:
         root = tk.Tk()
         root.iconbitmap(fox_ico)
         root.title('Fux!')
-        app = tkwindows.InfoWindow(root, lines)
+        app = gui.InfoWindow(root, lines)
         root.focus_force()
         root.mainloop()
         root.destroy()
@@ -234,7 +234,7 @@ while True:
         root = tk.Tk()
         root.iconbitmap(fox_ico)
         root.title('Fux!')
-        app = tkwindows.TextWindow(root, header, lines)
+        app = gui.TextWindow(root, header, lines)
         root.focus_force()
         root.mainloop()
         root.destroy()
