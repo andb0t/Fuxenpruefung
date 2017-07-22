@@ -16,10 +16,10 @@ a = Analysis(['fuxenpruefung.py'],
              cipher=block_cipher)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
-a.datas += [(r'images\fox.ico', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\images\fox.ico', 'DATA')]
-a.datas += [(r'images\fox.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\images\fox.png', 'DATA')]
-a.datas += [(r'images\github.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\images\github.png', 'DATA')]
-a.datas += [(r'images\language.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\images\language.png', 'DATA')]
+a.datas += [(r'images\fox.ico', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\fox.ico', 'DATA')]
+a.datas += [(r'images\fox.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\fox.png', 'DATA')]
+a.datas += [(r'images\github.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\github.png', 'DATA')]
+a.datas += [(r'images\language.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\language.png', 'DATA')]
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
