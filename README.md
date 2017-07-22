@@ -18,3 +18,8 @@ one delivered within the project (password: 'password').
 
 Languages:
 The program is available in English and German
+
+Compilation for windows:
+pyinstaller fuxenpruefung.spec
+or
+pyinstaller -w -F -i fox.ico fuxenpruefung.py
