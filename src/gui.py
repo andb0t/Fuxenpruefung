@@ -151,7 +151,7 @@ class InfoWindow:
             if isinstance(line, str):
                 one_msg = tk.Message(master, text=line, width=200)
                 one_msg.grid(row=_row_count, columnspan=3)
-            elif isinstance(line, tuple):
+            elif isinstance(line, list) or isinstance(line, tuple):
                 _col_count = 0
                 for item in line:
                     multi_msg = tk.Message(master, text=line[_col_count],
