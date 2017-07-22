@@ -13,40 +13,10 @@ import i18n
 
 
 base_path = ''
-# base_path = r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\\'
 fox_png = base_path+r'images\fox.png'
 fox_ico = base_path+r'images\fox.ico'
 language_button_png = base_path+'images\language.png'
 github_button_png = base_path+'images\github.png'
-question_file = ''
-
-
-reinit = False
-lang = 'ger'
-categories = []
-
-
-def setLanguage(key='ger'):
-    global lang
-    lang = key
-    global categories
-    categories = [
-                  [16, i18n.lg_names[lang][0], i18n.short_names[lang][0]],
-                  [6, i18n.lg_names[lang][1], i18n.short_names[lang][1]],
-                  [4, i18n.lg_names[lang][2], i18n.short_names[lang][2]],
-                  [1000, i18n.lg_names[lang][3], i18n.short_names[lang][3]],
-                  [5, i18n.lg_names[lang][4], i18n.short_names[lang][4]],
-                  [0, i18n.lg_names[lang][5], i18n.short_names[lang][5]],
-                 ]
-
-
-def switchLanguage():
-    if lang == 'ger':
-        setLanguage('eng')
-    elif lang == 'eng':
-        setLanguage('ger')
-    global reinit
-    reinit = True
 
 
 def resource_path(relative_path):
@@ -63,6 +33,21 @@ fox_png = resource_path(fox_png)
 fox_ico = resource_path(fox_ico)
 language_button_png = resource_path(language_button_png)
 github_button_png = resource_path(github_button_png)
+
+
+lang = 'ger'
+
+
+def setLanguage(key='ger'):
+    global lang
+    lang = key
+
+
+def switchLanguage():
+    if lang == 'ger':
+        setLanguage('eng')
+    elif lang == 'eng':
+        setLanguage('ger')
 
 
 def combine_funcs(*funcs):
@@ -92,7 +77,7 @@ def center_window(root, xdist=0, ydist=0):
 
 class InitWindow:
 
-    def __init__(self, master, radioinit=0):
+    def __init__(self, master, categories, radioinit=0):
 
         center_window(master)
 
@@ -100,6 +85,7 @@ class InitWindow:
 
         self.input_dict = {}
         self.radio_var = tk.IntVar()
+        self.reinit = tk.IntVar()
         _row_count = 0
 
         _head_label = tk.Label(master, text=i18n.app_header[lang], font=("Helvetica", 16))
@@ -143,7 +129,7 @@ class InitWindow:
         _quit_button.grid(row=_row_count, column=2, columnspan=2)
         _row_count += 1
 
-        _language_button = tk.Button(master, command=combine_funcs(switchLanguage, master.quit))
+        _language_button = tk.Button(master, command=combine_funcs(switchLanguage, master.quit, self.reinit.set(1)))
         _language_button_image = tk.PhotoImage(file=language_button_png)
         _language_button_image = _language_button_image.subsample(3, 3)
         _language_button.config(image=_language_button_image, width=30, height=20)
@@ -285,18 +271,28 @@ def mystrip(a):
 
 task_var = 0
 zip_passwd = ''
+question_file = ''
 while True:
-
     setLanguage(lang)
+    reinit = False
+    categories = [
+                  [16, i18n.lg_names[lang][0], i18n.short_names[lang][0]],
+                  [6, i18n.lg_names[lang][1], i18n.short_names[lang][1]],
+                  [4, i18n.lg_names[lang][2], i18n.short_names[lang][2]],
+                  [1000, i18n.lg_names[lang][3], i18n.short_names[lang][3]],
+                  [5, i18n.lg_names[lang][4], i18n.short_names[lang][4]],
+                  [0, i18n.lg_names[lang][5], i18n.short_names[lang][5]],
+                 ]
     useGUI = True
     quest_numbers = {}
     if useGUI:
         mainroot = tk.Tk()
         mainroot.iconbitmap(fox_ico)
         mainroot.title('Fux!')
-        mainapp = InitWindow(mainroot, task_var)
+        mainapp = InitWindow(mainroot, categories, task_var)
         mainroot.focus_force()
         mainroot.mainloop()
+        reinit = mainapp.reinit.get()
         if reinit:
             reinit = False
             mainroot.destroy()
