@@ -12,14 +12,7 @@ from tkinter import filedialog, simpledialog
 import i18n
 
 
-base_path = ''
-fox_png = base_path+r'images\fox.png'
-fox_ico = base_path+r'images\fox.ico'
-language_button_png = base_path+'images\language.png'
-github_button_png = base_path+'images\github.png'
-
-
-def resource_path(relative_path):
+def resource_path(base_path, relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
@@ -29,10 +22,10 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-fox_png = resource_path(fox_png)
-fox_ico = resource_path(fox_ico)
-language_button_png = resource_path(language_button_png)
-github_button_png = resource_path(github_button_png)
+fox_png = resource_path('', r'images\fox.png')
+fox_ico = resource_path('', r'images\fox.ico')
+language_button_png = resource_path('', 'images\language.png')
+github_button_png = resource_path('', 'images\github.png')
 
 
 lang = 'ger'
@@ -86,6 +79,9 @@ class InitWindow:
         self.input_dict = {}
         self.radio_var = tk.IntVar()
         self.reinit = tk.IntVar()
+
+        self.reinit.set(0)
+
         _row_count = 0
 
         _head_label = tk.Label(master, text=i18n.app_header[lang], font=("Helvetica", 16))
@@ -129,7 +125,10 @@ class InitWindow:
         _quit_button.grid(row=_row_count, column=2, columnspan=2)
         _row_count += 1
 
-        _language_button = tk.Button(master, command=combine_funcs(switchLanguage, master.quit, self.reinit.set(1)))
+        def set_reinit():
+            self.reinit.set(1)
+
+        _language_button = tk.Button(master, command=combine_funcs(switchLanguage, master.quit, set_reinit))
         _language_button_image = tk.PhotoImage(file=language_button_png)
         _language_button_image = _language_button_image.subsample(3, 3)
         _language_button.config(image=_language_button_image, width=30, height=20)
@@ -283,63 +282,55 @@ while True:
                   [5, i18n.lg_names[lang][4], i18n.short_names[lang][4]],
                   [0, i18n.lg_names[lang][5], i18n.short_names[lang][5]],
                  ]
-    useGUI = True
-    quest_numbers = {}
-    if useGUI:
-        mainroot = tk.Tk()
-        mainroot.iconbitmap(fox_ico)
-        mainroot.title('Fux!')
-        mainapp = InitWindow(mainroot, categories, task_var)
-        mainroot.focus_force()
-        mainroot.mainloop()
-        reinit = mainapp.reinit.get()
-        if reinit:
-            reinit = False
-            mainroot.destroy()
-            continue
-        task_var = mainapp.radio_var.get()
-        idx = 0
-        for default, lg_name, short_name in categories:
-            try:
-                quest_numbers[short_name] = int((mainapp.input_dict)[short_name].get())
-            except KeyError:
-                quest_numbers[short_name] = default
-            categories[idx][0] = quest_numbers[short_name]
-            idx += 1
-
-        # ask for question file
-        FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt', filetypes=[('', '*.txt;*.zip')])
-        if not question_file:
-            question_file = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
-
-        password_error = False
-        if question_file.endswith('.zip'):
-            zf = zipfile.ZipFile(question_file)
-            for zinfo in zf.infolist():
-                is_encrypted = zinfo.flag_bits & 0x1
-            if is_encrypted and zip_passwd == '':
-                zip_passwd = simpledialog.askstring(i18n.password_text[lang][0],
-                                                    i18n.password_text[lang][1], show='*')
-                try:
-                    zip_passwd_bytes = str.encode(zip_passwd)
-                except TypeError:
-                    zip_passwd_bytes = b'1234'
-                print(os.path.splitext(question_file)[0])
-                base = os.path.basename(question_file)
-                try:
-                    with zf.open(os.path.splitext(base)[0]+'.txt', pwd=zip_passwd_bytes) as data:
-                        pass
-                except RuntimeError:
-                    print('Bad password!')
-                    password_error = True
-
+    mainroot = tk.Tk()
+    mainroot.iconbitmap(fox_ico)
+    mainroot.title('Fux!')
+    mainapp = InitWindow(mainroot, categories, task_var)
+    mainroot.focus_force()
+    mainroot.mainloop()
+    reinit = mainapp.reinit.get()
+    if reinit:
+        reinit = False
         mainroot.destroy()
-
-    else:
-        question_file = base_path+'Fragensammlung.txt'
-        task_var = 0
-        for default, lg_name, short_name in categories:
+        continue
+    task_var = mainapp.radio_var.get()
+    idx = 0
+    quest_numbers = {}
+    for default, lg_name, short_name in categories:
+        try:
+            quest_numbers[short_name] = int((mainapp.input_dict)[short_name].get())
+        except KeyError:
             quest_numbers[short_name] = default
+        categories[idx][0] = quest_numbers[short_name]
+        idx += 1
+
+    # ask for question file
+    FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt', filetypes=[('', '*.txt;*.zip')])
+    if not question_file:
+        question_file = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
+
+    password_error = False
+    if question_file.endswith('.zip'):
+        zf = zipfile.ZipFile(question_file)
+        for zinfo in zf.infolist():
+            is_encrypted = zinfo.flag_bits & 0x1
+        if is_encrypted and zip_passwd == '':
+            zip_passwd = simpledialog.askstring(i18n.password_text[lang][0],
+                                                i18n.password_text[lang][1], show='*')
+            try:
+                zip_passwd_bytes = str.encode(zip_passwd)
+            except TypeError:
+                zip_passwd_bytes = b'1234'
+            print(os.path.splitext(question_file)[0])
+            base = os.path.basename(question_file)
+            try:
+                with zf.open(os.path.splitext(base)[0]+'.txt', pwd=zip_passwd_bytes) as data:
+                    pass
+            except RuntimeError:
+                print('Bad password!')
+                password_error = True
+
+    mainroot.destroy()
 
     if not question_file or password_error:
         error_idx = 0
@@ -353,6 +344,7 @@ while True:
         lines = []
         lines.append(i18n.error_text[lang][error_idx])
         app = InfoWindow(root, lines)
+        root.focus_force()
         root.mainloop()
         root.destroy()
         zip_passwd = ''
@@ -478,6 +470,3 @@ while True:
         root.focus_force()
         root.mainloop()
         root.destroy()
-
-    if not useGUI:
-        break
