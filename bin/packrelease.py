@@ -10,7 +10,7 @@ parser.add_option("-p", "--public", dest="ispublic", default=True,
 
 
 # First pack release in unencrypted zip
-command = '7z a -tzip'
+command = 'cd ../questions & 7z a -tzip'
 archivename = 'fuxenpruefung.zip'
 files = [r'"C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\dist\fuxenpruefung.exe"']
 question_file = ""
