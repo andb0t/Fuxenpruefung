@@ -96,12 +96,12 @@ class InitWindow:
         def set_switch_lang():
             self.switch_lang.set(1)
 
-        _language_button = tk.Button(master, command=combine_funcs(set_switch_lang, master.quit, set_reinit))
-        _language_button_image = tk.PhotoImage(file=png_list[1])
-        _language_button_image = _language_button_image.subsample(3, 3)
-        _language_button.config(image=_language_button_image, width=30, height=20)
-        _language_button._language_button_image = _language_button_image
-        _language_button.grid(row=_row_count, column=0)
+        _lang_button = tk.Button(master, command=combine_funcs(set_switch_lang, master.quit, set_reinit))
+        _lang_button_image = tk.PhotoImage(file=png_list[1])
+        # _lang_button_image = _lang_button_image.subsample(1, 1)
+        _lang_button.config(image=_lang_button_image, width=30, height=20)
+        _lang_button._lang_button_image = _lang_button_image
+        _lang_button.grid(row=_row_count, column=0)
 
         _github_button = tk.Button(master)
         _github_button_image = tk.PhotoImage(file=png_list[2])

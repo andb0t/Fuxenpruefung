@@ -22,13 +22,6 @@ def resource_path(base_path, relative_path):
     return os.path.join(base_path, relative_path)
 
 
-fox_ico = resource_path('', r'images\fox.ico')
-fox_png = resource_path('', r'images\fox.png')
-language_button_png = resource_path('', 'images\language.png')
-github_button_png = resource_path('', 'images\github.png')
-png_list = [fox_png, language_button_png, github_button_png]
-
-
 def switch_language(lang):
     if lang == 'ger':
         return 'eng'
@@ -43,6 +36,14 @@ zip_passwd = ''
 question_file = ''
 lang = 'ger'
 while True:
+
+    fox_ico = resource_path('', r'images\fox.ico')
+    fox_png = resource_path('', r'images\fox.png')
+    lang_png_name = lang + '_' + switch_language(lang)
+    lang_button_png = resource_path('', 'images\\' + lang_png_name + '.png')
+    github_button_png = resource_path('', 'images\github.png')
+    png_list = [fox_png, lang_button_png, github_button_png]
+
     categories = [
                   [16, i18n.lg_names[lang][0], i18n.short_names[lang][0]],
                   [6, i18n.lg_names[lang][1], i18n.short_names[lang][1]],
