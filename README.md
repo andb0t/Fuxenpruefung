@@ -29,6 +29,6 @@ The program is available in English, German and Bavarian.
 
 
 Compilation for windows:
-pyinstaller fuxenpruefung.spec
+pyinstaller src/fuxenpruefung.spec
 or
-pyinstaller -w -F -i fox.ico fuxenpruefung.py
+pyinstaller -w -F -i src/images/fox.ico src/fuxenpruefung.py
