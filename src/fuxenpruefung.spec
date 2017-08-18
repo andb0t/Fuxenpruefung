@@ -31,4 +31,4 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
-          console=False , icon=r'images\fox.ico')
+          console=False , icon=r'src\images\fox.ico')
