@@ -21,9 +21,9 @@ error_title = {'ger': 'Fehler!',
                'eng': 'Error!',
                'bay': 'Foisch!',
                }
-error_text = {'ger': ['Keine Fragensammlung ausgewaehlt! Nochmal!', 'Falsches Passwort! Nochmal!'],
-              'eng': ['No question file selected. Retry!', 'Bad password. Retry!'],
-              'bay': ['Koa Frognkatalog gfunna. Nomoi!', 'Posswoat foisch. Nomoi!'],
+error_text = {'ger': ['Keine Fragensammlung ausgewaehlt! Nochmal!', 'Falsches Passwort! Nochmal!', 'Fehler in Fragensammlung: '],
+              'eng': ['No question file selected. Retry!', 'Bad password. Retry!', 'Error in question file: '],
+              'bay': ['Koa Frognkatalog gfunna. Nomoi!', 'Posswoat foisch. Nomoi!', 'Foische Form im Frognkatalog: '],
               }
 dict_init = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen'],
              'eng': ['Compile new exam', 'Show question statistics', 'Show all questions'],

@@ -152,7 +152,23 @@ while True:
         except ValueError:
             continue
         splitlist = [x for x in map(lambda a: a.strip(), splitlist)]
-        difficulty, question, answer, category, vspace = splitlist
+        try:
+            difficulty, question, answer, category, vspace = splitlist
+        except ValueError:
+            error_idx = 2
+            root = tk.Tk()
+            root.iconbitmap(fox_ico)
+            root.title(i18n.error_title[lang])
+            lines = []
+            lines.append(i18n.error_text[lang][error_idx] + ' ' + line)
+            app = gui.InfoWindow(root, lines)
+            root.focus_force()
+            root.mainloop()
+            root.destroy()
+            zip_passwd = ''
+            question_file = ''
+            continue
+
         qdicts[difficulty][len(qdicts[difficulty])] = question, answer, category, vspace
         qdicts_all[quest_counter] = question, answer, category, difficulty, vspace
         quest_counter += 1
