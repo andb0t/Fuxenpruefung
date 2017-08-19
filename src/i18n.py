@@ -17,7 +17,7 @@ link_label_text = {'ger': 'AGV Webseite öffnen',
                    'eng': 'Open AGV website',
                    'bay': "Moch d'Webseitn af!",
                    }
-error_title = {'ger': 'Fehler!',
+error_title = {'ger': 'Bierjunge!',
                'eng': 'Error!',
                'bay': 'Foisch!',
                }
