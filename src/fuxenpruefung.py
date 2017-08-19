@@ -23,14 +23,12 @@ def resource_path(base_path, relative_path):
 
 
 def change_catagories(category, category_update):
-    for idx, update in enumerate(category_update):
-        if update == -1:
+    for key in category_update.keys():
+        try:
+            idx = list(map(lambda a: a[2], category)).index(key)
+        except ValueError:
             continue
-        else:
-            try:
-                category[idx][0] = update
-            except ValueError:
-                pass
+        category[idx][0] = category_update[key]
     return category
 
 
@@ -47,7 +45,7 @@ task_var = 0
 zip_passwd = ''
 question_file = ''
 lang = 'ger'
-categoryUpdate = [-1, -1, -1, -1]
+categoryUpdate = {}
 while True:
 
     fox_ico = resource_path('', r'images\fox.ico')
@@ -83,11 +81,7 @@ while True:
     for idx, thisCat in enumerate(categories):
         default, lg_name, short_name = thisCat
         try:
-            quest_numbers[short_name] = int((mainapp.input_dict)[short_name].get())
-            try:
-                categoryUpdate[idx] = quest_numbers[short_name]
-            except IndexError:
-                pass
+            quest_numbers[short_name] = categoryUpdate[short_name] = int((mainapp.input_dict)[short_name].get())
         except KeyError:
             quest_numbers[short_name] = default
         categories[idx][0] = quest_numbers[short_name]
