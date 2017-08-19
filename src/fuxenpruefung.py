@@ -22,6 +22,18 @@ def resource_path(base_path, relative_path):
     return os.path.join(base_path, relative_path)
 
 
+def change_catagories(category, category_update):
+    for idx, update in enumerate(category_update):
+        if update == -1:
+            continue
+        else:
+            try:
+                category[idx][0] = update
+            except ValueError:
+                pass
+    return category
+
+
 def switch_language(lang):
     if lang == 'ger':
         return 'eng'
@@ -35,6 +47,7 @@ task_var = 0
 zip_passwd = ''
 question_file = ''
 lang = 'ger'
+categoryUpdate = [-1, -1, -1, -1]
 while True:
 
     fox_ico = resource_path('', r'images\fox.ico')
@@ -52,6 +65,7 @@ while True:
                   [5, i18n.lg_names[lang][4], i18n.short_names[lang][4]],
                   [0, i18n.lg_names[lang][5], i18n.short_names[lang][5]],
                  ]
+    change_catagories(categories, categoryUpdate)
     mainroot = tk.Tk()
     mainroot.iconbitmap(fox_ico)
     mainroot.title('Fux!')
@@ -66,9 +80,14 @@ while True:
     task_var = mainapp.radio_var.get()
     idx = 0
     quest_numbers = {}
-    for default, lg_name, short_name in categories:
+    for idx, thisCat in enumerate(categories):
+        default, lg_name, short_name = thisCat
         try:
             quest_numbers[short_name] = int((mainapp.input_dict)[short_name].get())
+            try:
+                categoryUpdate[idx] = quest_numbers[short_name]
+            except IndexError:
+                pass
         except KeyError:
             quest_numbers[short_name] = default
         categories[idx][0] = quest_numbers[short_name]
@@ -173,6 +192,7 @@ while True:
         qdicts_all[quest_counter] = question, answer, category, difficulty, vspace
         quest_counter += 1
 
+    # process tasks below
     if task_var == 0:
         ran_qdicts = {}
         for qdict_str in qdicts:
