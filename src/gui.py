@@ -33,13 +33,13 @@ def center_window(root, xdist=0, ydist=0):
 
 class InitWindow:
 
-    def __init__(self, master, categories, lang, png_list, radioinit=0):
+    def __init__(self, master, categories, lang, pngList, radioinit=0):
 
         center_window(master)
 
         master.protocol("WM_DELETE_WINDOW", sys.exit)
 
-        self.input_dict = {}
+        self.inputDict = {}
         self.radio_var = tk.IntVar()
         self.reinit = tk.IntVar()
         self.switch_lang = tk.IntVar()
@@ -49,11 +49,11 @@ class InitWindow:
 
         _row_count = 0
 
-        _head_label = tk.Label(master, text=i18n.app_header[lang], font=("Helvetica", 16))
+        _head_label = tk.Label(master, text=i18n.appHeader[lang], font=("Helvetica", 16))
         _head_label.grid(row=_row_count, columnspan=4)
         _row_count += 1
 
-        _photo = tk.PhotoImage(file=png_list[0])
+        _photo = tk.PhotoImage(file=pngList[0])
         _photo = _photo.subsample(5, 5)
         _photo_label = tk.Label(master, image=_photo)
         _photo_label.photo = _photo
@@ -62,30 +62,30 @@ class InitWindow:
 
         _col_idx = 0
         _row_count += 2
-        for default, lg_name, short_name in categories:
-            if short_name == 'P' or short_name == 'A':
+        for default, longName, shortName in categories:
+            if shortName == 'P' or shortName == 'A':
                 continue
-            cat_label = tk.Label(master, text=lg_name)
+            cat_label = tk.Label(master, text=longName)
             cat_label.grid(row=_row_count-2, column=_col_idx+1)
             string_val = tk.StringVar()
             string_val.set(default)
             cat_entry = tk.Entry(master, textvariable=string_val, width=5)
             cat_entry.grid(row=_row_count-1, column=_col_idx+1)
-            self.input_dict[short_name] = string_val
+            self.inputDict[shortName] = string_val
             _col_idx = (_col_idx + 1) % 2
             if (_col_idx == 0):
                 _row_count += 2
 
-        for idx, task in enumerate(i18n.dict_init[lang]):
+        for idx, task in enumerate(i18n.dictInit[lang]):
             rad = tk.Radiobutton(master, text=task, variable=self.radio_var, value=idx)
             rad.grid(row=_row_count, columnspan=4)
             _row_count += 1
         self.radio_var.set(radioinit)
 
-        _start_button = tk.Button(master, text=i18n.start_button_text[lang][0],
+        _start_button = tk.Button(master, text=i18n.startButtonText[lang][0],
                                   fg="green", font="bold", command=master.quit)
         _start_button.grid(row=_row_count, column=0, columnspan=2)
-        _quit_button = tk.Button(master, text=i18n.start_button_text[lang][1],
+        _quit_button = tk.Button(master, text=i18n.startButtonText[lang][1],
                                  fg="red", font="bold", command=sys.exit)
         _quit_button.grid(row=_row_count, column=2, columnspan=2)
         _row_count += 1
@@ -97,21 +97,21 @@ class InitWindow:
             self.switch_lang.set(1)
 
         _lang_button = tk.Button(master, command=combine_funcs(set_switch_lang, master.quit, set_reinit))
-        _lang_button_image = tk.PhotoImage(file=png_list[1])
+        _lang_button_image = tk.PhotoImage(file=pngList[1])
         # _lang_button_image = _lang_button_image.subsample(1, 1)
         _lang_button.config(image=_lang_button_image, width=30, height=20)
         _lang_button._lang_button_image = _lang_button_image
         _lang_button.grid(row=_row_count, column=0)
 
         _github_button = tk.Button(master)
-        _github_button_image = tk.PhotoImage(file=png_list[2])
+        _github_button_image = tk.PhotoImage(file=pngList[2])
         _github_button_image = _github_button_image.subsample(7, 7)
         _github_button.config(image=_github_button_image, width=60, height=20)
         _github_button._github_button_image = _github_button_image
         _github_button.bind("<Button-1>", callback_GitHub)
         _github_button.grid(row=_row_count, column=3)
 
-        _link_label = tk.Label(master, text=i18n.link_label_text[lang], fg="blue", cursor="hand2")
+        _link_label = tk.Label(master, text=i18n.linkLabelText[lang], fg="blue", cursor="hand2")
         _link_label.grid(row=_row_count, column=1, columnspan=2)
         _link_label.bind("<Button-1>", callback_AGV)
 
@@ -124,7 +124,7 @@ class InitWindow:
 
         def _toggledown(self):
             old = thisradio.get()
-            new = min(old + 1, len(i18n.dict_init[lang])-1)
+            new = min(old + 1, len(i18n.dictInit[lang])-1)
             thisradio.set(new)
 
         def _quit(self):

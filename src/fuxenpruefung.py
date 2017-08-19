@@ -12,23 +12,23 @@ import i18n
 import gui
 
 
-def resource_path(base_path, relative_path):
+def resource_path(basePath, relativePath):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
+        basePath = sys._MEIPASS
     except Exception:
-        base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
+        basePath = os.path.abspath(".")
+    return os.path.join(basePath, relativePath)
 
 
-def change_catagories(category, category_update):
-    for key in category_update.keys():
+def change_catagories(category, categoryUpdate):
+    for key in categoryUpdate.keys():
         try:
             idx = list(map(lambda a: a[2], category)).index(key)
         except ValueError:
             continue
-        category[idx][0] = category_update[key]
+        category[idx][0] = categoryUpdate[key]
     return category
 
 
@@ -41,33 +41,33 @@ def switch_language(lang):
         return 'ger'
 
 
-task_var = 0
-zip_passwd = ''
-question_file = ''
+taskVar = 0
+zipPasswd = ''
+questionFile = ''
 lang = 'ger'
 categoryUpdate = {}
 while True:
 
-    fox_ico = resource_path('', r'images\fox.ico')
-    fox_png = resource_path('', r'images\fox.png')
+    foxIco = resource_path('', r'images\fox.ico')
+    foxPng = resource_path('', r'images\fox.png')
     lang_png_name = lang + '_' + switch_language(lang)
     lang_button_png = resource_path('', 'images\\' + lang_png_name + '.png')
     github_button_png = resource_path('', 'images\github.png')
-    png_list = [fox_png, lang_button_png, github_button_png]
+    pngList = [foxPng, lang_button_png, github_button_png]
 
     categories = [
-                  [16, i18n.lg_names[lang][0], i18n.short_names[lang][0]],
-                  [6, i18n.lg_names[lang][1], i18n.short_names[lang][1]],
-                  [4, i18n.lg_names[lang][2], i18n.short_names[lang][2]],
-                  [1000, i18n.lg_names[lang][3], i18n.short_names[lang][3]],
-                  [5, i18n.lg_names[lang][4], i18n.short_names[lang][4]],
-                  [0, i18n.lg_names[lang][5], i18n.short_names[lang][5]],
+                  [16, i18n.longNames[lang][0], i18n.shortNames[lang][0]],
+                  [6, i18n.longNames[lang][1], i18n.shortNames[lang][1]],
+                  [4, i18n.longNames[lang][2], i18n.shortNames[lang][2]],
+                  [1000, i18n.longNames[lang][3], i18n.shortNames[lang][3]],
+                  [5, i18n.longNames[lang][4], i18n.shortNames[lang][4]],
+                  [0, i18n.longNames[lang][5], i18n.shortNames[lang][5]],
                  ]
     change_catagories(categories, categoryUpdate)
     mainroot = tk.Tk()
-    mainroot.iconbitmap(fox_ico)
+    mainroot.iconbitmap(foxIco)
     mainroot.title('Fux!')
-    mainapp = gui.InitWindow(mainroot, categories, lang, png_list, task_var)
+    mainapp = gui.InitWindow(mainroot, categories, lang, pngList, taskVar)
     mainroot.focus_force()
     mainroot.mainloop()
     if mainapp.switch_lang.get():
@@ -75,87 +75,87 @@ while True:
     if mainapp.reinit.get():
         mainroot.destroy()
         continue
-    task_var = mainapp.radio_var.get()
+    taskVar = mainapp.radio_var.get()
     idx = 0
-    quest_numbers = {}
+    questNumbers = {}
     for idx, thisCat in enumerate(categories):
-        default, lg_name, short_name = thisCat
+        default, longName, shortName = thisCat
         try:
-            quest_numbers[short_name] = categoryUpdate[short_name] = int((mainapp.input_dict)[short_name].get())
+            questNumbers[shortName] = categoryUpdate[shortName] = int((mainapp.inputDict)[shortName].get())
         except KeyError:
-            quest_numbers[short_name] = default
-        categories[idx][0] = quest_numbers[short_name]
+            questNumbers[shortName] = default
+        categories[idx][0] = questNumbers[shortName]
         idx += 1
 
     # ask for question file
     FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt', filetypes=[('', '*.txt;*.zip')])
-    if not question_file:
-        question_file = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
+    if not questionFile:
+        questionFile = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
 
-    password_error = False
-    if question_file.endswith('.zip'):
-        zf = zipfile.ZipFile(question_file)
+    passwordError = False
+    if questionFile.endswith('.zip'):
+        zf = zipfile.ZipFile(questionFile)
         for zinfo in zf.infolist():
-            is_encrypted = zinfo.flag_bits & 0x1
-        if is_encrypted and zip_passwd == '':
-            zip_passwd = simpledialog.askstring(i18n.password_text[lang][0],
-                                                i18n.password_text[lang][1], show='*')
+            isEncrypted = zinfo.flag_bits & 0x1
+        if isEncrypted and zipPasswd == '':
+            zipPasswd = simpledialog.askstring(i18n.passwordText[lang][0],
+                                               i18n.passwordText[lang][1], show='*')
             try:
-                zip_passwd_bytes = str.encode(zip_passwd)
+                zipPasswd_bytes = str.encode(zipPasswd)
             except TypeError:
-                zip_passwd_bytes = b'1234'
-            print(os.path.splitext(question_file)[0])
-            base = os.path.basename(question_file)
+                zipPasswd_bytes = b'1234'
+            print(os.path.splitext(questionFile)[0])
+            base = os.path.basename(questionFile)
             try:
-                with zf.open(os.path.splitext(base)[0]+'.txt', pwd=zip_passwd_bytes) as data:
+                with zf.open(os.path.splitext(base)[0]+'.txt', pwd=zipPasswd_bytes) as data:
                     pass
             except RuntimeError:
                 print('Bad password!')
-                password_error = True
+                passwordError = True
 
     mainroot.destroy()
 
-    if not question_file or password_error:
-        error_idx = 0
-        if not question_file:
-            error_idx = 0
-        elif password_error:
-            error_idx = 1
+    if not questionFile or passwordError:
+        errorIdx = 0
+        if not questionFile:
+            errorIdx = 0
+        elif passwordError:
+            errorIdx = 1
         root = tk.Tk()
-        root.iconbitmap(fox_ico)
-        root.title(i18n.error_title[lang])
+        root.iconbitmap(foxIco)
+        root.title(i18n.errorTitle[lang])
         lines = []
-        lines.append(i18n.error_text[lang][error_idx])
+        lines.append(i18n.errorText[lang][errorIdx])
         app = gui.InfoWindow(root, lines)
         root.focus_force()
         root.mainloop()
         root.destroy()
-        zip_passwd = ''
-        question_file = ''
+        zipPasswd = ''
+        questionFile = ''
         continue
 
-    print('Selected task:', i18n.dict_init[lang][task_var])
+    print('Selected task:', i18n.dictInit[lang][taskVar])
 
     # Read in data
     qdicts = {}
-    for key in quest_numbers.keys():
+    for key in questNumbers.keys():
         qdicts[key] = {}
-    qdicts_all = {}
+    qdictsAll = {}
 
-    quest_counter = 0
-    question_lines = []
-    if question_file.endswith('.zip'):
-        base = os.path.basename(question_file)
-        with zf.open(os.path.splitext(base)[0]+'.txt', pwd=zip_passwd_bytes) as data:
-            for byte_line in data:
-                line = byte_line.decode('utf8')
-                question_lines.append(line)
+    questCounter = 0
+    questLines = []
+    if questionFile.endswith('.zip'):
+        base = os.path.basename(questionFile)
+        with zf.open(os.path.splitext(base)[0]+'.txt', pwd=zipPasswd_bytes) as data:
+            for byteLine in data:
+                line = byteLine.decode('utf8')
+                questLines.append(line)
     else:
-        with open(question_file, 'r', encoding='utf8') as data:
+        with open(questionFile, 'r', encoding='utf8') as data:
             for line in data:
-                question_lines.append(line)
+                questLines.append(line)
 
-    for line in question_lines:
+    for line in questLines:
         line = line.rstrip()
         if line.startswith('#') or not len(line):
             continue
@@ -168,39 +168,39 @@ while True:
         try:
             difficulty, question, answer, category, vspace = splitlist
         except ValueError:
-            error_idx = 2
+            errorIdx = 2
             root = tk.Tk()
-            root.iconbitmap(fox_ico)
-            root.title(i18n.error_title[lang])
+            root.iconbitmap(foxIco)
+            root.title(i18n.errorTitle[lang])
             lines = []
-            lines.append(i18n.error_text[lang][error_idx] + ' ' + line)
+            lines.append(i18n.errorText[lang][errorIdx] + ' ' + line)
             app = gui.InfoWindow(root, lines)
             root.focus_force()
             root.mainloop()
             root.destroy()
-            zip_passwd = ''
-            question_file = ''
+            zipPasswd = ''
+            questionFile = ''
             continue
 
         qdicts[difficulty][len(qdicts[difficulty])] = question, answer, category, vspace
-        qdicts_all[quest_counter] = question, answer, category, difficulty, vspace
-        quest_counter += 1
+        qdictsAll[questCounter] = question, answer, category, difficulty, vspace
+        questCounter += 1
 
     # process tasks below
-    if task_var == 0:
+    if taskVar == 0:
         ran_qdicts = {}
         for qdict_str in qdicts:
             qdict = qdicts[qdict_str]
             keys = list(qdict.keys())
             random.shuffle(keys)
-            ran_QnA = [(qdict[key][:2]+(qdict[key][3],)) for key in keys][:quest_numbers[qdict_str]]
+            ran_QnA = [(qdict[key][:2]+(qdict[key][3],)) for key in keys][:questNumbers[qdict_str]]
             ran_qdicts[qdict_str] = ran_QnA
 
-        with open(i18n.exam_file[lang][0], 'w', encoding='utf8') as myfile:
-            print(i18n.exam_title[lang][0]+"\n", file=myfile)
+        with open(i18n.examFile[lang][0], 'w', encoding='utf8') as myfile:
+            print(i18n.examTitle[lang][0]+"\n", file=myfile)
             count = 0
-            for default, lg_name, short_name in categories:
-                for question, answer, vspace in ran_qdicts[short_name]:
+            for default, longName, shortName in categories:
+                for question, answer, vspace in ran_qdicts[shortName]:
                     count += 1
                     questionlines = question.split("\\\\")
                     print('{}.'.format(count), questionlines[0], file=myfile)
@@ -208,34 +208,34 @@ while True:
                         print('\to '+item, file=myfile)
                     print('\n'*int(vspace), file=myfile)
 
-        with open(i18n.exam_file[lang][1], 'w', encoding='utf8') as myfile:
-            print(i18n.exam_title[lang][1]+"\n", file=myfile)
+        with open(i18n.examFile[lang][1], 'w', encoding='utf8') as myfile:
+            print(i18n.examTitle[lang][1]+"\n", file=myfile)
             count = 0
-            for default, lg_name, short_name in categories:
-                for question, answer, vspace in ran_qdicts[short_name]:
+            for default, longName, shortName in categories:
+                for question, answer, vspace in ran_qdicts[shortName]:
                     count += 1
                     print('{}.'.format(count), answer, file=myfile)
 
-        sys_command = 'notepad '+i18n.exam_file[lang][1]
+        sys_command = 'notepad '+i18n.examFile[lang][1]
         subprocess.Popen(sys_command)
         sleep(0.1)
-        sys_command = 'notepad '+i18n.exam_file[lang][0]
+        sys_command = 'notepad '+i18n.examFile[lang][0]
         subprocess.Popen(sys_command)
 
-    elif task_var == 1:
+    elif taskVar == 1:
         from collections import Counter
-        tot_n_questions = len(qdicts_all)
+        tot_n_questions = len(qdictsAll)
         # create message
         lines = []
-        lines.append(i18n.statistics_header[lang][0])
-        lines.append(i18n.statistics_colheader[lang])
-        for default, lg_name, short_name in categories:
-            lines.append((lg_name+': ', str(len(qdicts[short_name])),
-                         '{:.0f} %'.format(100*len(qdicts[short_name])/tot_n_questions)))
+        lines.append(i18n.statisticsHeader[lang][0])
+        lines.append(i18n.statisticsColHeader[lang])
+        for default, longName, shortName in categories:
+            lines.append((longName+': ', str(len(qdicts[shortName])),
+                         '{:.0f} %'.format(100*len(qdicts[shortName])/tot_n_questions)))
 
-        lines.append(i18n.statistics_header[lang][1])
-        lines.append(i18n.statistics_colheader[lang])
-        count_dict = Counter([x[2] for x in qdicts_all.values()])
+        lines.append(i18n.statisticsHeader[lang][1])
+        lines.append(i18n.statisticsColHeader[lang])
+        count_dict = Counter([x[2] for x in qdictsAll.values()])
         keys = list(count_dict.keys())
         keys.sort()
         for key in keys:
@@ -243,28 +243,28 @@ while True:
                          '{:.0f} %'.format(100*count_dict[key]/tot_n_questions)))
 
         root = tk.Tk()
-        root.iconbitmap(fox_ico)
+        root.iconbitmap(foxIco)
         root.title('Fux!')
         app = gui.InfoWindow(root, lines)
         root.focus_force()
         root.mainloop()
         root.destroy()
 
-    elif task_var == 2:
+    elif taskVar == 2:
 
-        header = i18n.allquestions_header[lang]
+        header = i18n.allquestionsHeader[lang]
         lines = []
-        lines.append(i18n.allquestions_colheader[lang])
-        for key in qdicts_all:
-            lines.append((qdicts_all[key][0],
-                          qdicts_all[key][1],
-                          qdicts_all[key][2],
-                          qdicts_all[key][3],
-                          qdicts_all[key][4],
+        lines.append(i18n.allquestionsColHeader[lang])
+        for key in qdictsAll:
+            lines.append((qdictsAll[key][0],
+                          qdictsAll[key][1],
+                          qdictsAll[key][2],
+                          qdictsAll[key][3],
+                          qdictsAll[key][4],
                           ))
 
         root = tk.Tk()
-        root.iconbitmap(fox_ico)
+        root.iconbitmap(foxIco)
         root.title('Fux!')
         app = gui.TextWindow(root, header, lines)
         root.focus_force()
