@@ -110,7 +110,7 @@ class InitWindow:
 
         _github_button = tk.Button(master)
         _github_button_image = tk.PhotoImage(file=pngList[2])
-        _github_button_image = _github_button_image.subsample(7, 7)
+        _github_button_image = _github_button_image.subsample(5, 5)
         _github_button.config(image=_github_button_image, width=60, height=20)
         _github_button._github_button_image = _github_button_image
         _github_button.bind("<Button-1>", callback_GitHub)
