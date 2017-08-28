@@ -1,3 +1,12 @@
+def switch_language(lang):
+    if lang == 'ger':
+        return 'eng'
+    elif lang == 'eng':
+        return 'bay'
+    elif lang == 'bay':
+        return 'ger'
+
+
 longNames = {'ger': ['Kleine Frage', 'Mittlere Frage', 'Große Frage', 'Permanente Frage',
                      'Scherzfrage', 'Archiv'],
              'eng': ['Small question', 'Medium question', 'Hard question', 'Permanent question',
@@ -13,9 +22,9 @@ startButtonText = {'ger': ['Start', 'Schließen'],
                    'eng': ['Go!', 'Close'],
                    'bay': ["Af geht's!", 'A Rua is!'],
                    }
-linkLabelText = {'ger': 'AGV Webseite öffnen',
-                 'eng': 'Open AGV website',
-                 'bay': "Moch d'Webseitn af!",
+linkLabelText = {'ger': 'AGV Webseite',
+                 'eng': 'AGV website',
+                 'bay': "Webseitn",
                  }
 errorTitle = {'ger': 'Bierjunge!',
               'eng': 'Error!',
