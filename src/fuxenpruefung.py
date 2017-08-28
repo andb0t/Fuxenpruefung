@@ -1,26 +1,16 @@
 import os
 import random
 import subprocess
-import sys
 import zipfile
 from time import sleep
 
-import winsound
 import tkinter as tk
 from tkinter import filedialog, simpledialog
 
 import i18n
 import gui
-
-
-def resource_path(basePath, relativePath):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        basePath = sys._MEIPASS
-    except Exception:
-        basePath = os.path.abspath(".")
-    return os.path.join(basePath, relativePath)
+import files
+import sound
 
 
 def change_catagories(category, categoryUpdate):
@@ -33,31 +23,22 @@ def change_catagories(category, categoryUpdate):
     return category
 
 
-def switch_language(lang):
-    if lang == 'ger':
-        return 'eng'
-    elif lang == 'eng':
-        return 'bay'
-    elif lang == 'bay':
-        return 'ger'
-
-
-songWav = resource_path('', r'sounds\Eher_unser_Zier.wav')
-winsound.PlaySound(songWav, winsound.SND_FILENAME | winsound.SND_ASYNC)
-
+sound.start_sound()
 taskVar = 0
 zipPasswd = ''
 questionFile = ''
 lang = 'ger'
+toggleSoundName = 'sound'
 categoryUpdate = {}
 while True:
 
-    foxIco = resource_path('', r'images\fox.ico')
-    foxPng = resource_path('', r'images\fox.png')
-    lang_png_name = lang + '_' + switch_language(lang)
-    lang_button_png = resource_path('', 'images\\' + lang_png_name + '.png')
-    github_button_png = resource_path('', 'images\github.png')
-    pngList = [foxPng, lang_button_png, github_button_png]
+    foxIco = files.resource_path('', r'images\fox.ico')
+    foxPng = files.resource_path('', r'images\fox.png')
+    lang_png_name = lang + '_' + i18n.switch_language(lang)
+    lang_button_png = files.resource_path('', 'images\\' + lang_png_name + '.png')
+    sound_buttong_png = files.resource_path('', 'images\\' + toggleSoundName + '.png')
+    github_button_png = files.resource_path('', 'images\github.png')
+    pngList = [foxPng, lang_button_png, github_button_png, sound_buttong_png]
 
     categories = [
                   [16, i18n.longNames[lang][0], i18n.shortNames[lang][0]],
@@ -75,7 +56,9 @@ while True:
     mainroot.focus_force()
     mainroot.mainloop()
     if mainapp.switch_lang.get():
-        lang = switch_language(lang)
+        lang = i18n.switch_language(lang)
+    if mainapp.toggle_sound.get():
+        toggleSoundName = sound.toggle_sound()
     if mainapp.reinit.get():
         mainroot.destroy()
         continue
