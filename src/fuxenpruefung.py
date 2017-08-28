@@ -5,6 +5,7 @@ import sys
 import zipfile
 from time import sleep
 
+import winsound
 import tkinter as tk
 from tkinter import filedialog, simpledialog
 
@@ -40,6 +41,9 @@ def switch_language(lang):
     elif lang == 'bay':
         return 'ger'
 
+
+songWav = resource_path('', r'sounds\Eher_unser_Zier.wav')
+winsound.PlaySound(songWav, winsound.SND_FILENAME | winsound.SND_ASYNC)
 
 taskVar = 0
 zipPasswd = ''
