@@ -21,7 +21,7 @@ def stop_sound():
 def toggle_sound():
     if SOUND_IS_ON:
         stop_sound()
-        return 'mute'
+        return 'sound'
     else:
         start_sound()
-        return 'sound'
+        return 'mute'

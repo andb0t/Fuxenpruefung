@@ -28,7 +28,7 @@ taskVar = 0
 zipPasswd = ''
 questionFile = ''
 lang = 'ger'
-toggleSoundName = 'sound'
+toggleSoundName = 'mute'
 categoryUpdate = {}
 while True:
 
