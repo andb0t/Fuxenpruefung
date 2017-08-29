@@ -83,20 +83,20 @@ class InitWindow:
                 _cat_label.append(None)
                 continue
             _cat_label.append(tk.Label(master, text=longName))
-            _cat_label[-1].grid(row=_row_count-2, column=_col_idx+1)
+            _cat_label[-1].grid(row=_row_count-2, column=_col_idx, columnspan=2)
             string_val = tk.StringVar()
             string_val.set(default)
             cat_entry = tk.Entry(master, textvariable=string_val, width=5)
-            cat_entry.grid(row=_row_count-1, column=_col_idx+1)
+            cat_entry.grid(row=_row_count-1, column=_col_idx, columnspan=2)
             self.inputDict[shortName] = string_val
-            _col_idx = (_col_idx + 1) % 2
+            _col_idx = (_col_idx + 2) % 4
             if (_col_idx == 0):
                 _row_count += 2
 
         _radioButton = []
         for idx, task in enumerate(i18n.dictInit[i18n.lang()]):
             _radioButton.append(tk.Radiobutton(master, text=task, variable=self.radio_var, value=idx))
-            _radioButton[idx].grid(row=_row_count, columnspan=4)
+            _radioButton[idx].grid(row=_row_count, column=0, columnspan=4)
             _row_count += 1
 
         _start_button = tk.Button(master, text=i18n.startButtonText[i18n.lang()][0], fg="green", font="bold",
