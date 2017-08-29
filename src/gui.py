@@ -31,6 +31,9 @@ def center_window(root, xdist=0, ydist=0):
     root.geometry('+%d+%d' % (x, y))
 
 
+# soundPngs = ['images/sound.png', 'images/mute.png']
+
+
 class InitWindow:
 
     def __init__(self, master, categories, lang, pngList, radioinit=0):
@@ -54,6 +57,12 @@ class InitWindow:
         _head_label = tk.Label(master, text=i18n.appHeader[lang], font=("Helvetica", 16))
         _head_label.grid(row=_row_count, columnspan=4)
         _row_count += 1
+
+        def set_image(button, file, zoom, height):
+            newImg = tk.PhotoImage(file=file)
+            newImg = newImg.subsample(zoom, zoom)
+            button.configure(image=newImg, height=height)
+            button.image = newImg
 
         _photo = tk.PhotoImage(file=pngList[0])
         _photo = _photo.subsample(5, 5)
@@ -84,11 +93,9 @@ class InitWindow:
             _row_count += 1
         self.radio_var.set(radioinit)
 
-        _start_button = tk.Button(master, text=i18n.startButtonText[lang][0],
-                                  fg="green", font="bold", command=master.quit)
+        _start_button = tk.Button(master, text=i18n.startButtonText[lang][0], fg="green", font="bold", command=master.quit)
         _start_button.grid(row=_row_count, column=0, columnspan=2)
-        _quit_button = tk.Button(master, text=i18n.startButtonText[lang][1],
-                                 fg="red", font="bold", command=sys.exit)
+        _quit_button = tk.Button(master, text=i18n.startButtonText[lang][1], fg="red", font="bold", command=sys.exit)
         _quit_button.grid(row=_row_count, column=2, columnspan=2)
         _row_count += 1
 
@@ -98,30 +105,32 @@ class InitWindow:
         def set_switch_lang():
             self.switch_lang.set(1)
 
-        def set_toggle_sound():
-            self.toggle_sound.set(1)
-
         _lang_button = tk.Button(master, command=combine_funcs(set_switch_lang, master.quit, set_reinit))
-        _lang_button_image = tk.PhotoImage(file=pngList[1])
-        # _lang_button_image = _lang_button_image.subsample(1, 1)
-        _lang_button.config(image=_lang_button_image, width=30, height=20)
-        _lang_button._lang_button_image = _lang_button_image
+        set_image(_lang_button, pngList[1], 1, 20)
         _lang_button.grid(row=_row_count, column=0)
 
         _github_button = tk.Button(master)
-        _github_button_image = tk.PhotoImage(file=pngList[2])
-        _github_button_image = _github_button_image.subsample(5, 5)
-        _github_button.config(image=_github_button_image, width=60, height=20)
-        _github_button._github_button_image = _github_button_image
+        set_image(_github_button, pngList[2], 5, 20)
         _github_button.bind("<Button-1>", callback_GitHub)
         _github_button.grid(row=_row_count, column=3)
 
+        def set_toggle_sound():
+            self.toggle_sound.set(1)
+
         _sound_button = tk.Button(master, command=combine_funcs(set_toggle_sound, master.quit, set_reinit))
-        _sound_button_image = tk.PhotoImage(file=pngList[3])
-        _sound_button_image = _sound_button_image.subsample(4, 4)
-        _sound_button.config(image=_sound_button_image, height=20)
-        _sound_button._sound_button_image = _sound_button_image
+        set_image(_sound_button, pngList[3], 4, 20)
         _sound_button.grid(row=_row_count, column=1)
+
+        # def set_toggle_sound_no_reinit():
+        #     if self.toggle_sound.get() == 0:
+        #         self.toggle_sound.set(1)
+        #     else:
+        #         self.toggle_sound.set(0)
+        #     set_image(_sound_button, soundPngs[self.toggle_sound.get()], 4, 20)
+        #
+        # _sound_button = tk.Button(master, command=combine_funcs(set_toggle_sound_no_reinit))
+        # set_image(_sound_button, soundPngs[self.toggle_sound.get()], 4, 20)
+        # _sound_button.grid(row=_row_count, column=1)
 
         _link_label = tk.Label(master, text=i18n.linkLabelText[lang], fg="blue", cursor="hand2")
         _link_label.grid(row=_row_count, column=2)
