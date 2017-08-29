@@ -27,7 +27,6 @@ sound.start_sound()
 taskVar = 0
 zipPasswd = ''
 questionFile = ''
-toggleSoundName = 'mute'
 categoryUpdate = {}
 while True:
 
@@ -35,7 +34,7 @@ while True:
     foxPng = files.resource_path('', r'images\fox.png')
     lang_png_name = i18n.lang() + '_' + i18n.switch_language(False)
     lang_button_png = files.resource_path('', 'images\\' + lang_png_name + '.png')
-    sound_buttong_png = files.resource_path('', 'images\\' + toggleSoundName + '.png')
+    sound_buttong_png = files.resource_path('', 'images\\' + sound.toggle_sound(False) + '.png')
     github_button_png = files.resource_path('', 'images\github.png')
     pngList = [foxPng, lang_button_png, github_button_png, sound_buttong_png]
 
@@ -57,7 +56,7 @@ while True:
     if mainapp.switch_lang.get():
         i18n.switch_language()
     if mainapp.toggle_sound.get():
-        toggleSoundName = sound.toggle_sound()
+        sound.toggle_sound()
     if mainapp.reinit.get():
         mainroot.destroy()
         continue

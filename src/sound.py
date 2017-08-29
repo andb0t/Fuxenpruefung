@@ -5,6 +5,10 @@ import files
 SOUND_IS_ON = False
 
 
+def sound():
+    return SOUND_IS_ON
+
+
 def start_sound():
     global SOUND_IS_ON
     songWav = files.resource_path('', r'sounds\Ehr_unser_Zier.wav')
@@ -18,10 +22,12 @@ def stop_sound():
     SOUND_IS_ON = False
 
 
-def toggle_sound():
-    if SOUND_IS_ON:
-        stop_sound()
+def toggle_sound(doSwitch=True):
+    if sound():
+        if doSwitch:
+            stop_sound()
         return 'sound'
     else:
-        start_sound()
+        if doSwitch:
+            start_sound()
         return 'mute'
