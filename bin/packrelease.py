@@ -28,10 +28,10 @@ os.system('del '+archivename)
 os.system(command+' '+archivename+' '+allfiles)
 
 # then encrypt secret question file
-print('Also recreate encrypted question file? (Y/n):')
+print('Also recreate encrypted question file? (Y/[n]):')
 if input() == 'Y':
     archivename = 'fragensammlung.zip'
-    os.system('del '+archivename)
+    os.system('del questions\\'+archivename)
     print('Enter password to encrypt question file:')
     passwd = input()
     command = 'cd questions & 7z a -tzip -p'+passwd+' '+archivename+' fragensammlung.txt'
