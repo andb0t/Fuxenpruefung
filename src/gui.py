@@ -43,6 +43,10 @@ def set_image(button, file, zoom, height):
     button.image = newImg
 
 
+def set_text(field, text):
+    field.configure(text=text)
+
+
 class InitWindow:
 
     def __init__(self, master, categories, radioinit=0):
@@ -53,12 +57,8 @@ class InitWindow:
 
         self.inputDict = {}
         self.radio_var = tk.IntVar()
-        self.switch_lang = tk.IntVar()
-        self.reinit = tk.IntVar()
 
         self.radio_var.set(radioinit)
-        self.switch_lang.set(0)
-        self.reinit.set(0)
 
         _row_count = 0
 
@@ -89,9 +89,10 @@ class InitWindow:
             if (_col_idx == 0):
                 _row_count += 2
 
+        _radioButton = []
         for idx, task in enumerate(i18n.dictInit[i18n.lang()]):
-            rad = tk.Radiobutton(master, text=task, variable=self.radio_var, value=idx)
-            rad.grid(row=_row_count, columnspan=4)
+            _radioButton.append(tk.Radiobutton(master, text=task, variable=self.radio_var, value=idx))
+            _radioButton[idx].grid(row=_row_count, columnspan=4)
             _row_count += 1
 
         _start_button = tk.Button(master, text=i18n.startButtonText[i18n.lang()][0], fg="green", font="bold",
@@ -102,13 +103,17 @@ class InitWindow:
         _quit_button.grid(row=_row_count, column=2, columnspan=2)
         _row_count += 1
 
-        def set_reinit():
-            self.reinit.set(1)
+        def set_switch_language():
+            i18n.switch_language()
+            set_image(_lang_button, i18n.lang_button_image(), 1, 20)
+            set_text(_head_label, i18n.appHeader[i18n.lang()])
+            for idx, rad in enumerate(_radioButton):
+                set_text(rad, i18n.dictInit[i18n.lang()][idx])
+            set_text(_start_button, i18n.startButtonText[i18n.lang()][0])
+            set_text(_quit_button, i18n.startButtonText[i18n.lang()][1])
+            set_text(_link_label, i18n.linkLabelText[i18n.lang()])
 
-        def set_switch_lang():
-            self.switch_lang.set(1)
-
-        _lang_button = tk.Button(master, command=combine_funcs(set_switch_lang, master.quit, set_reinit))
+        _lang_button = tk.Button(master, command=combine_funcs(set_switch_language))
         set_image(_lang_button, i18n.lang_button_image(), 1, 20)
         _lang_button.grid(row=_row_count, column=0)
 
@@ -147,11 +152,15 @@ class InitWindow:
         def _mute(self):
             set_toggle_sound()
 
+        def _lang(self):
+            set_switch_language()
+
         master.bind('<Escape>', sys.exit)
         master.bind('<Up>', _toggleup)
         master.bind('<Down>',  _toggledown)
         master.bind('<Return>', _quit)
         master.bind('m', _mute)
+        master.bind('l', _lang)
 
 
 class InfoWindow:

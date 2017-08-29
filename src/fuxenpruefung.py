@@ -51,11 +51,6 @@ while True:
     mainapp = gui.InitWindow(mainroot, categories, taskVar)
     mainroot.focus_force()
     mainroot.mainloop()
-    if mainapp.switch_lang.get():
-        i18n.switch_language()
-    if mainapp.reinit.get():
-        mainroot.destroy()
-        continue
     taskVar = mainapp.radio_var.get()
     idx = 0
     questNumbers = {}

@@ -30,6 +30,7 @@ Keybindings:
 <Down>      radio button down
 <Return>    start, proceed with next window
 m           in main window: mute or unmute sound
+l           in main window: switch language
 
 
 Languages:
