@@ -75,11 +75,15 @@ class InitWindow:
 
         _col_idx = 0
         _row_count += 2
-        for default, longName, shortName in categories:
+        _cat_label = []
+        for idx, default in enumerate(categories):
+            longName = i18n.longNames[i18n.lang()][idx]
+            shortName = i18n.shortNames[i18n.lang()][idx]
             if shortName == 'P' or shortName == 'A':
+                _cat_label.append(None)
                 continue
-            cat_label = tk.Label(master, text=longName)
-            cat_label.grid(row=_row_count-2, column=_col_idx+1)
+            _cat_label.append(tk.Label(master, text=longName))
+            _cat_label[-1].grid(row=_row_count-2, column=_col_idx+1)
             string_val = tk.StringVar()
             string_val.set(default)
             cat_entry = tk.Entry(master, textvariable=string_val, width=5)
@@ -109,6 +113,10 @@ class InitWindow:
             set_text(_head_label, i18n.appHeader[i18n.lang()])
             for idx, rad in enumerate(_radioButton):
                 set_text(rad, i18n.dictInit[i18n.lang()][idx])
+            for idx, cat in enumerate(_cat_label):
+                if cat is None:
+                    continue
+                set_text(cat, i18n.longNames[i18n.lang()][idx])
             set_text(_start_button, i18n.startButtonText[i18n.lang()][0])
             set_text(_quit_button, i18n.startButtonText[i18n.lang()][1])
             set_text(_link_label, i18n.linkLabelText[i18n.lang()])

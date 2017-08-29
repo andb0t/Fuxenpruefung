@@ -45,10 +45,11 @@ while True:
                   [0, i18n.longNames[i18n.lang()][5], i18n.shortNames[i18n.lang()][5]],
                  ]
     change_catagories(categories, categoryUpdate)
+    category_numbers = map(lambda x: x[0], categories)
     mainroot = tk.Tk()
     mainroot.iconbitmap(foxIco)
     mainroot.title('Fux!')
-    mainapp = gui.InitWindow(mainroot, categories, taskVar)
+    mainapp = gui.InitWindow(mainroot, category_numbers, taskVar)
     mainroot.focus_force()
     mainroot.mainloop()
     taskVar = mainapp.radio_var.get()
