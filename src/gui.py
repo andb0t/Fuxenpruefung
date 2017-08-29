@@ -36,6 +36,13 @@ def center_window(root, xdist=0, ydist=0):
     root.geometry('+%d+%d' % (x, y))
 
 
+def set_image(button, file, zoom, height):
+    newImg = tk.PhotoImage(file=file)
+    newImg = newImg.subsample(zoom, zoom)
+    button.configure(image=newImg, height=height)
+    button.image = newImg
+
+
 class InitWindow:
 
     def __init__(self, master, categories, radioinit=0):
@@ -46,23 +53,18 @@ class InitWindow:
 
         self.inputDict = {}
         self.radio_var = tk.IntVar()
-        self.reinit = tk.IntVar()
         self.switch_lang = tk.IntVar()
+        self.reinit = tk.IntVar()
 
-        self.reinit.set(0)
+        self.radio_var.set(radioinit)
         self.switch_lang.set(0)
+        self.reinit.set(0)
 
         _row_count = 0
 
         _head_label = tk.Label(master, text=i18n.appHeader[i18n.lang()], font=("Helvetica", 16))
         _head_label.grid(row=_row_count, columnspan=4)
         _row_count += 1
-
-        def set_image(button, file, zoom, height):
-            newImg = tk.PhotoImage(file=file)
-            newImg = newImg.subsample(zoom, zoom)
-            button.configure(image=newImg, height=height)
-            button.image = newImg
 
         _photo = tk.PhotoImage(file=foxPng)
         _photo = _photo.subsample(5, 5)
@@ -91,7 +93,6 @@ class InitWindow:
             rad = tk.Radiobutton(master, text=task, variable=self.radio_var, value=idx)
             rad.grid(row=_row_count, columnspan=4)
             _row_count += 1
-        self.radio_var.set(radioinit)
 
         _start_button = tk.Button(master, text=i18n.startButtonText[i18n.lang()][0], fg="green", font="bold",
                                   command=master.quit)
@@ -142,10 +143,15 @@ class InitWindow:
 
         def _quit(self):
             master.quit()
+
+        def _mute(self):
+            set_toggle_sound()
+
         master.bind('<Escape>', sys.exit)
         master.bind('<Up>', _toggleup)
         master.bind('<Down>',  _toggledown)
         master.bind('<Return>', _quit)
+        master.bind('m', _mute)
 
 
 class InfoWindow:
