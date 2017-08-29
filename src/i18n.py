@@ -1,9 +1,23 @@
-def switch_language(lang):
-    if lang == 'ger':
+CURRENT_LANGUAGE = 'ger'
+
+
+def lang():
+    return CURRENT_LANGUAGE
+
+
+def switch_language(doSwitch=True):
+    global CURRENT_LANGUAGE
+    if CURRENT_LANGUAGE == 'ger':
+        if doSwitch:
+            CURRENT_LANGUAGE = 'eng'
         return 'eng'
-    elif lang == 'eng':
+    elif CURRENT_LANGUAGE == 'eng':
+        if doSwitch:
+            CURRENT_LANGUAGE = 'bay'
         return 'bay'
-    elif lang == 'bay':
+    elif CURRENT_LANGUAGE == 'bay':
+        if doSwitch:
+            CURRENT_LANGUAGE = 'ger'
         return 'ger'
 
 
@@ -30,7 +44,8 @@ errorTitle = {'ger': 'Bierjunge!',
               'eng': 'Error!',
               'bay': 'Foisch!',
               }
-errorText = {'ger': ['Keine Fragensammlung ausgewaehlt! Nochmal!', 'Falsches Passwort! Nochmal!', 'Fehler in Fragensammlung: '],
+errorText = {'ger': ['Keine Fragensammlung ausgewaehlt! Nochmal!', 'Falsches Passwort! Nochmal!',
+                     'Fehler in Fragensammlung: '],
              'eng': ['No question file selected. Retry!', 'Bad password. Retry!', 'Error in question file: '],
              'bay': ['Koa Frognkatalog gfunna. Nomoi!', 'Posswoat foisch. Nomoi!', 'Foische Form im Frognkatalog: '],
              }

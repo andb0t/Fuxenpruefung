@@ -93,9 +93,11 @@ class InitWindow:
             _row_count += 1
         self.radio_var.set(radioinit)
 
-        _start_button = tk.Button(master, text=i18n.startButtonText[lang][0], fg="green", font="bold", command=master.quit)
+        _start_button = tk.Button(master, text=i18n.startButtonText[lang][0], fg="green", font="bold",
+                                  command=master.quit)
         _start_button.grid(row=_row_count, column=0, columnspan=2)
-        _quit_button = tk.Button(master, text=i18n.startButtonText[lang][1], fg="red", font="bold", command=sys.exit)
+        _quit_button = tk.Button(master, text=i18n.startButtonText[lang][1], fg="red", font="bold",
+                                 command=sys.exit)
         _quit_button.grid(row=_row_count, column=2, columnspan=2)
         _row_count += 1
 
