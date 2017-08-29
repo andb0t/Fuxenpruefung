@@ -1,8 +1,15 @@
+import files
+
+
 CURRENT_LANGUAGE = 'ger'
 
 
 def lang():
     return CURRENT_LANGUAGE
+
+
+def lang_button_image():
+    return files.resource_path('', 'images\\' + lang() + '_' + switch_language(False) + '.png')
 
 
 def switch_language(doSwitch=True):

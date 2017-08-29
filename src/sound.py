@@ -9,6 +9,10 @@ def sound():
     return SOUND_IS_ON
 
 
+def sound_button_image():
+    return files.resource_path('', 'images\\' + toggle_sound(False) + '.png')
+
+
 def start_sound():
     global SOUND_IS_ON
     songWav = files.resource_path('', r'sounds\Ehr_unser_Zier.wav')

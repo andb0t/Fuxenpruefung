@@ -28,15 +28,13 @@ taskVar = 0
 zipPasswd = ''
 questionFile = ''
 categoryUpdate = {}
+foxIco = files.resource_path('', r'images\fox.ico')
+
+
 while True:
 
-    foxIco = files.resource_path('', r'images\fox.ico')
-    foxPng = files.resource_path('', r'images\fox.png')
-    lang_png_name = i18n.lang() + '_' + i18n.switch_language(False)
-    lang_button_png = files.resource_path('', 'images\\' + lang_png_name + '.png')
-    sound_buttong_png = files.resource_path('', 'images\\' + sound.toggle_sound(False) + '.png')
-    github_button_png = files.resource_path('', 'images\github.png')
-    pngList = [foxPng, lang_button_png, github_button_png, sound_buttong_png]
+    lang_button_png = i18n.lang_button_image()
+    sound_buttong_png = sound.sound_button_image()
 
     categories = [
                   [16, i18n.longNames[i18n.lang()][0], i18n.shortNames[i18n.lang()][0]],
@@ -50,7 +48,7 @@ while True:
     mainroot = tk.Tk()
     mainroot.iconbitmap(foxIco)
     mainroot.title('Fux!')
-    mainapp = gui.InitWindow(mainroot, categories, i18n.lang(), pngList, taskVar)
+    mainapp = gui.InitWindow(mainroot, categories, taskVar)
     mainroot.focus_force()
     mainroot.mainloop()
     if mainapp.switch_lang.get():
