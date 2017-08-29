@@ -53,8 +53,6 @@ while True:
     mainroot.mainloop()
     if mainapp.switch_lang.get():
         i18n.switch_language()
-    if mainapp.toggle_sound.get():
-        sound.toggle_sound()
     if mainapp.reinit.get():
         mainroot.destroy()
         continue

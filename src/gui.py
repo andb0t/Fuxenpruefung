@@ -48,11 +48,9 @@ class InitWindow:
         self.radio_var = tk.IntVar()
         self.reinit = tk.IntVar()
         self.switch_lang = tk.IntVar()
-        self.toggle_sound = tk.IntVar()
 
         self.reinit.set(0)
         self.switch_lang.set(0)
-        self.toggle_sound.set(0)
 
         _row_count = 0
 
@@ -119,22 +117,12 @@ class InitWindow:
         _github_button.grid(row=_row_count, column=3)
 
         def set_toggle_sound():
-            self.toggle_sound.set(1)
+            sound.toggle_sound()
+            set_image(_sound_button, sound.sound_button_image(), 4, 20)
 
-        _sound_button = tk.Button(master, command=combine_funcs(set_toggle_sound, master.quit, set_reinit))
+        _sound_button = tk.Button(master, command=combine_funcs(set_toggle_sound))
         set_image(_sound_button, sound.sound_button_image(), 4, 20)
         _sound_button.grid(row=_row_count, column=1)
-
-        # def set_toggle_sound_no_reinit():
-        #     if self.toggle_sound.get() == 0:
-        #         self.toggle_sound.set(1)
-        #     else:
-        #         self.toggle_sound.set(0)
-        #     set_image(_sound_button, sound.sound_button_image(), 4, 20)
-        #
-        # _sound_button = tk.Button(master, command=combine_funcs(set_toggle_sound_no_reinit))
-        # set_image(_sound_button, sound.sound_button_image(), 4, 20)
-        # _sound_button.grid(row=_row_count, column=1)
 
         _link_label = tk.Label(master, text=i18n.linkLabelText[i18n.lang()], fg="blue", cursor="hand2")
         _link_label.grid(row=_row_count, column=2)
