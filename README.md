@@ -24,6 +24,14 @@ also read input from an encrypted ZIP file, such as the
 one delivered within the project (password: 'password').
 
 
+Keybindings:
+<Escape>    close the current window
+<Up>        radio button up
+<Down>      radio button down
+<Return>    start, proceed with next window
+m           in main window: mute or unmute sound
+
+
 Languages:
 The program is available in English, German and Bavarian.
 
