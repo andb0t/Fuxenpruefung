@@ -7,12 +7,6 @@
 
 This is a small program to create a random questionnaire from a list of questions. It is primarily written for easily compiling and correcting exams.
 
-
-
-
-## Usage:
-The program requires a question file, structured like the example question files in `questions` directory contained in the project and explained under *Question file syntax* below. It can also read input from an encrypted ZIP file, such as the one delivered within the project (password: *password*). This is useful if you do not want to risk your students to get hold of the answers.
-
 The selection of questions is randomized, and so is the order of appearance. The number of questions from different categories of difficulty can be set.
 
 The program creates two formatted text documents, the solutions for the examiner and the questionnaire for the examinee.
@@ -20,16 +14,22 @@ The program creates two formatted text documents, the solutions for the examiner
 
 
 
+## Usage:
+The program requires a question file, structured like the example question files in `questions` directory contained in the project and explained under *Question file syntax* below. It can also read input from an encrypted ZIP file, such as the one delivered within the project (password: *password*). This is useful if you do not want to risk your students to get hold of the answers.
+
+
+
+
 ## Installation
-*No installation necessary!* The distributed ZIP file `fuxenpruefung.zip` in the [releases](https://github.com/andb0t/Fuxenpruefung/releases) contains the compiled windows executable. It also contains a directory of example questions.
+*No installation necessary!* The distributed ZIP file `fuxenpruefung.zip` in the [releases](https://github.com/andb0t/Fuxenpruefung/releases) contains the compiled windows executable. It also contains a directory of example questions. Simply download, extract and click.
 
 
 
 
 ## Languages:
 The program is available in those languages:
-* English <img src="src/images/eng.png" height="12">
 * German <img src="src/images/ger.png" height="12">
+* English <img src="src/images/eng.png" height="12">
 * Bavarian <img src="src/images/bay.png" height="12">
 
 
@@ -67,7 +67,7 @@ would result in a multiple choice question with two bullet points and no space a
 
 
 ## For the geeks:
-If you would like to test it, build it yourself or contribute, this is for you!
+If you would like to test it, tweak it, build it yourself or contribute, this is for you!
 
 ### Contributing
 Suggestions, tips, issues, feature requests or merge requests are always welcome!
