@@ -1,5 +1,6 @@
 <img src="src/images/fox.png" width="100">
 
+
 # Fuxenpruefungsgenerator
 
 ### A program for random questionnaires
@@ -25,6 +26,15 @@ The program creates two formatted text documents, the solutions for the examiner
 
 
 
+## Languages:
+The program is available in those languages:
+* English <img src="src/images/eng.png" height="12">
+* German <img src="src/images/ger.png" height="12">
+* Bavarian <img src="src/images/bay.png" height="12">
+
+
+
+
 ## Keybindings:
 * `<Escape>`    close the current window
 * `<Up>`        radio button up
@@ -32,6 +42,7 @@ The program creates two formatted text documents, the solutions for the examiner
 * `<Return>`    start, proceed with next window
 * `m`           in main window: mute or unmute sound
 * `l`           in main window: switch language
+
 
 
 
@@ -48,22 +59,22 @@ would denote a small question asking for the name of the program, which is an IT
 
 For Multiple Choice questions use '\\\\' for every option, e.g.:
 ```
-S # What is python?\\A snake\\A programing language# A # Example # 0
+S # What is python?\\A snake\\A programming language# A # Example # 0
 ```
 would result in a multiple choice question with two bullet points and no space after it, since they are meant to be ticked.
 
 
 
-## Languages:
-The program is available in those languages:
-* English <img src="src/images/eng.png" height="15">
-* German <img src="src/images/ger.png" height="15">
-* Bavarian <img src="src/images/bay.png" height="15">
-
-
-
 
 ## For the geeks:
+If you would like to test it, build it yourself or contribute, this is for you!
+
+### Contributing
+Suggestions, tips, issues, feature requests or merge requests are always welcome!
+
+Simply create your own branch and go for it! An early pull request with the `WIP:` label allows us to discuss the change before it is time to merge.
+
+### Compilation and alternative execution
 If you want to compile the project from the source code, use this:
 ```shell
 pyinstaller src/fuxenpruefung.spec
