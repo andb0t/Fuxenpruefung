@@ -1,4 +1,4 @@
-<img src="src/images/fox.png" width="100">
+<img src="src/images/fox.png" width="20"><img src="src/images/fox.png" width="50"><img src="src/images/fox.png" width="100"><img src="src/images/fox.png" width="50"><img src="src/images/fox.png" width="20">
 
 
 # Fuxenpruefungsgenerator
@@ -74,13 +74,15 @@ Suggestions, tips, issues, feature requests or merge requests are always welcome
 
 Simply create your own branch and go for it! An early pull request with the `WIP:` label allows us to discuss the change before it is time to merge.
 
-### Compilation and alternative execution
-If you want to compile the project from the source code, use this:
-```shell
-pyinstaller src/fuxenpruefung.spec
-```
+### Alternative execution
 If you would like to execute it via the shell use this:
 ```shell
 $ cd src
 $ python fuxenpruefung.py
+```
+
+### Dependencies and compilation
+All used packages are part of the standard python distribution, the others are available via channels like `anaconda`. Most notabily, it uses `winsound` for playing music, so this feature only exists on windows, yet. If you want to compile the project from source, use this:
+```shell
+pyinstaller src/fuxenpruefung.spec
 ```
