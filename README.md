@@ -1,6 +1,6 @@
 <img src="src/images/fox.png" width="100">
 
-#Fuxenpruefungsgenerator
+# Fuxenpruefungsgenerator
 
 ### A program for random questionnaires
 
