@@ -1,7 +1,7 @@
 <img src="src/images/fox.png" width="20"><img src="src/images/fox.png" width="50"><img src="src/images/fox.png" width="100"><img src="src/images/fox.png" width="50"><img src="src/images/fox.png" width="20">
 
 
-# Fuxenpruefungsgenerator
+# Fuxenprüfungsgenerator
 
 ### A program for random questionnaires
 
@@ -53,9 +53,9 @@ The program expects questions in the following format, each part separated by a 
 ```
 The difficulty/work intensity related with a question is set via H (high), M (medium), S (small), J (joke), P (permanent), A (archived). For example:
 ```
-S # What is the name of this program? # Fuxenpruefung # IT # 1
+S # What is the name of this program? # Fuxenprüfung # IT # 1
 ```
-would denote a small question asking for the name of the program, which is an IT related question and needs one line for the answer *Fuxenpruefung*.
+would denote a small question asking for the name of the program, which is an IT related question and needs one line for the answer *Fuxenprüfung*.
 
 For Multiple Choice questions use '\\\\' for every option, e.g.:
 ```
