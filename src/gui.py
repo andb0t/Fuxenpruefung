@@ -19,7 +19,7 @@ def combine_funcs(*funcs):
 
 
 def callback_GitHub(event):
-    webbrowser.open_new(r"https://github.com/andb0t/Fuxenpruefung/releases")
+    webbrowser.open_new(r"https://github.com/andb0t/Fuxenpruefung")
 
 
 def callback_AGV(event):
