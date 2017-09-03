@@ -4,7 +4,8 @@ import subprocess
 import zipfile
 import functools
 import operator
-from time import sleep
+import time
+import collections
 
 import tkinter as tk
 from tkinter import filedialog, simpledialog
@@ -201,12 +202,11 @@ while True:
 
         sys_command = 'notepad '+i18n.examFile[i18n.lang()][1]
         subprocess.Popen(sys_command)
-        sleep(0.1)
+        time.sleep(0.1)
         sys_command = 'notepad '+i18n.examFile[i18n.lang()][0]
         subprocess.Popen(sys_command)
 
     elif taskVar == 1:
-        from collections import Counter
         tot_n_questions = len(qdictsAll)
         # create message
         lines = []
@@ -218,12 +218,11 @@ while True:
 
         lines.append(i18n.statisticsHeader[i18n.lang()][1])
         lines.append(i18n.statisticsColHeader[i18n.lang()])
-        count_dict = Counter([x[2] for x in qdictsAll.values()])
+        count_dict = collections.Counter([x[2] for x in qdictsAll.values()])
         keys = list(count_dict.keys())
         keys.sort()
         for key in keys:
-            lines.append((key+': ', str(count_dict[key]),
-                         '{:.0f} %'.format(100*count_dict[key]/tot_n_questions)))
+            lines.append((key+': ', str(count_dict[key]), '{:.0f} %'.format(100*count_dict[key]/tot_n_questions)))
 
         root = tk.Tk()
         root.iconbitmap(foxIco)
@@ -258,12 +257,12 @@ while True:
         ran_qdicts = randomize_questions()
         questionList = functools.reduce(operator.add, ran_qdicts.values())
         answers = {'success': 0, 'failure': 0, 'skip': 0}
-        for question in questionList:
+        success = ''
+        for idx, question in enumerate(questionList):
             root = tk.Tk()
             root.iconbitmap(foxIco)
             root.title(i18n.quizTitle[i18n.lang()])
-            lines = []
-            app = gui.QuizWindow(root, question[0])
+            app = gui.QuizWindow(root, str(idx + 1) + '. ' + question[0])
             root.focus_force()
             root.mainloop()
             root.destroy()
@@ -273,4 +272,28 @@ while True:
             else:
                 answers[success] += 1
 
-        print(answers)
+        if success == "quit":
+            continue
+
+        lines = []
+        lines.append(i18n.successHeader[i18n.lang()][0])
+        lines.append(i18n.statisticsColHeader[i18n.lang()])
+        tot_n_questions = functools.reduce(operator.add, answers.values())
+        keys = list(answers.keys())
+        keys.sort()
+        successRate = answers['success']/(tot_n_questions - answers['skip']) * (len(i18n.successInterpretation[i18n.lang()]) - 1)
+        successInterpretation = i18n.successInterpretation[i18n.lang()][int(successRate)]
+        if successRate == 1:
+            successInterpretation = i18n.successInterpretation[i18n.lang()][-1]
+
+        for key in keys:
+            lines.append((key+': ', str(answers[key]), '{:.0f} %'.format(100*answers[key]/tot_n_questions)))
+        lines.append(i18n.successHeader[i18n.lang()][1] + ': ' + successInterpretation)
+
+        root = tk.Tk()
+        root.iconbitmap(foxIco)
+        root.title('Fux!')
+        app = gui.InfoWindow(root, lines)
+        root.focus_force()
+        root.mainloop()
+        root.destroy()

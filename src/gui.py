@@ -340,13 +340,13 @@ class QuizWindow:
             thisSuccess.set('quit')
             master.quit()
 
-        _success_button = tk.Button(master, text=i18n.success[i18n.lang()][0], command=_success, width=15)
+        _success_button = tk.Button(master, text=i18n.success[i18n.lang()][0] + ' [k]', command=_success, width=15)
         _success_button.grid(row=_row_count, column=0)
 
-        _failure_button = tk.Button(master, text=i18n.success[i18n.lang()][1], command=_failure, width=15)
+        _failure_button = tk.Button(master, text=i18n.success[i18n.lang()][1] + ' [d]', command=_failure, width=15)
         _failure_button.grid(row=_row_count, column=1)
 
-        _skip_button = tk.Button(master, text=i18n.success[i18n.lang()][2], command=_skip, width=15)
+        _skip_button = tk.Button(master, text=i18n.success[i18n.lang()][2] + ' [s]', command=_skip, width=15)
         _skip_button.grid(row=_row_count, column=2)
 
         _quit_button = tk.Button(master, text=i18n.success[i18n.lang()][3], command=_quit, width=15)
@@ -368,3 +368,38 @@ class QuizWindow:
         master.bind('d', _failure_bind)
         master.bind('s', _skip_bind)
         master.bind('<Escape>', _quit_bind)
+
+
+class ResultWindow:
+
+    def __init__(self, master, answers):
+
+        center_window(master)
+
+        master.protocol("WM_DELETE_WINDOW", master.quit)
+
+        _row_count = 0
+        _col_count = 0
+        _widths = (200, 50, 50)
+        _stickys = (tk.W, None, None)
+        for line in answers:
+            if isinstance(line, str):
+                one_msg = tk.Message(master, text=line, width=200)
+                one_msg.grid(row=_row_count, columnspan=3)
+            elif isinstance(line, list) or isinstance(line, tuple):
+                _col_count = 0
+                for item in line:
+                    multi_msg = tk.Message(master, text=line[_col_count],
+                                           width=_widths[_col_count])
+                    multi_msg.grid(row=_row_count, column=_col_count,
+                                   sticky=_stickys[_col_count])
+                    _col_count += 1
+            _row_count += 1
+
+        _OK_button = tk.Button(master, text="OK", command=master.quit)
+        _OK_button.grid(row=_row_count, columnspan=3)
+
+        def _quit(self):
+            master.quit()
+        master.bind('<Return>', _quit)
+        master.bind('<Escape>', _quit)
