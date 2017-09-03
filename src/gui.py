@@ -57,7 +57,6 @@ class InitWindow:
 
         self.inputDict = {}
         self.radio_var = tk.IntVar()
-
         self.radio_var.set(radioinit)
 
         _row_count = 0
@@ -266,3 +265,106 @@ class TextWindow:
         _canvas.bind("<Down>", lambda event: _canvas.yview_scroll(1, "units"))
         _canvas.bind_all("<MouseWheel>", lambda event: _canvas.yview_scroll(-1*int(event.delta/50), "units"))
         _canvas.focus_set()
+
+
+class YesNoWindow:
+
+    def __init__(self, master, lines):
+
+        self.OKvalue = tk.IntVar()
+        self.OKvalue.set(0)
+        thisOKvalue = self.OKvalue
+
+        center_window(master)
+        master.protocol("WM_DELETE_WINDOW", master.quit)
+
+        _row_count = 0
+        for line in lines:
+            one_msg = tk.Message(master, text=line, width=400)
+            one_msg.grid(row=_row_count, column=0, columnspan=2)
+            _row_count += 1
+
+        def _quit():
+            thisOKvalue.set(0)
+            master.quit()
+
+        def _go():
+            thisOKvalue.set(1)
+            master.quit()
+
+        _OK_button = tk.Button(master, text=i18n.yesNo[i18n.lang()][0], command=_go, width=25)
+        _OK_button.grid(row=_row_count, column=0)
+
+        _cancel_button = tk.Button(master, text=i18n.yesNo[i18n.lang()][1], command=_quit, width=25)
+        _cancel_button.grid(row=_row_count, column=1)
+
+        def _quit_bind(self):
+            _quit()
+
+        def _go_bind(self):
+            _go()
+
+        master.bind('<Return>', _go_bind)
+        master.bind('<Escape>', _quit_bind)
+
+
+class QuizWindow:
+
+    def __init__(self, master, question):
+
+        self.success = tk.StringVar()
+        self.success.set('')
+        thisSuccess = self.success
+
+        center_window(master)
+        master.protocol("WM_DELETE_WINDOW", master.quit)
+
+        _row_count = 0
+        one_msg = tk.Message(master, text=question, width=400)
+        one_msg.grid(row=_row_count, column=0, columnspan=4)
+        _row_count += 1
+
+        def _success():
+            thisSuccess.set('success')
+            master.quit()
+
+        def _failure():
+            thisSuccess.set('failure')
+            master.quit()
+
+        def _skip():
+            thisSuccess.set('skip')
+            master.quit()
+
+        def _quit():
+            thisSuccess.set('quit')
+            master.quit()
+
+        _success_button = tk.Button(master, text=i18n.success[i18n.lang()][0], command=_success, width=15)
+        _success_button.grid(row=_row_count, column=0)
+
+        _failure_button = tk.Button(master, text=i18n.success[i18n.lang()][1], command=_failure, width=15)
+        _failure_button.grid(row=_row_count, column=1)
+
+        _skip_button = tk.Button(master, text=i18n.success[i18n.lang()][2], command=_skip, width=15)
+        _skip_button.grid(row=_row_count, column=2)
+
+        _quit_button = tk.Button(master, text=i18n.success[i18n.lang()][3], command=_quit, width=15)
+        _quit_button.grid(row=_row_count, column=3)
+
+        def _success_bind(self):
+            _success()
+
+        def _failure_bind(self):
+            _failure()
+
+        def _skip_bind(self):
+            _skip()
+
+        def _quit_bind(self):
+            _quit()
+
+        master.bind('k', _success_bind)
+        master.bind('d', _failure_bind)
+        master.bind('s', _skip_bind)
+        master.bind('<Escape>', _quit_bind)

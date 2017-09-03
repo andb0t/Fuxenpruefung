@@ -2,6 +2,8 @@ import os
 import random
 import subprocess
 import zipfile
+import functools
+import operator
 from time import sleep
 
 import tkinter as tk
@@ -163,8 +165,7 @@ while True:
         qdictsAll[questCounter] = question, answer, category, difficulty, vspace
         questCounter += 1
 
-    # process tasks below
-    if taskVar == 0:
+    def randomize_questions():
         ran_qdicts = {}
         for qdict_str in qdicts:
             qdict = qdicts[qdict_str]
@@ -172,6 +173,11 @@ while True:
             random.shuffle(keys)
             ran_QnA = [(qdict[key][:2]+(qdict[key][3],)) for key in keys][:questNumbers[qdict_str]]
             ran_qdicts[qdict_str] = ran_QnA
+        return ran_qdicts
+
+    # process tasks below
+    if taskVar == 0:
+        ran_qdicts = randomize_questions()
 
         with open(i18n.examFile[i18n.lang()][0], 'w', encoding='utf8') as myfile:
             print(i18n.examTitle[i18n.lang()][0]+"\n", file=myfile)
@@ -239,7 +245,6 @@ while True:
                           qdictsAll[key][3],
                           qdictsAll[key][4],
                           ))
-
         root = tk.Tk()
         root.iconbitmap(foxIco)
         root.title('Fux!')
@@ -247,3 +252,25 @@ while True:
         root.focus_force()
         root.mainloop()
         root.destroy()
+
+    elif taskVar == 3:
+
+        ran_qdicts = randomize_questions()
+        questionList = functools.reduce(operator.add, ran_qdicts.values())
+        answers = {'success': 0, 'failure': 0, 'skip': 0}
+        for question in questionList:
+            root = tk.Tk()
+            root.iconbitmap(foxIco)
+            root.title(i18n.quizTitle[i18n.lang()])
+            lines = []
+            app = gui.QuizWindow(root, question[0])
+            root.focus_force()
+            root.mainloop()
+            root.destroy()
+            success = app.success.get()
+            if success == "quit":
+                break
+            else:
+                answers[success] += 1
+
+        print(answers)
