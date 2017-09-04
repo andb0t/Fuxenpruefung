@@ -171,7 +171,6 @@ while True:
         for qdict_str in qdicts:
             if qdict_str in exclude:
                 continue
-            print(qdict_str)
             qdict = qdicts[qdict_str]
             keys = list(qdict.keys())
             random.shuffle(keys)
@@ -259,8 +258,8 @@ while True:
 
         ran_qdicts = randomize_questions(exclude=['J', 'P'])
         questionList = functools.reduce(operator.add, ran_qdicts.values())
-        answers = {'success': 0, 'failure': 0, 'skip': 0}
-        success = ''
+        answersCount = [0, 0, 0]
+        success = -1
         for idx, question in enumerate(questionList):
             root = tk.Tk()
             root.iconbitmap(foxIco)
@@ -270,32 +269,31 @@ while True:
             root.mainloop()
             root.destroy()
             success = app.success.get()
-            if success == "quit":
+            if success == -1:
                 break
             else:
-                answers[success] += 1
+                answersCount[success] += 1
 
-        if success == "quit":
+        if success == -1:
             continue
 
-        # answers = {'success': 7, 'failure': 3, 'skip': 2}
+        # answersCount = {'success': 7, 'failure': 3, 'skip': 2}
 
         lines = []
         lines.append(i18n.successHeader[i18n.lang()][0])
         lines.append(i18n.statisticsColHeader[i18n.lang()])
-        tot_n_questions = functools.reduce(operator.add, answers.values())
-        keys = list(answers.keys())
-        keys.sort()
-        successRate = answers['success']/(tot_n_questions - answers['skip'])
+        tot_n_questions = functools.reduce(operator.add, answersCount)
+        successRate = answersCount[0]/(tot_n_questions - answersCount[2])
         successIndex = int(successRate * (len(i18n.successInterpretation[i18n.lang()]) - 1))
         successInterpretation = i18n.successInterpretation[i18n.lang()][successIndex]
         if successRate == 1:
             successInterpretation = i18n.successInterpretation[i18n.lang()][-1]
 
-        for key in keys:
-            lines.append((key+': ', str(answers[key]), '{:.0f} %'.format(100*answers[key]/tot_n_questions)))
+        keys = i18n.answerCorrect[i18n.lang()]
+        for idx, key in enumerate(keys):
+            lines.append((key+': ', str(answersCount[idx]), '{:.0f} %'.format(100*answersCount[idx]/tot_n_questions)))
         interpretationText = i18n.successHeader[i18n.lang()][1] + ': '
-        interpretationText += str(round(100 * successRate, 0)) + ' % '
+        interpretationText += str(int(100 * successRate)) + ' % '
         interpretationText += i18n.answerCorrect[i18n.lang()][0].lower() + '. '
         interpretationText += successInterpretation + '!'
         lines.append(interpretationText)

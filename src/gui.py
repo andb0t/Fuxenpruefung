@@ -312,7 +312,7 @@ class QuizWindow:
 
     def __init__(self, master, question):
 
-        self.success = tk.StringVar()
+        self.success = tk.IntVar()
         self.success.set('')
         thisSuccess = self.success
 
@@ -325,19 +325,19 @@ class QuizWindow:
         _row_count += 1
 
         def _success():
-            thisSuccess.set('success')
+            thisSuccess.set(0)
             master.quit()
 
         def _failure():
-            thisSuccess.set('failure')
+            thisSuccess.set(1)
             master.quit()
 
         def _skip():
-            thisSuccess.set('skip')
+            thisSuccess.set(2)
             master.quit()
 
         def _quit():
-            thisSuccess.set('quit')
+            thisSuccess.set(-1)
             master.quit()
 
         _success_button = tk.Button(master, text=i18n.success[i18n.lang()][0] + ' [k]', command=_success, width=15)

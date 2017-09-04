@@ -105,9 +105,9 @@ success = {'ger': ['Weiss ich', 'Keine Ahnung', 'Überspringen', 'Abbruch'],
            'eng': ['I know it', "I don't know", 'Skip', 'Cancel'],
            'bay': ['Woass I', 'Woas I ned', 'Andere Frog', 'Etz reichts ma!'],
            }
-successHeader = {'ger': ['Testergebnisse', 'Interpretation'],
-                 'eng': ['Test results', 'Interpretation'],
-                 'bay': ["Zeignis", 'Wos des etz hoast'],
+successHeader = {'ger': ['Testergebniss', 'Interpretation'],
+                 'eng': ['Test result', 'Interpretation'],
+                 'bay': ["Zeignis", 'Wos hoast des etz'],
                  }
 successInterpretation = {'ger': ['Durchgefallen', 'Knapp bestanden', 'Befriedigend', 'Gut gemacht', 'Perfekt'],
                          'eng': ['Insufficient', 'Barely passed', 'Sufficient', 'Well done', 'Perfect'],
