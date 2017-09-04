@@ -339,17 +339,8 @@ class QuizWindow:
         center_window(master)
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
-        _row_count = 0
-        one_msg = tk.Message(master, text=questionList[self.currentQuestion.get()], width=400)
-        one_msg.grid(row=_row_count, column=0, columnspan=4)
-        _row_count += 1
-
-        def _new_question():
-            augment(thisCurrentQuestion)
-            try:
-                set_text(one_msg, questionList[self.currentQuestion.get()])
-            except IndexError:
-                master.quit()
+        self.one_msg = []
+        self._row_count = 0
 
         def _success():
             augment(thisSuccess)
@@ -367,17 +358,49 @@ class QuizWindow:
             augment(thisQuit)
             master.quit()
 
-        _success_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][0] + ' [k]', command=_success, width=15)
-        _success_button.grid(row=_row_count, column=0)
+        self._success_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][0] + ' [k]',
+                                         command=_success, width=15)
+        self._failure_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][1] + ' [d]',
+                                         command=_failure, width=15)
+        self._skip_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][2] + ' [s]',
+                                      command=_skip, width=15)
+        self._quit_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][3] + ' [esc]',
+                                      command=_quit, width=15)
 
-        _failure_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][1] + ' [d]', command=_failure, width=15)
-        _failure_button.grid(row=_row_count, column=1)
+        def print_question(one_msg):
+            self._row_count = 0
+            splitlist = questionList[self.currentQuestion.get()].split('\\\\')
+            for idx, item in enumerate(splitlist):
+                if idx > 0:
+                    item = str(idx) + '. ' + item
+                self.one_msg.append(tk.Message(master, text=item, width=400))
+                self.one_msg[idx].grid(row=self._row_count, column=0, columnspan=4)
+                self._row_count += 1
+            self._failure_button.grid(row=self._row_count, column=1)
+            self._success_button.grid(row=self._row_count, column=0)
+            self._skip_button.grid(row=self._row_count, column=2)
+            self._quit_button.grid(row=self._row_count, column=3)
 
-        _skip_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][2] + ' [s]', command=_skip, width=15)
-        _skip_button.grid(row=_row_count, column=2)
+        def remove_question(one_msg):
+            while one_msg:
+                msg = one_msg.pop()
+                msg.grid_forget()
 
-        _quit_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][3], command=_quit, width=15)
-        _quit_button.grid(row=_row_count, column=3)
+        print_question(self.one_msg)
+
+        def _new_question():
+            augment(thisCurrentQuestion)
+            remove_question(self.one_msg)
+            try:
+                print_question(self.one_msg)
+                # set_text(one_msg, questionList[self.currentQuestion.get()])
+            except IndexError:
+                master.quit()
+
+        self._failure_button.grid(row=self._row_count, column=1)
+        self._success_button.grid(row=self._row_count, column=0)
+        self._skip_button.grid(row=self._row_count, column=2)
+        self._quit_button.grid(row=self._row_count, column=3)
 
         def _success_bind(self):
             _success()
@@ -400,9 +423,7 @@ class QuizWindow:
 class ResultWindow:
 
     def __init__(self, master, answers):
-
         center_window(master)
-
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
         _row_count = 0
@@ -428,5 +449,6 @@ class ResultWindow:
 
         def _quit(self):
             master.quit()
+
         master.bind('<Return>', _quit)
         master.bind('<Escape>', _quit)
