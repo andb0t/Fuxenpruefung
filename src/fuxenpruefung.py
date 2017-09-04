@@ -258,44 +258,43 @@ while True:
 
         ran_qdicts = randomize_questions(exclude=['J', 'P'])
         questionList = functools.reduce(operator.add, ran_qdicts.values())
+        questionList = map(lambda x: x[0], questionList)
         answersCount = [0, 0, 0]
-        success = -1
+        quizResult = -1
         for idx, question in enumerate(questionList):
             root = tk.Tk()
             root.iconbitmap(foxIco)
             root.title(i18n.quizTitle[i18n.lang()])
-            app = gui.QuizWindow(root, str(idx + 1) + '. ' + question[0])
+            app = gui.QuizWindow(root, str(idx + 1) + '. ' + question)
             root.focus_force()
             root.mainloop()
             root.destroy()
-            success = app.success.get()
-            if success == -1:
+            quizResult = app.quizResult.get()
+            if quizResult == -1:
                 break
             else:
-                answersCount[success] += 1
+                answersCount[quizResult] += 1
 
-        if success == -1:
+        if quizResult == -1:
             continue
 
-        # answersCount = {'success': 7, 'failure': 3, 'skip': 2}
-
         lines = []
-        lines.append(i18n.successHeader[i18n.lang()][0])
+        lines.append(i18n.quizHeader[i18n.lang()][0])
         lines.append(i18n.statisticsColHeader[i18n.lang()])
         tot_n_questions = functools.reduce(operator.add, answersCount)
         successRate = answersCount[0]/(tot_n_questions - answersCount[2])
-        successIndex = int(successRate * (len(i18n.successInterpretation[i18n.lang()]) - 1))
-        successInterpretation = i18n.successInterpretation[i18n.lang()][successIndex]
+        successIndex = int(successRate * (len(i18n.quizInterpretation[i18n.lang()]) - 1))
+        quizInterpretation = i18n.quizInterpretation[i18n.lang()][successIndex]
         if successRate == 1:
-            successInterpretation = i18n.successInterpretation[i18n.lang()][-1]
+            quizInterpretation = i18n.quizInterpretation[i18n.lang()][-1]
 
         keys = i18n.answerCorrect[i18n.lang()]
         for idx, key in enumerate(keys):
             lines.append((key+': ', str(answersCount[idx]), '{:.0f} %'.format(100*answersCount[idx]/tot_n_questions)))
-        interpretationText = i18n.successHeader[i18n.lang()][1] + ': '
+        interpretationText = i18n.quizHeader[i18n.lang()][1] + ': '
         interpretationText += str(int(100 * successRate)) + ' % '
         interpretationText += i18n.answerCorrect[i18n.lang()][0].lower() + '. '
-        interpretationText += successInterpretation + '!'
+        interpretationText += quizInterpretation + '!'
         lines.append(interpretationText)
 
         root = tk.Tk()

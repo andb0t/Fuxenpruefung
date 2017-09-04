@@ -316,6 +316,15 @@ class QuizWindow:
         self.success.set('')
         thisSuccess = self.success
 
+
+class QuizWindow:
+
+    def __init__(self, master, question):
+
+        self.quizResult = tk.IntVar()
+        self.quizResult.set(-1)
+        thisQuizResult = self.quizResult
+
         center_window(master)
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
@@ -325,31 +334,31 @@ class QuizWindow:
         _row_count += 1
 
         def _success():
-            thisSuccess.set(0)
+            thisQuizResult.set(0)
             master.quit()
 
         def _failure():
-            thisSuccess.set(1)
+            thisQuizResult.set(1)
             master.quit()
 
         def _skip():
-            thisSuccess.set(2)
+            thisQuizResult.set(2)
             master.quit()
 
         def _quit():
-            thisSuccess.set(-1)
+            thisQuizResult.set(-1)
             master.quit()
 
-        _success_button = tk.Button(master, text=i18n.success[i18n.lang()][0] + ' [k]', command=_success, width=15)
+        _success_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][0] + ' [k]', command=_success, width=15)
         _success_button.grid(row=_row_count, column=0)
 
-        _failure_button = tk.Button(master, text=i18n.success[i18n.lang()][1] + ' [d]', command=_failure, width=15)
+        _failure_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][1] + ' [d]', command=_failure, width=15)
         _failure_button.grid(row=_row_count, column=1)
 
-        _skip_button = tk.Button(master, text=i18n.success[i18n.lang()][2] + ' [s]', command=_skip, width=15)
+        _skip_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][2] + ' [s]', command=_skip, width=15)
         _skip_button.grid(row=_row_count, column=2)
 
-        _quit_button = tk.Button(master, text=i18n.success[i18n.lang()][3], command=_quit, width=15)
+        _quit_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][3], command=_quit, width=15)
         _quit_button.grid(row=_row_count, column=3)
 
         def _success_bind(self):

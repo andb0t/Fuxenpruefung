@@ -101,19 +101,19 @@ yesNo = {'ger': ['Klar!', 'Nein'],
          'eng': ['Yes!', 'No'],
          'bay': ['No halle', 'Na'],
          }
-success = {'ger': ['Weiss ich', 'Keine Ahnung', 'Überspringen', 'Abbruch'],
-           'eng': ['I know it', "I don't know", 'Skip', 'Cancel'],
-           'bay': ['Woass I', 'Woas I ned', 'Andere Frog', 'Etz reichts ma!'],
-           }
-successHeader = {'ger': ['Testergebniss', 'Interpretation'],
-                 'eng': ['Test result', 'Interpretation'],
-                 'bay': ["Zeignis", 'Wos hoast des etz'],
-                 }
-successInterpretation = {'ger': ['Durchgefallen', 'Knapp bestanden', 'Befriedigend', 'Gut gemacht', 'Perfekt'],
-                         'eng': ['Insufficient', 'Barely passed', 'Sufficient', 'Well done', 'Perfect'],
-                         'bay': ['A totaler Depp', 'Do homma scho bessane ghabt', 'Ned schlecht',
-                                 'Sauber, du woast echt vui', 'Du host gspickt'],
-                         }
+quizButton = {'ger': ['Weiss ich', 'Keine Ahnung', 'Überspringen', 'Abbruch'],
+              'eng': ['I know it', "I don't know", 'Skip', 'Cancel'],
+              'bay': ['Woass I', 'Woas I ned', 'Andere Frog', 'Etz reichts ma!'],
+              }
+quizHeader = {'ger': ['Testergebnis', 'Interpretation'],
+              'eng': ['Test result', 'Interpretation'],
+              'bay': ["Zeignis", 'Wos hoast des etz'],
+              }
+quizInterpretation = {'ger': ['Durchgefallen', 'Knapp bestanden', 'Befriedigend', 'Gut gemacht', 'Perfekt'],
+                      'eng': ['Insufficient', 'Barely passed', 'Sufficient', 'Well done', 'Perfect'],
+                      'bay': ['A totaler Depp', 'Do homma scho bessane ghabt', 'Ned schlecht',
+                              'Sauber, du woast echt vui', 'Du host gspickt'],
+                      }
 answerCorrect = {'ger': ['Richtig', 'Falsch', 'Übersprungen'],
                  'eng': ['Correct', 'Wrong', 'Skipped'],
                  'bay': ['Hod gstimmt', 'Foisch', 'Übersprunga'],
