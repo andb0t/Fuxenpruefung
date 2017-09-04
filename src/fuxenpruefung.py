@@ -260,23 +260,22 @@ while True:
         questionList = functools.reduce(operator.add, ran_qdicts.values())
         questionList = map(lambda x: x[0], questionList)
         answersCount = [0, 0, 0]
-        quizResult = -1
-        for idx, question in enumerate(questionList):
-            root = tk.Tk()
-            root.iconbitmap(foxIco)
-            root.title(i18n.quizTitle[i18n.lang()])
-            app = gui.QuizWindow(root, str(idx + 1) + '. ' + question)
-            root.focus_force()
-            root.mainloop()
-            root.destroy()
-            quizResult = app.quizResult.get()
-            if quizResult == -1:
-                break
-            else:
-                answersCount[quizResult] += 1
 
-        if quizResult == -1:
+        root = tk.Tk()
+        root.iconbitmap(foxIco)
+        root.title(i18n.quizTitle[i18n.lang()])
+        questionList = [str(idx + 1) + '. ' + question for idx, question in enumerate(questionList)]
+        app = gui.QuizWindow(root, questionList)
+        root.focus_force()
+        root.mainloop()
+        root.destroy()
+        if app.quit.get():
             continue
+        success = app.success.get()
+        failure = app.failure.get()
+        skip = app.skip.get()
+
+        answersCount = [success, failure, skip]
 
         lines = []
         lines.append(i18n.quizHeader[i18n.lang()][0])

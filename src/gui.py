@@ -47,6 +47,10 @@ def set_text(field, text):
     field.configure(text=text)
 
 
+def augment(tkVar, incr=1):
+    tkVar.set(tkVar.get() + incr)
+
+
 class InitWindow:
 
     def __init__(self, master, categories, radioinit=0):
@@ -310,43 +314,57 @@ class YesNoWindow:
 
 class QuizWindow:
 
-    def __init__(self, master, question):
+    def __init__(self, master, questionList):
+
+        self.quit = tk.IntVar()
+        self.quit.set(0)
+        thisQuit = self.quit
 
         self.success = tk.IntVar()
-        self.success.set('')
+        self.success.set(0)
         thisSuccess = self.success
 
+        self.failure = tk.IntVar()
+        self.failure.set(0)
+        thisFailure = self.failure
 
-class QuizWindow:
+        self.skip = tk.IntVar()
+        self.skip.set(0)
+        thisSkip = self.skip
 
-    def __init__(self, master, question):
-
-        self.quizResult = tk.IntVar()
-        self.quizResult.set(-1)
-        thisQuizResult = self.quizResult
+        self.currentQuestion = tk.IntVar()
+        self.currentQuestion.set(0)
+        thisCurrentQuestion = self.currentQuestion
 
         center_window(master)
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
         _row_count = 0
-        one_msg = tk.Message(master, text=question, width=400)
+        one_msg = tk.Message(master, text=questionList[self.currentQuestion.get()], width=400)
         one_msg.grid(row=_row_count, column=0, columnspan=4)
         _row_count += 1
 
+        def _new_question():
+            augment(thisCurrentQuestion)
+            try:
+                set_text(one_msg, questionList[self.currentQuestion.get()])
+            except IndexError:
+                master.quit()
+
         def _success():
-            thisQuizResult.set(0)
-            master.quit()
+            augment(thisSuccess)
+            _new_question()
 
         def _failure():
-            thisQuizResult.set(1)
-            master.quit()
+            augment(thisFailure)
+            _new_question()
 
         def _skip():
-            thisQuizResult.set(2)
-            master.quit()
+            augment(thisSkip)
+            _new_question()
 
         def _quit():
-            thisQuizResult.set(-1)
+            augment(thisQuit)
             master.quit()
 
         _success_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][0] + ' [k]', command=_success, width=15)
