@@ -97,11 +97,6 @@ quizTitle = {'ger': 'Fuxenquiz',
              'eng': 'Interactive quiz',
              'bay': "Quiz",
              }
-
-quizInstructions = {'ger': ['Beantworte die Fragen!', 'Bist du bereit?'],
-                    'eng': ['Answer the questions!', 'Are you ready?'],
-                    'bay': ['Etz bist dro!', ' Bist fit gnua?'],
-                    }
 yesNo = {'ger': ['Klar!', 'Nein'],
          'eng': ['Yes!', 'No'],
          'bay': ['No halle', 'Na'],
@@ -114,8 +109,8 @@ successHeader = {'ger': ['Testergebnisse', 'Interpretation'],
                  'eng': ['Test results', 'Interpretation'],
                  'bay': ["Zeignis", 'Wos des etz hoast'],
                  }
-successInterpretation = {'ger': ['Durchgefallen', 'Knapp bestanden', 'Befriedigend', 'Gut gemacht', 'Perfekt!'],
-                         'eng': ['Insufficient', 'Barely passed', 'Passed', 'Well done!', 'Perfect!'],
+successInterpretation = {'ger': ['Durchgefallen', 'Knapp bestanden', 'Befriedigend', 'Gut gemacht', 'Perfekt'],
+                         'eng': ['Insufficient', 'Barely passed', 'Sufficient', 'Well done', 'Perfect'],
                          'bay': ['A totaler Depp', 'Do homma scho bessane ghabt', 'Ned schlecht',
                                  'Sauber, du woast echt vui', 'Du host gspickt'],
                          }

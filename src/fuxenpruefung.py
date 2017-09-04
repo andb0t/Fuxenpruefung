@@ -166,9 +166,12 @@ while True:
         qdictsAll[questCounter] = question, answer, category, difficulty, vspace
         questCounter += 1
 
-    def randomize_questions():
+    def randomize_questions(exclude=''):
         ran_qdicts = {}
         for qdict_str in qdicts:
+            if qdict_str in exclude:
+                continue
+            print(qdict_str)
             qdict = qdicts[qdict_str]
             keys = list(qdict.keys())
             random.shuffle(keys)
@@ -254,7 +257,7 @@ while True:
 
     elif taskVar == 3:
 
-        ran_qdicts = randomize_questions()
+        ran_qdicts = randomize_questions(exclude=['J', 'P'])
         questionList = functools.reduce(operator.add, ran_qdicts.values())
         answers = {'success': 0, 'failure': 0, 'skip': 0}
         success = ''
@@ -275,20 +278,27 @@ while True:
         if success == "quit":
             continue
 
+        # answers = {'success': 7, 'failure': 3, 'skip': 2}
+
         lines = []
         lines.append(i18n.successHeader[i18n.lang()][0])
         lines.append(i18n.statisticsColHeader[i18n.lang()])
         tot_n_questions = functools.reduce(operator.add, answers.values())
         keys = list(answers.keys())
         keys.sort()
-        successRate = answers['success']/(tot_n_questions - answers['skip']) * (len(i18n.successInterpretation[i18n.lang()]) - 1)
-        successInterpretation = i18n.successInterpretation[i18n.lang()][int(successRate)]
+        successRate = answers['success']/(tot_n_questions - answers['skip'])
+        successIndex = int(successRate * (len(i18n.successInterpretation[i18n.lang()]) - 1))
+        successInterpretation = i18n.successInterpretation[i18n.lang()][successIndex]
         if successRate == 1:
             successInterpretation = i18n.successInterpretation[i18n.lang()][-1]
 
         for key in keys:
             lines.append((key+': ', str(answers[key]), '{:.0f} %'.format(100*answers[key]/tot_n_questions)))
-        lines.append(i18n.successHeader[i18n.lang()][1] + ': ' + successInterpretation)
+        interpretationText = i18n.successHeader[i18n.lang()][1] + ': '
+        interpretationText += str(round(100 * successRate, 0)) + ' % '
+        interpretationText += i18n.answerCorrect[i18n.lang()][0].lower() + '. '
+        interpretationText += successInterpretation + '!'
+        lines.append(interpretationText)
 
         root = tk.Tk()
         root.iconbitmap(foxIco)
