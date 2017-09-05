@@ -56,9 +56,9 @@ errorText = {'ger': ['Keine Fragensammlung ausgewaehlt! Nochmal!', 'Falsches Pas
              'eng': ['No question file selected. Retry!', 'Bad password. Retry!', 'Error in question file: '],
              'bay': ['Koa Frognkatalog gfunna. Nomoi!', 'Posswoat foisch. Nomoi!', 'Foische Form im Frognkatalog: '],
              }
-dictInit = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen'],
-            'eng': ['Compile new exam', 'Show question statistics', 'Show all questions'],
-            'bay': ['Gib ma a neie Pruefung', "Zeig ma d'Statistik", "Zeig olle Frogn her"],
+dictInit = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen', 'Interaktives Quiz'],
+            'eng': ['Compile new exam', 'Show question statistics', 'Show all questions', 'Interactive quiz'],
+            'bay': ['Gib ma a neie Pruefung', "Zeig ma d'Statistik", "Zeig olle Frogn her", 'Machma a Quiz'],
             }
 examTitle = {'ger': ['Fuxenprüfung', 'Fuxenlösung'],
              'eng': ['Exam', 'Solution'],
@@ -92,3 +92,33 @@ examFile = {'ger': ['fuxenpruefung.txt', 'fuxenloesung.txt'],
             'eng': ['exam.txt', 'solution.txt'],
             'bay': ['fuxenpruefung.txt', 'fuxenloesung.txt'],
             }
+
+quizTitle = {'ger': 'Fuxenquiz',
+             'eng': 'Interactive quiz',
+             'bay': "Quiz",
+             }
+yesNo = {'ger': ['Klar!', 'Nein'],
+         'eng': ['Yes!', 'No'],
+         'bay': ['No halle', 'Na'],
+         }
+quizButton = {'ger': ['Weiss ich', 'Keine Ahnung', 'Überspringen', 'Abbruch'],
+              'eng': ['I know it', "I don't know", 'Skip', 'Cancel'],
+              'bay': ['Woass I', 'Woas I ned', 'Andere Frog', 'Etz reichts!'],
+              }
+quizHeader = {'ger': ['Testergebnis', 'Interpretation'],
+              'eng': ['Test result', 'Interpretation'],
+              'bay': ["Zeignis", 'Wos hoast des etz'],
+              }
+quizInterpretation = {'ger': ['Durchgefallen', 'Knapp bestanden', 'Befriedigend', 'Gut gemacht', 'Perfekt'],
+                      'eng': ['Insufficient', 'Barely passed', 'Sufficient', 'Well done', 'Perfect'],
+                      'bay': ['A totaler Depp', 'Do homma scho bessane ghabt', 'Ned schlecht',
+                              'Sauber, du woast echt vui', 'Du host gspickt'],
+                      }
+quizCorrect = {'ger': 'der Antworten wurden richtig beantwortet',
+               'eng': 'of the questions were answered correctly',
+               'bay': 'hom gstimmt',
+               }
+answerCorrect = {'ger': ['Richtig', 'Falsch', 'Übersprungen'],
+                 'eng': ['Correct', 'Wrong', 'Skipped'],
+                 'bay': ['Hod gstimmt', 'Foisch', 'Übersprunga'],
+                 }
