@@ -103,7 +103,7 @@ yesNo = {'ger': ['Klar!', 'Nein'],
          }
 quizButton = {'ger': ['Weiss ich', 'Keine Ahnung', 'Überspringen', 'Abbruch'],
               'eng': ['I know it', "I don't know", 'Skip', 'Cancel'],
-              'bay': ['Woass I', 'Woas I ned', 'Andere Frog', 'Etz reichts ma!'],
+              'bay': ['Woass I', 'Woas I ned', 'Andere Frog', 'Etz reichts!'],
               }
 quizHeader = {'ger': ['Testergebnis', 'Interpretation'],
               'eng': ['Test result', 'Interpretation'],
@@ -114,6 +114,10 @@ quizInterpretation = {'ger': ['Durchgefallen', 'Knapp bestanden', 'Befriedigend'
                       'bay': ['A totaler Depp', 'Do homma scho bessane ghabt', 'Ned schlecht',
                               'Sauber, du woast echt vui', 'Du host gspickt'],
                       }
+quizCorrect = {'ger': 'der Antworten wurden richtig beantwortet',
+               'eng': 'of the questions were answered correctly',
+               'bay': 'hom gstimmt',
+               }
 answerCorrect = {'ger': ['Richtig', 'Falsch', 'Übersprungen'],
                  'eng': ['Correct', 'Wrong', 'Skipped'],
                  'bay': ['Hod gstimmt', 'Foisch', 'Übersprunga'],

@@ -274,6 +274,8 @@ while True:
         success = app.success.get()
         failure = app.failure.get()
         skip = app.skip.get()
+        if not (success + failure):
+            continue
 
         answersCount = [success, failure, skip]
 
@@ -292,7 +294,7 @@ while True:
             lines.append((key+': ', str(answersCount[idx]), '{:.0f} %'.format(100*answersCount[idx]/tot_n_questions)))
         interpretationText = i18n.quizHeader[i18n.lang()][1] + ': '
         interpretationText += str(int(100 * successRate)) + ' % '
-        interpretationText += i18n.answerCorrect[i18n.lang()][0].lower() + '. '
+        interpretationText += i18n.quizCorrect[i18n.lang()] + '. '
         interpretationText += quizInterpretation + '!'
         lines.append(interpretationText)
 

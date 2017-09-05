@@ -337,7 +337,6 @@ class QuizWindow:
         thisCurrentQuestion = self.currentQuestion
 
         center_window(master)
-        master.protocol("WM_DELETE_WINDOW", master.quit)
 
         self.one_msg = []
         self._row_count = 0
@@ -359,13 +358,13 @@ class QuizWindow:
             master.quit()
 
         self._success_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][0] + ' [k]',
-                                         command=_success, width=15)
+                                         command=_success, width=15, font="bold")
         self._failure_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][1] + ' [d]',
-                                         command=_failure, width=15)
+                                         command=_failure, width=15, font="bold")
         self._skip_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][2] + ' [s]',
-                                      command=_skip, width=15)
+                                      command=_skip, width=15, font="bold")
         self._quit_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][3] + ' [esc]',
-                                      command=_quit, width=15)
+                                      command=_quit, width=15, fg="red", font="bold")
 
         def print_question(one_msg):
             self._row_count = 0
@@ -373,7 +372,7 @@ class QuizWindow:
             for idx, item in enumerate(splitlist):
                 if idx > 0:
                     item = str(idx) + '. ' + item
-                self.one_msg.append(tk.Message(master, text=item, width=400))
+                self.one_msg.append(tk.Message(master, text=item, width=575))
                 self.one_msg[idx].grid(row=self._row_count, column=0, columnspan=4)
                 self._row_count += 1
             self._failure_button.grid(row=self._row_count, column=1)
@@ -393,7 +392,6 @@ class QuizWindow:
             remove_question(self.one_msg)
             try:
                 print_question(self.one_msg)
-                # set_text(one_msg, questionList[self.currentQuestion.get()])
             except IndexError:
                 master.quit()
 
@@ -414,6 +412,7 @@ class QuizWindow:
         def _quit_bind(self):
             _quit()
 
+        master.protocol("WM_DELETE_WINDOW", _quit)
         master.bind('k', _success_bind)
         master.bind('d', _failure_bind)
         master.bind('s', _skip_bind)
