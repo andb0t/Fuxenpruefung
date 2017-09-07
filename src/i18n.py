@@ -122,3 +122,11 @@ answerCorrect = {'ger': ['Richtig', 'Falsch', 'Übersprungen'],
                  'eng': ['Correct', 'Wrong', 'Skipped'],
                  'bay': ['Hod gstimmt', 'Foisch', 'Übersprunga'],
                  }
+snakeWelcome = {'ger': 'Fuxensnake',
+                'eng': 'Fox Snake',
+                'bay': 'Fuxnspui',
+                }
+snakeInstruction = {'ger': ['Bist du bereit?', 'Beliebige Taste drücken!'],
+                    'eng': ['Are you ready?', 'Then press any key!'],
+                    'bay': ['Bist bereit?', 'Druck aufs Bredl!'],
+                    }
