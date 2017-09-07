@@ -130,3 +130,7 @@ snakeInstruction = {'ger': ['Bist du bereit?', 'Enter Taste drücken!'],
                     'eng': ['Are you ready?', 'Then press the return key!'],
                     'bay': ['Bist bereit?', 'Druck af Enter am Bredl!'],
                     }
+snakeScore = {'ger': 'Punktestand',
+              'eng': 'Score',
+              'bay': 'Punkte',
+              }

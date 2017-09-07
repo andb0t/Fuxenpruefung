@@ -15,10 +15,12 @@ BOX_HEIGHT = 200
 BOX_X_MIN = 0
 BOX_Y_MIN = 30
 
-FOX_SIZE = 70
+MAJOR_SIZE = 70
+FOX_SIZE = 40
 N_MAX_LOOP = 100000
 
 majorImgPath = files.resource_path('', r'images\fox.ico')
+foxImgPath = files.resource_path('', r'images\fox.ico')
 
 
 class SnakeWindow:
@@ -50,8 +52,13 @@ class SnakeWindow:
         gameStarted = False
 
         majorImgObj = Image.open(majorImgPath)
-        majorImgObj = majorImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
+        majorImgObj = majorImgObj.resize((MAJOR_SIZE, MAJOR_SIZE), Image.ANTIALIAS)
         canv.majorImg = ImageTk.PhotoImage(majorImgObj)
+
+        foxImgObj = Image.open(foxImgPath)
+        foxImgObj = foxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
+        canv.foxImg = ImageTk.PhotoImage(foxImgObj)
+
         major = canv.create_image(FULL_WIDTH / 2, FULL_HEIGHT / 2, image=canv.majorImg, tags=('major'))
         itemRegister.append('major')
 
@@ -76,8 +83,8 @@ class SnakeWindow:
                 if check_clipping(itemX, itemY, exclude='major'):
                     _draw_new_fox()
                     self._score += 1
-                    canv.itemconfig('scoreText', text='Score: ' + str(self._score))
-            master.after(100, move)
+                    canv.itemconfig('scoreText', text=i18n.snakeScore[i18n.lang()] + ': ' + str(self._score))
+            master.after(50, move)
 
         def check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
             if x > BOX_WIDTH - xSize / 2 or \
@@ -91,11 +98,13 @@ class SnakeWindow:
                 if item in exclude:
                     continue
                 itemX, itemY = canv.coords(item)
-                itemSize = FOX_SIZE
+                x0, y0, x1, y1 = canv.bbox(item)  # returns a tuple like (x1, y1, x2, y2)
+                itemSizeX = x1 - x0
+                itemSizeY = y1 - y0
                 # print('New item x/y', round(x), '/', round(y), item, itemX, '/', itemY)
                 PROXIMITY = 4
-                isCloseX = abs(itemX - x) < xSize / PROXIMITY + itemSize / PROXIMITY
-                isCloseY = abs(itemY - y) < xSize / PROXIMITY + itemSize / PROXIMITY
+                isCloseX = abs(itemX - x) < xSize / PROXIMITY + itemSizeX / PROXIMITY
+                isCloseY = abs(itemY - y) < xSize / PROXIMITY + itemSizeY / PROXIMITY
                 if isCloseX and isCloseY:
                     return True
             return False
@@ -116,7 +125,7 @@ class SnakeWindow:
         def _draw_new_fox():
             newX, newY = get_new_random_pos(FOX_SIZE, FOX_SIZE)
             canv.delete('fox')
-            canv.create_image(newX, newY, image=canv.majorImg, tags=('fox'))
+            canv.create_image(newX, newY, image=canv.foxImg, tags=('fox'))
             itemRegister.append('fox')
 
         def _start(event):
@@ -131,7 +140,7 @@ class SnakeWindow:
             master.bind('<Down>', _go_direction)
             master.bind('<Right>', _go_direction)
             master.bind('<Left>', _go_direction)
-            canv.create_text(BOX_WIDTH / 2, BOX_HEIGHT * 1 / 16, text='Score: '+str(self._score),
+            canv.create_text(BOX_WIDTH / 2, BOX_HEIGHT * 1 / 16, text=i18n.snakeScore[i18n.lang()] + ': '+str(self._score),
                              tags=('scoreText'))
             move()
 
