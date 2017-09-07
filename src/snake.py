@@ -1,4 +1,5 @@
 import random
+import time
 
 import tkinter as tk
 from PIL import Image
@@ -50,6 +51,7 @@ class SnakeWindow:
         self._direction = None
         self._score = 0
         gameStarted = False
+        gameStopped = False
 
         majorImgObj = Image.open(majorImgPath)
         majorImgObj = majorImgObj.resize((MAJOR_SIZE, MAJOR_SIZE), Image.ANTIALIAS)
@@ -84,7 +86,8 @@ class SnakeWindow:
                     _draw_new_fox()
                     self._score += 1
                     canv.itemconfig('scoreText', text=i18n.snakeScore[i18n.lang()] + ': ' + str(self._score))
-            master.after(50, move)
+            if not gameStopped:
+                master.after(50, move)
 
         def check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
             if x > BOX_WIDTH - xSize / 2 or \
@@ -145,6 +148,8 @@ class SnakeWindow:
             move()
 
         def _quit(self):
+            gameStopped = True
+            time.sleep(0.1)
             master.quit()
 
         def _go_direction(event):
@@ -178,7 +183,7 @@ def main():
     print('Executing only snake!')
     root = tk.Tk()
     root.iconbitmap(foxIco)
-    root.title('Foxnake game')
+    root.title('Fox snake game')
     SnakeWindow(root)
     root.focus_force()
     root.mainloop()
