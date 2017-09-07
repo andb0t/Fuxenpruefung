@@ -10,6 +10,11 @@ import files
 
 FULL_WIDTH = 200
 FULL_HEIGHT = 200
+BOX_WIDTH = 200
+BOX_HEIGHT = 200
+BOX_X_MIN = 0
+BOX_Y_MIN = 30
+
 FOX_SIZE = 70
 N_MAX_LOOP = 100000
 
@@ -26,73 +31,127 @@ class SnakeWindow:
 
         canv = tk.Canvas(master, highlightthickness=0)
         canv.pack(fill='both', expand=True)
-        canv.create_line(0, 0, FULL_WIDTH, 0, fill='black', tags=('top'), width=10)
-        canv.create_line(0, 0, 0, FULL_HEIGHT, fill='black', tags=('left'), width=10)
-        canv.create_line(FULL_WIDTH - 1, 0, FULL_WIDTH - 1, FULL_HEIGHT, fill='black', tags=('right'), width=10)
-        canv.create_line(0, FULL_HEIGHT - 2, FULL_WIDTH, FULL_HEIGHT - 2, fill='black', tags=('bottom'), width=10)
-
-        canv.create_text(FULL_WIDTH / 2, FULL_HEIGHT * 1 / 8, text=i18n.snakeWelcome[i18n.lang()],
+        canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_WIDTH, BOX_Y_MIN, fill='black', tags=('top'), width=10)
+        canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_HEIGHT, fill='black', tags=('left'), width=10)
+        canv.create_line(BOX_WIDTH - 1, BOX_Y_MIN, BOX_WIDTH - 1, BOX_HEIGHT, fill='black', tags=('right'), width=10)
+        canv.create_line(BOX_X_MIN, BOX_HEIGHT - 2, BOX_WIDTH, BOX_HEIGHT - 2, fill='black', tags=('bottom'), width=10)
+        canv.create_text(BOX_WIDTH / 2, BOX_HEIGHT * 1 / 16, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font='b', fill='orange')
-        canv.create_text(FULL_WIDTH / 2, FULL_HEIGHT * 6 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
+        canv.create_text(BOX_WIDTH / 2, BOX_HEIGHT * 6 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
                          tags=('instructionText'))
         canv.create_text(FULL_WIDTH / 2, FULL_HEIGHT * 7 / 8, text=i18n.snakeInstruction[i18n.lang()][1],
                          tags=('instructionText2'))
 
-        itemRegister = {}
+        itemRegister = []
+        self._xVel = 0
+        self._yVel = 0
+        self._direction = None
+        self._score = 0
+        gameStarted = False
 
         majorImgObj = Image.open(majorImgPath)
         majorImgObj = majorImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
         canv.majorImg = ImageTk.PhotoImage(majorImgObj)
         major = canv.create_image(FULL_WIDTH / 2, FULL_HEIGHT / 2, image=canv.majorImg, tags=('major'))
-        itemRegister['major'] = major
+        itemRegister.append('major')
 
-        print(canv.coords(itemRegister['major']))
+        print(canv.coords('major'))
 
-        def check_clipping(x, y, xSize, ySize):
-            if x > FULL_WIDTH - xSize / 2 or \
+        def keep_in_box(item):
+            itemX, itemY = canv.coords(item)
+            if itemX < 0:
+                canv.coords(item, BOX_WIDTH, itemY)
+            if itemX > BOX_WIDTH:
+                canv.coords(item, 0, itemY)
+            if itemY < 0:
+                canv.coords(item, itemX, BOX_HEIGHT)
+            if itemY > BOX_HEIGHT:
+                canv.coords(item, itemX, 0)
+
+        def move():
+            if self._direction is not None:
+                canv.move(major, self._xVel, self._yVel)
+                itemX, itemY = canv.coords(major)
+                keep_in_box(major)
+                if check_clipping(itemX, itemY, exclude='major'):
+                    _draw_new_fox()
+                    self._score += 1
+                    canv.itemconfig('scoreText', text='Score: ' + str(self._score))
+            master.after(100, move)
+
+        def check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
+            if x > BOX_WIDTH - xSize / 2 or \
                x < xSize / 2 or \
-               y > FULL_HEIGHT - ySize / 2 or \
+               y > BOX_HEIGHT - ySize / 2 or \
                y < ySize / 2:
                 return True
-            for item in itemRegister.keys():
-                itemX, itemY = canv.coords(itemRegister[item])
+
+        def check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude=[]):
+            for item in itemRegister:
+                if item in exclude:
+                    continue
+                itemX, itemY = canv.coords(item)
                 itemSize = FOX_SIZE
-                print('New item x/y', round(x), '/', round(y), item, itemX, '/', itemY)
+                # print('New item x/y', round(x), '/', round(y), item, itemX, '/', itemY)
                 PROXIMITY = 4
-                if abs(itemX - x) < xSize / PROXIMITY + itemSize / PROXIMITY or \
-                   abs(itemY - y) < xSize / PROXIMITY + itemSize / PROXIMITY:
+                isCloseX = abs(itemX - x) < xSize / PROXIMITY + itemSize / PROXIMITY
+                isCloseY = abs(itemY - y) < xSize / PROXIMITY + itemSize / PROXIMITY
+                if isCloseX and isCloseY:
                     return True
             return False
 
         def get_new_random_pos(xSize, ySize):
             nTries = 0
             while True:
-                newX = FULL_WIDTH * random.random()
-                newY = FULL_HEIGHT * random.random()
+                newX = BOX_WIDTH * random.random()
+                newY = BOX_HEIGHT * random.random()
                 if nTries > N_MAX_LOOP:
                     return None
+                if check_box_boundary(newX, newY, xSize, ySize):
+                    continue
                 if check_clipping(newX, newY, xSize, ySize):
                     continue
                 return (newX, newY)
 
-        def _draw_new_fox(self):
+        def _draw_new_fox():
             newX, newY = get_new_random_pos(FOX_SIZE, FOX_SIZE)
             canv.delete('fox')
-            self.fox = canv.create_image(newX, newY, image=canv.majorImg, tags=('fox'))
+            canv.create_image(newX, newY, image=canv.majorImg, tags=('fox'))
+            itemRegister.append('fox')
 
-        def _start(self):
+        def _start(event):
+            global gameStarted
             canv.delete('welcomeText')
             canv.delete('instructionText')
             canv.delete('instructionText2')
-            _draw_new_fox(self)
+            _draw_new_fox()
             print('Start the game')
-            # master.bind('<Up>', _go_up_bind)
-            # master.bind('<Down>', _go_down_bind)
-            # master.bind('<Right>', _go_right_bind)
-            # master.bind('<Left>', _go_left_bind)
+            gameStarted = True
+            master.bind('<Up>', _go_direction)
+            master.bind('<Down>', _go_direction)
+            master.bind('<Right>', _go_direction)
+            master.bind('<Left>', _go_direction)
+            canv.create_text(BOX_WIDTH / 2, BOX_HEIGHT * 1 / 16, text='Score: '+str(self._score),
+                             tags=('scoreText'))
+            move()
 
         def _quit(self):
             master.quit()
+
+        def _go_direction(event):
+            self._direction = event.keysym
+            if self._direction == 'Up':
+                self._yVel = -5
+                self._xVel = 0
+            if self._direction == 'Down':
+                self._yVel = 5
+                self._xVel = 0
+            if self._direction == 'Right':
+                self._yVel = 0
+                self._xVel = 5
+            if self._direction == 'Left':
+                self._yVel = 0
+                self._xVel = -5
 
         master.protocol("WM_DELETE_WINDOW", _quit)
         master.bind('<Up>', _start)
@@ -100,7 +159,7 @@ class SnakeWindow:
         master.bind('<Right>', _start)
         master.bind('<Left>', _start)
         master.bind('<Escape>', _quit)
-        master.bind('<Return>', _draw_new_fox)
+        master.bind('<Return>', _start)
 
 
 foxIco = files.resource_path('', r'images\fox.ico')
