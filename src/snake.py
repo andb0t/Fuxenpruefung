@@ -11,7 +11,7 @@ import files
 
 FULL_WIDTH = 200
 FULL_HEIGHT = 200
-BOX_WIDTH = 200
+BOX_X_MAX = 200
 BOX_HEIGHT = 200
 BOX_X_MIN = 0
 BOX_Y_MIN = 30
@@ -34,13 +34,13 @@ class SnakeWindow:
 
         canv = tk.Canvas(master, highlightthickness=0)
         canv.pack(fill='both', expand=True)
-        canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_WIDTH, BOX_Y_MIN, fill='black', tags=('top'), width=10)
+        canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MAX, BOX_Y_MIN, fill='black', tags=('top'), width=10)
         canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_HEIGHT, fill='black', tags=('left'), width=10)
-        canv.create_line(BOX_WIDTH - 1, BOX_Y_MIN, BOX_WIDTH - 1, BOX_HEIGHT, fill='black', tags=('right'), width=10)
-        canv.create_line(BOX_X_MIN, BOX_HEIGHT - 2, BOX_WIDTH, BOX_HEIGHT - 2, fill='black', tags=('bottom'), width=10)
-        canv.create_text(BOX_WIDTH / 2, BOX_HEIGHT * 1 / 16, text=i18n.snakeWelcome[i18n.lang()],
+        canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_HEIGHT, fill='black', tags=('right'), width=10)
+        canv.create_line(BOX_X_MIN, BOX_HEIGHT - 2, BOX_X_MAX, BOX_HEIGHT - 2, fill='black', tags=('bottom'), width=10)
+        canv.create_text(BOX_X_MAX / 2, BOX_HEIGHT * 1 / 16, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font='b', fill='orange')
-        canv.create_text(BOX_WIDTH / 2, BOX_HEIGHT * 6 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
+        canv.create_text(BOX_X_MAX / 2, BOX_HEIGHT * 6 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
                          tags=('instructionText'))
         canv.create_text(FULL_WIDTH / 2, FULL_HEIGHT * 7 / 8, text=i18n.snakeInstruction[i18n.lang()][1],
                          tags=('instructionText2'))
@@ -68,11 +68,11 @@ class SnakeWindow:
 
         def keep_in_box(item):
             itemX, itemY = canv.coords(item)
-            if itemX < 0:
-                canv.coords(item, BOX_WIDTH, itemY)
-            if itemX > BOX_WIDTH:
+            if itemX < BOX_X_MIN:
+                canv.coords(item, BOX_X_MAX, itemY)
+            if itemX > BOX_X_MAX:
                 canv.coords(item, 0, itemY)
-            if itemY < 0:
+            if itemY < BOX_Y_MIN:
                 canv.coords(item, itemX, BOX_HEIGHT)
             if itemY > BOX_HEIGHT:
                 canv.coords(item, itemX, 0)
@@ -90,10 +90,10 @@ class SnakeWindow:
                 master.after(50, move)
 
         def check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
-            if x > BOX_WIDTH - xSize / 2 or \
-               x < xSize / 2 or \
+            if x > BOX_X_MAX - xSize / 2 or \
+               x < BOX_X_MIN + xSize / 2 or \
                y > BOX_HEIGHT - ySize / 2 or \
-               y < ySize / 2:
+               y < BOX_Y_MIN + ySize / 2:
                 return True
 
         def check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude=[]):
@@ -101,11 +101,11 @@ class SnakeWindow:
                 if item in exclude:
                     continue
                 itemX, itemY = canv.coords(item)
-                x0, y0, x1, y1 = canv.bbox(item)  # returns a tuple like (x1, y1, x2, y2)
+                x0, y0, x1, y1 = canv.bbox(item)
                 itemSizeX = x1 - x0
                 itemSizeY = y1 - y0
                 # print('New item x/y', round(x), '/', round(y), item, itemX, '/', itemY)
-                PROXIMITY = 4
+                PROXIMITY = 2
                 isCloseX = abs(itemX - x) < xSize / PROXIMITY + itemSizeX / PROXIMITY
                 isCloseY = abs(itemY - y) < xSize / PROXIMITY + itemSizeY / PROXIMITY
                 if isCloseX and isCloseY:
@@ -115,7 +115,7 @@ class SnakeWindow:
         def get_new_random_pos(xSize, ySize):
             nTries = 0
             while True:
-                newX = BOX_WIDTH * random.random()
+                newX = BOX_X_MAX * random.random()
                 newY = BOX_HEIGHT * random.random()
                 if nTries > N_MAX_LOOP:
                     return None
@@ -143,11 +143,12 @@ class SnakeWindow:
             master.bind('<Down>', _go_direction)
             master.bind('<Right>', _go_direction)
             master.bind('<Left>', _go_direction)
-            canv.create_text(BOX_WIDTH / 2, BOX_HEIGHT * 1 / 16, text=i18n.snakeScore[i18n.lang()] + ': '+str(self._score),
+            canv.create_text(BOX_X_MAX / 2, BOX_HEIGHT * 1 / 16, text=i18n.snakeScore[i18n.lang()] + ': '+str(self._score),
                              tags=('scoreText'))
             move()
 
         def _quit(self):
+            global gameStopped
             gameStopped = True
             time.sleep(0.1)
             master.quit()
