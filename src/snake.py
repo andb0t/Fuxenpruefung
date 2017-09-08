@@ -74,7 +74,7 @@ class SnakeWindow:
 
         def move_fox_tail():
             for idx in range(self._nFoxes):
-                thisFoxTag = 'fox' + str(idx)
+                thisFoxTag = 'tail' + str(idx)
                 try:
                     canv.coords(thisFoxTag, self._xPath[(idx + 1) * STEP_DISTANCE], self._yPath[(idx + 1) * STEP_DISTANCE])
                 except IndexError:
@@ -88,7 +88,7 @@ class SnakeWindow:
                 return (newX, newY)
             except IndexError:
                 if self._nFoxes:
-                    newX, newY = canv.coords('fox' + str(self._nFoxes))
+                    newX, newY = canv.coords('tail' + str(self._nFoxes))
             return (newX, newY)
 
         def keep_in_box(item):
@@ -114,8 +114,7 @@ class SnakeWindow:
                     self._score += 1
                     canv.itemconfig('scoreText', text=i18n.snakeScore[i18n.lang()] + ': ' + str(self._score))
                     newX, newY = get_new_fox_pos()
-                    newFoxTailTag = 'fox' + str(self._nFoxes)
-                    _draw_new_fox(newX=newX, newY=newY, name=newFoxTailTag)
+                    _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes))
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
                     self._nFoxes += 1
@@ -199,19 +198,22 @@ class SnakeWindow:
             _quit(self)
 
         def _go_direction(event):
-            self._direction = event.keysym
-            if self._direction == 'Up':
+            if event.keysym == 'Up' and self._direction != 'Down':
                 self._yVel = -5
                 self._xVel = 0
-            if self._direction == 'Down':
+                self._direction = event.keysym
+            if event.keysym == 'Down' and self._direction != 'Up':
                 self._yVel = 5
                 self._xVel = 0
-            if self._direction == 'Right':
+                self._direction = event.keysym
+            if event.keysym == 'Right' and self._direction != 'Left':
                 self._yVel = 0
                 self._xVel = 5
-            if self._direction == 'Left':
+                self._direction = event.keysym
+            if event.keysym == 'Left' and self._direction != 'Right':
                 self._yVel = 0
                 self._xVel = -5
+                self._direction = event.keysym
 
         master.protocol("WM_DELETE_WINDOW", _quit)
         master.bind('<Up>', _start)
