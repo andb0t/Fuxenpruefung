@@ -92,12 +92,15 @@ class SnakeWindow:
         def get_new_tail_pos():
             newX, newY = canv.coords('major')
             try:
-                newX = self._xPath[(self._nFoxes + 1) * TAIL_STEP_DISTANCE]
-                newY = self._yPath[(self._nFoxes + 1) * TAIL_STEP_DISTANCE]
+                newX = self._xPath[(self._nFoxes) * TAIL_STEP_DISTANCE]
+                newY = self._yPath[(self._nFoxes) * TAIL_STEP_DISTANCE]
                 return (newX, newY)
             except IndexError:
-                if self._nFoxes:
-                    newX, newY = canv.coords('tail' + str(self._nFoxes))
+                try:
+                    if self._nFoxes:
+                        newX, newY = canv.coords('tail' + str(self._nFoxes-1))
+                except ValueError:
+                    pass
             return (newX, newY)
 
         def keep_in_box(item):
@@ -124,11 +127,11 @@ class SnakeWindow:
                 if check_clipping(itemX, itemY, include='fox'):
                     self._score += 1
                     canv.itemconfig('scoreText', text=i18n.snakeScore[i18n.lang()] + ': ' + str(self._score))
+                    self._nFoxes += 1
                     newX, newY = get_new_tail_pos()
-                    _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes))
+                    _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes-1))
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
-                    self._nFoxes += 1
                     _draw_new_fox()
                 if check_clipping(itemX, itemY, include='beer'):
                     _draw_new_beer()
@@ -137,6 +140,7 @@ class SnakeWindow:
                 noTailFoxes.extend(['tail' + str(idx) for idx in range(3)])
                 if check_clipping(itemX, itemY, exclude=noTailFoxes):
                     print('Overlapping with own tail!')
+                    _end_game()
             if not gameStopped:
                 master.after(self._speed, move)
 
