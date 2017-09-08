@@ -24,11 +24,13 @@ STEP_SIZE = 5
 MAJOR_SIZE = 70
 FOX_SIZE = 40
 BEER_SIZE = 40
+STAR_SIZE = 40
 N_MAX_LOOP = 10000
 
 majorImgPath = files.resource_path('', r'images\fox.ico')
 foxImgPath = files.resource_path('', r'images\fox.ico')
 beerImgPath = files.resource_path('', r'images\beer.png')
+starImgPath = files.resource_path('', r'images\star.png')
 
 
 class SnakeWindow:
@@ -60,6 +62,7 @@ class SnakeWindow:
         self._direction = None
         self._score = 0
         self._nFoxes = 0
+        self._nBeers = 0
         self._speed = 50
         gameStarted = False
         gameStopped = False
@@ -75,6 +78,10 @@ class SnakeWindow:
         beerImgObj = Image.open(beerImgPath)
         beerImgObj = beerImgObj.resize((BEER_SIZE, BEER_SIZE), Image.ANTIALIAS)
         canv.beerImg = ImageTk.PhotoImage(beerImgObj)
+
+        starImgObj = Image.open(starImgPath)
+        starImgObj = starImgObj.resize((STAR_SIZE, STAR_SIZE), Image.ANTIALIAS)
+        canv.starImg = ImageTk.PhotoImage(starImgObj)
 
         canv.create_image(FULL_WIDTH / 2, FULL_HEIGHT / 2, image=canv.majorImg, tags=('major'))
         itemRegister.append('major')
@@ -126,14 +133,19 @@ class SnakeWindow:
                 move_fox_tail()
                 if check_clipping(itemX, itemY, include='fox'):
                     self._score += 1
-                    canv.itemconfig('scoreText', text=i18n.snakeScore[i18n.lang()] + ': ' + str(self._score))
                     self._nFoxes += 1
+                    canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
+                    canv.itemconfig('starText', text=': ' + str(self._score))
                     newX, newY = get_new_tail_pos()
                     _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes-1))
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
                     _draw_new_fox()
                 if check_clipping(itemX, itemY, include='beer'):
+                    self._score += 1
+                    self._nBeers += 1
+                    canv.itemconfig('beerText', text=': ' + str(self._nBeers))
+                    canv.itemconfig('starText', text=': ' + str(self._score))
                     _draw_new_beer()
                     self._speed = math.ceil(self._speed * 0.95)
                 noTailFoxes = [item for item in itemRegister if 'tail' not in item]
@@ -205,6 +217,16 @@ class SnakeWindow:
             if name not in itemRegister:
                 itemRegister.append(name)
 
+        def _draw_new_star(newX=None, newY=None, name='star'):
+            if not newX and not newY:
+                newX, newY = get_new_random_pos(STAR_SIZE, STAR_SIZE)
+                if not newX and not newY:
+                    _end_game()
+            canv.delete(name)
+            canv.create_image(newX, newY, image=canv.starImg, tags=(name))
+            if name not in itemRegister:
+                itemRegister.append(name)
+
         def _start(event):
             global gameStarted
             canv.delete('welcomeText')
@@ -218,8 +240,12 @@ class SnakeWindow:
             master.bind('<Right>', _go_direction)
             master.bind('<Left>', _go_direction)
             master.unbind('<Return>')
-            canv.create_text(BOX_X_MAX / 2, FULL_HEIGHT * 1 / 16,
-                             text=i18n.snakeScore[i18n.lang()] + ': '+str(self._score), tags=('scoreText'))
+            _draw_new_fox(BOX_X_MAX * 2 / 8, FULL_HEIGHT * 1 / 16, 'scoreFox')
+            canv.create_text(BOX_X_MAX * 3 / 8, FULL_HEIGHT * 1 / 16, text=':' + str(self._nFoxes), tags=('foxText'))
+            _draw_new_beer(BOX_X_MAX * 4 / 8, FULL_HEIGHT * 1 / 16, 'scoreBeer')
+            canv.create_text(BOX_X_MAX * 5 / 8, FULL_HEIGHT * 1 / 16, text=':' + str(self._nBeers), tags=('beerText'))
+            _draw_new_star(BOX_X_MAX * 6 / 8, FULL_HEIGHT * 1 / 16, 'scoreStar')
+            canv.create_text(BOX_X_MAX * 7 / 8, FULL_HEIGHT * 1 / 16, text=':' + str(self._nBeers), tags=('starText'))
             move()
 
         def _quit(self):
