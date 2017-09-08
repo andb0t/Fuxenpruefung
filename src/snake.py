@@ -79,8 +79,6 @@ class SnakeWindow:
         canv.create_image(FULL_WIDTH / 2, FULL_HEIGHT / 2, image=canv.majorImg, tags=('major'))
         itemRegister.append('major')
 
-        print(canv.coords('major'))
-
         def move_fox_tail():
             for idx in range(self._nFoxes):
                 thisFoxTag = 'tail' + str(idx)
@@ -91,7 +89,7 @@ class SnakeWindow:
                 except IndexError:
                     pass
 
-        def get_new_fox_pos():
+        def get_new_tail_pos():
             newX, newY = canv.coords('major')
             try:
                 newX = self._xPath[(self._nFoxes + 1) * TAIL_STEP_DISTANCE]
@@ -114,6 +112,8 @@ class SnakeWindow:
                 canv.coords(item, itemX, BOX_Y_MIN)
 
         def move():
+            if gameStopped:
+                return
             if self._direction is not None:
                 canv.move('major', self._xVel, self._yVel)
                 itemX, itemY = canv.coords('major')
@@ -124,7 +124,7 @@ class SnakeWindow:
                 if check_clipping(itemX, itemY, include='fox'):
                     self._score += 1
                     canv.itemconfig('scoreText', text=i18n.snakeScore[i18n.lang()] + ': ' + str(self._score))
-                    newX, newY = get_new_fox_pos()
+                    newX, newY = get_new_tail_pos()
                     _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes))
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
@@ -132,7 +132,11 @@ class SnakeWindow:
                     _draw_new_fox()
                 if check_clipping(itemX, itemY, include='beer'):
                     _draw_new_beer()
-                    self._speed = math.ceil(self._speed * 0.9)
+                    self._speed = math.ceil(self._speed * 0.95)
+                noTailFoxes = [item for item in itemRegister if 'tail' not in item]
+                noTailFoxes.extend(['tail' + str(idx) for idx in range(3)])
+                if check_clipping(itemX, itemY, exclude=noTailFoxes):
+                    print('Overlapping with own tail!')
             if not gameStopped:
                 master.after(self._speed, move)
 
@@ -143,7 +147,7 @@ class SnakeWindow:
                y < BOX_Y_MIN + ySize / 2:
                 return True
 
-        def check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude=[], include=[]):
+        def check_clipping(x, y, xSize=MAJOR_SIZE, ySize=MAJOR_SIZE, exclude=[], include=[]):
             for item in itemRegister:
                 if item in exclude:
                     continue
@@ -154,7 +158,7 @@ class SnakeWindow:
                 itemSizeX = x1 - x0
                 itemSizeY = y1 - y0
                 # print('New item x/y', round(x), '/', round(y), item, itemX, '/', itemY)
-                PROXIMITY = 2
+                PROXIMITY = 3
                 isCloseX = abs(itemX - x) < xSize / PROXIMITY + itemSizeX / PROXIMITY
                 isCloseY = abs(itemY - y) < xSize / PROXIMITY + itemSizeY / PROXIMITY
                 if isCloseX and isCloseY:
@@ -184,7 +188,8 @@ class SnakeWindow:
                     _end_game()
             canv.delete(name)
             canv.create_image(newX, newY, image=canv.foxImg, tags=(name))
-            itemRegister.append(name)
+            if name not in itemRegister:
+                itemRegister.append(name)
 
         def _draw_new_beer(newX=None, newY=None, name='beer'):
             if not newX and not newY:
@@ -193,7 +198,8 @@ class SnakeWindow:
                     _end_game()
             canv.delete(name)
             canv.create_image(newX, newY, image=canv.beerImg, tags=(name))
-            itemRegister.append(name)
+            if name not in itemRegister:
+                itemRegister.append(name)
 
         def _start(event):
             global gameStarted
@@ -202,7 +208,6 @@ class SnakeWindow:
             canv.delete('instructionText2')
             _draw_new_fox()
             _draw_new_beer()
-            print('Start the game')
             gameStarted = True
             master.bind('<Up>', _go_direction)
             master.bind('<Down>', _go_direction)
