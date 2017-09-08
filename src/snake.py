@@ -1,3 +1,4 @@
+import math
 import random
 import time
 from collections import deque
@@ -6,9 +7,9 @@ import tkinter as tk
 from PIL import Image
 from PIL import ImageTk
 
+import files
 import gui
 import i18n
-import files
 
 FULL_WIDTH = 200
 FULL_HEIGHT = 200
@@ -17,14 +18,17 @@ BOX_Y_MAX = 200
 BOX_X_MIN = 0
 BOX_Y_MIN = 30
 MAX_QUEUE_LEN = 1000
-STEP_DISTANCE = 6
+TAIL_STEP_DISTANCE = 6
+STEP_SIZE = 5
 
 MAJOR_SIZE = 70
 FOX_SIZE = 40
+BEER_SIZE = 40
 N_MAX_LOOP = 10000
 
 majorImgPath = files.resource_path('', r'images\fox.ico')
 foxImgPath = files.resource_path('', r'images\fox.ico')
+beerImgPath = files.resource_path('', r'images\beer.png')
 
 
 class SnakeWindow:
@@ -56,6 +60,7 @@ class SnakeWindow:
         self._direction = None
         self._score = 0
         self._nFoxes = 0
+        self._speed = 50
         gameStarted = False
         gameStopped = False
 
@@ -67,6 +72,10 @@ class SnakeWindow:
         foxImgObj = foxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
         canv.foxImg = ImageTk.PhotoImage(foxImgObj)
 
+        beerImgObj = Image.open(beerImgPath)
+        beerImgObj = beerImgObj.resize((BEER_SIZE, BEER_SIZE), Image.ANTIALIAS)
+        canv.beerImg = ImageTk.PhotoImage(beerImgObj)
+
         canv.create_image(FULL_WIDTH / 2, FULL_HEIGHT / 2, image=canv.majorImg, tags=('major'))
         itemRegister.append('major')
 
@@ -76,15 +85,17 @@ class SnakeWindow:
             for idx in range(self._nFoxes):
                 thisFoxTag = 'tail' + str(idx)
                 try:
-                    canv.coords(thisFoxTag, self._xPath[(idx + 1) * STEP_DISTANCE], self._yPath[(idx + 1) * STEP_DISTANCE])
+                    canv.coords(thisFoxTag,
+                                self._xPath[(idx + 1) * TAIL_STEP_DISTANCE],
+                                self._yPath[(idx + 1) * TAIL_STEP_DISTANCE])
                 except IndexError:
                     pass
 
         def get_new_fox_pos():
             newX, newY = canv.coords('major')
             try:
-                newX = self._xPath[(self._nFoxes + 1) * STEP_DISTANCE]
-                newY = self._yPath[(self._nFoxes + 1) * STEP_DISTANCE]
+                newX = self._xPath[(self._nFoxes + 1) * TAIL_STEP_DISTANCE]
+                newY = self._yPath[(self._nFoxes + 1) * TAIL_STEP_DISTANCE]
                 return (newX, newY)
             except IndexError:
                 if self._nFoxes:
@@ -119,8 +130,11 @@ class SnakeWindow:
                         canv.tag_raise(item)
                     self._nFoxes += 1
                     _draw_new_fox()
+                if check_clipping(itemX, itemY, include='beer'):
+                    _draw_new_beer()
+                    self._speed = math.ceil(self._speed * 0.9)
             if not gameStopped:
-                master.after(50, move)
+                master.after(self._speed, move)
 
         def check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
             if x > BOX_X_MAX - xSize / 2 or \
@@ -172,20 +186,31 @@ class SnakeWindow:
             canv.create_image(newX, newY, image=canv.foxImg, tags=(name))
             itemRegister.append(name)
 
+        def _draw_new_beer(newX=None, newY=None, name='beer'):
+            if not newX and not newY:
+                newX, newY = get_new_random_pos(BEER_SIZE, BEER_SIZE)
+                if not newX and not newY:
+                    _end_game()
+            canv.delete(name)
+            canv.create_image(newX, newY, image=canv.beerImg, tags=(name))
+            itemRegister.append(name)
+
         def _start(event):
             global gameStarted
             canv.delete('welcomeText')
             canv.delete('instructionText')
             canv.delete('instructionText2')
             _draw_new_fox()
+            _draw_new_beer()
             print('Start the game')
             gameStarted = True
             master.bind('<Up>', _go_direction)
             master.bind('<Down>', _go_direction)
             master.bind('<Right>', _go_direction)
             master.bind('<Left>', _go_direction)
-            canv.create_text(BOX_X_MAX / 2, FULL_HEIGHT * 1 / 16, text=i18n.snakeScore[i18n.lang()] + ': '+str(self._score),
-                             tags=('scoreText'))
+            master.unbind('<Return>')
+            canv.create_text(BOX_X_MAX / 2, FULL_HEIGHT * 1 / 16,
+                             text=i18n.snakeScore[i18n.lang()] + ': '+str(self._score), tags=('scoreText'))
             move()
 
         def _quit(self):
@@ -199,20 +224,20 @@ class SnakeWindow:
 
         def _go_direction(event):
             if event.keysym == 'Up' and self._direction != 'Down':
-                self._yVel = -5
+                self._yVel = -STEP_SIZE
                 self._xVel = 0
                 self._direction = event.keysym
             if event.keysym == 'Down' and self._direction != 'Up':
-                self._yVel = 5
+                self._yVel = STEP_SIZE
                 self._xVel = 0
                 self._direction = event.keysym
             if event.keysym == 'Right' and self._direction != 'Left':
                 self._yVel = 0
-                self._xVel = 5
+                self._xVel = STEP_SIZE
                 self._direction = event.keysym
             if event.keysym == 'Left' and self._direction != 'Right':
                 self._yVel = 0
-                self._xVel = -5
+                self._xVel = -STEP_SIZE
                 self._direction = event.keysym
 
         master.protocol("WM_DELETE_WINDOW", _quit)

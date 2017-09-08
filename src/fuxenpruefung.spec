@@ -18,6 +18,7 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 a.datas += [(r'images\fox.ico', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\fox.ico', 'DATA')]
 a.datas += [(r'images\fox.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\fox.png', 'DATA')]
+a.datas += [(r'images\beer.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\beer.png', 'DATA')]
 a.datas += [(r'images\github.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\github.png', 'DATA')]
 a.datas += [(r'images\ger_eng.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\ger_eng.png', 'DATA')]
 a.datas += [(r'images\eng_bay.png', r'C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\src\images\eng_bay.png', 'DATA')]
