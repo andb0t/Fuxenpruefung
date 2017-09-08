@@ -166,7 +166,7 @@ class SnakeWindow:
             while True:
                 newX = BOX_X_MAX * random.random()
                 newY = BOX_Y_MAX * random.random()
-                print(nTries, 'Trying newX newY', newX, '/', newY)
+                # print(nTries, 'Trying newX newY', newX, '/', newY)
                 if nTries > N_MAX_LOOP:
                     return (None, None)
                 else:
@@ -219,6 +219,9 @@ class SnakeWindow:
             time.sleep(0.1)
             master.quit()
 
+        def _click_quit():
+            _quit(self)
+
         def _end_game():
             _quit(self)
 
@@ -240,7 +243,7 @@ class SnakeWindow:
                 self._xVel = -STEP_SIZE
                 self._direction = event.keysym
 
-        master.protocol("WM_DELETE_WINDOW", _quit)
+        master.protocol("WM_DELETE_WINDOW", _click_quit)
         master.bind('<Up>', _start)
         master.bind('<Down>', _start)
         master.bind('<Right>', _start)
