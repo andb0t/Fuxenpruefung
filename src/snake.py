@@ -73,15 +73,18 @@ class SnakeWindow:
 
         foxImgObj = Image.open(foxImgPath)
         foxImgObj = foxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
-        canv.foxImg = ImageTk.PhotoImage(foxImgObj)
 
         beerImgObj = Image.open(beerImgPath)
         beerImgObj = beerImgObj.resize((BEER_SIZE, BEER_SIZE), Image.ANTIALIAS)
-        canv.beerImg = ImageTk.PhotoImage(beerImgObj)
+        # canv.beerImg = ImageTk.PhotoImage(beerImgObj)
 
         starImgObj = Image.open(starImgPath)
         starImgObj = starImgObj.resize((STAR_SIZE, STAR_SIZE), Image.ANTIALIAS)
-        canv.starImg = ImageTk.PhotoImage(starImgObj)
+        # canv.starImg = ImageTk.PhotoImage(starImgObj)
+
+        canv.foxImg = {}
+        canv.beerImg = {}
+        canv.starImg = {}
 
         canv.create_image(FULL_WIDTH / 2, FULL_HEIGHT / 2, image=canv.majorImg, tags=('major'))
         itemRegister.append('major')
@@ -197,33 +200,39 @@ class SnakeWindow:
                     continue
                 return (newX, newY)
 
-        def _draw_new_fox(newX=None, newY=None, name='fox'):
+        def _draw_new_fox(newX=None, newY=None, name='fox', size=1):
             if not newX and not newY:
                 newX, newY = get_new_random_pos(FOX_SIZE, FOX_SIZE)
                 if not newX and not newY:
                     _end_game()
             canv.delete(name)
-            canv.create_image(newX, newY, image=canv.foxImg, tags=(name))
+            thisFoxImgObj = foxImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
+            canv.foxImg[name] = ImageTk.PhotoImage(thisFoxImgObj)
+            canv.create_image(newX, newY, image=canv.foxImg[name], tags=(name))
             if name not in itemRegister:
                 itemRegister.append(name)
 
-        def _draw_new_beer(newX=None, newY=None, name='beer'):
+        def _draw_new_beer(newX=None, newY=None, name='beer', size=1):
             if not newX and not newY:
                 newX, newY = get_new_random_pos(BEER_SIZE, BEER_SIZE)
                 if not newX and not newY:
                     _end_game()
             canv.delete(name)
-            canv.create_image(newX, newY, image=canv.beerImg, tags=(name))
+            thisBeerImgObj = beerImgObj.resize((int(BEER_SIZE * size), int(BEER_SIZE * size)), Image.ANTIALIAS)
+            canv.beerImg[name] = ImageTk.PhotoImage(thisBeerImgObj)
+            canv.create_image(newX, newY, image=canv.beerImg[name], tags=(name))
             if name not in itemRegister:
                 itemRegister.append(name)
 
-        def _draw_new_star(newX=None, newY=None, name='star'):
+        def _draw_new_star(newX=None, newY=None, name='star', size=1):
             if not newX and not newY:
                 newX, newY = get_new_random_pos(STAR_SIZE, STAR_SIZE)
                 if not newX and not newY:
                     _end_game()
             canv.delete(name)
-            canv.create_image(newX, newY, image=canv.starImg, tags=(name))
+            thisStarImgObj = starImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
+            canv.starImg[name] = ImageTk.PhotoImage(thisStarImgObj)
+            canv.create_image(newX, newY, image=canv.starImg[name], tags=(name))
             if name not in itemRegister:
                 itemRegister.append(name)
 
@@ -240,11 +249,11 @@ class SnakeWindow:
             master.bind('<Right>', _go_direction)
             master.bind('<Left>', _go_direction)
             master.unbind('<Return>')
-            _draw_new_fox(BOX_X_MAX * 2 / 8, FULL_HEIGHT * 1 / 16, 'scoreFox')
+            _draw_new_fox(BOX_X_MAX * 2 / 8, FULL_HEIGHT * 1 / 16, 'scoreFox', 0.5)
             canv.create_text(BOX_X_MAX * 3 / 8, FULL_HEIGHT * 1 / 16, text=':' + str(self._nFoxes), tags=('foxText'))
-            _draw_new_beer(BOX_X_MAX * 4 / 8, FULL_HEIGHT * 1 / 16, 'scoreBeer')
+            _draw_new_beer(BOX_X_MAX * 4 / 8, FULL_HEIGHT * 1 / 16, 'scoreBeer', 0.5)
             canv.create_text(BOX_X_MAX * 5 / 8, FULL_HEIGHT * 1 / 16, text=':' + str(self._nBeers), tags=('beerText'))
-            _draw_new_star(BOX_X_MAX * 6 / 8, FULL_HEIGHT * 1 / 16, 'scoreStar')
+            _draw_new_star(BOX_X_MAX * 6 / 8, FULL_HEIGHT * 1 / 16, 'scoreStar', 0.5)
             canv.create_text(BOX_X_MAX * 7 / 8, FULL_HEIGHT * 1 / 16, text=':' + str(self._nBeers), tags=('starText'))
             move()
 
