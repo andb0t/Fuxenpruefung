@@ -71,7 +71,6 @@ while True:
     print('Selected task:', i18n.dictInit[i18n.lang()][taskVar])
 
     if taskVar == 4:
-        print('Awesomeness!')
         mainroot.destroy()
 
         root = tk.Tk()

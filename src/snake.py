@@ -11,10 +11,10 @@ import files
 import gui
 import i18n
 
-FULL_WIDTH = 200
-FULL_HEIGHT = 200
-BOX_X_MAX = 200
-BOX_Y_MAX = 200
+FULL_WIDTH = 300
+FULL_HEIGHT = 300
+BOX_X_MAX = 300
+BOX_Y_MAX = 300
 BOX_X_MIN = 0
 BOX_Y_MIN = 30
 MAX_QUEUE_LEN = 1000
@@ -27,7 +27,7 @@ BEER_SIZE = 40
 STAR_SIZE = 40
 N_MAX_LOOP = 10000
 
-majorImgPath = files.resource_path('', r'images\fox.ico')
+majorImgPath = files.resource_path('', r'images\major.png')
 foxImgPath = files.resource_path('', r'images\fox.ico')
 beerImgPath = files.resource_path('', r'images\beer.png')
 starImgPath = files.resource_path('', r'images\star.png')
