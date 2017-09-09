@@ -11,10 +11,10 @@ import files
 import gui
 import i18n
 
-FULL_WIDTH = 300
-FULL_HEIGHT = 300
-BOX_X_MAX = 300
-BOX_Y_MAX = 300
+FULL_WIDTH = 200
+FULL_HEIGHT = 200
+BOX_X_MAX = 200
+BOX_Y_MAX = 200
 BOX_X_MIN = 0
 BOX_Y_MIN = 30
 MAX_QUEUE_LEN = 1000
@@ -47,7 +47,7 @@ class SnakeWindow:
         canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_Y_MAX, fill='black', tags=('left'), width=10)
         canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('right'), width=10)
         canv.create_line(BOX_X_MIN, BOX_Y_MAX - 2, BOX_X_MAX, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
-        canv.create_text(FULL_WIDTH / 2, FULL_HEIGHT * 1 / 16, text=i18n.snakeWelcome[i18n.lang()],
+        canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN / 2, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font='b', fill='orange')
         canv.create_text(BOX_X_MAX / 2, BOX_Y_MAX * 6 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
                          tags=('instructionText'))
@@ -132,7 +132,7 @@ class SnakeWindow:
                 keep_in_box('major')
                 move_fox_tail()
                 if check_clipping(itemX, itemY, include='fox'):
-                    self._score += 1
+                    self._score += (self._nBeers + 1)
                     self._nFoxes += 1
                     canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
                     canv.itemconfig('starText', text=': ' + str(self._score))
@@ -142,7 +142,7 @@ class SnakeWindow:
                         canv.tag_raise(item)
                     _draw_new_fox()
                 if check_clipping(itemX, itemY, include='beer'):
-                    self._score += 1
+                    self._score += 0
                     self._nBeers += 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers))
                     canv.itemconfig('starText', text=': ' + str(self._score))
