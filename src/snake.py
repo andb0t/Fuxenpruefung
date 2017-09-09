@@ -203,7 +203,7 @@ class SnakeWindow:
             if not newX and not newY:
                 newX, newY = get_new_random_pos(FOX_SIZE, FOX_SIZE)
                 if not newX and not newY:
-                    print('Warning: no new free position found!')
+                    print('Warning: no new free fox position found!')
                     _end_game()
             canv.delete(name)
             thisFoxImgObj = foxImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
@@ -216,7 +216,7 @@ class SnakeWindow:
             if not newX and not newY:
                 newX, newY = get_new_random_pos(BEER_SIZE, BEER_SIZE)
                 if not newX and not newY:
-                    print('Warning: no new free position found!')
+                    print('Warning: no new free beer position found!')
                     _end_game()
             canv.delete(name)
             thisBeerImgObj = beerImgObj.resize((int(BEER_SIZE * size), int(BEER_SIZE * size)), Image.ANTIALIAS)
@@ -229,7 +229,7 @@ class SnakeWindow:
             if not newX and not newY:
                 newX, newY = get_new_random_pos(STAR_SIZE, STAR_SIZE)
                 if not newX and not newY:
-                    print('Warning: no new free position found!')
+                    print('Warning: no new free star position found!')
                     _end_game()
             canv.delete(name)
             thisStarImgObj = starImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
@@ -270,13 +270,22 @@ class SnakeWindow:
 
         def cancel():
             if self._job is not None:
-                print('I should actually stop')
                 master.after_cancel(self._job)
                 self._job = None
 
+        def remove_items():
+            keepItems = ['scoreFox', 'scoreBeer', 'scoreStar']
+            for item in itemRegister:
+                if item not in keepItems:
+                    canv.delete(item)
+
         def _end_game():
             cancel()
-            # _quit(self)
+            remove_items()
+            canv.create_text(BOX_X_MAX / 2, FULL_HEIGHT * 4 / 8, fill='red', font='b',
+                             text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
+            canv.create_text(BOX_X_MAX / 2, FULL_HEIGHT * 5 / 8, fill='red',
+                             text=i18n.gameOver[i18n.lang()][1], tags=('gameOverInstructionText'))
 
         def _go_direction(event):
             if event.keysym == 'Up' and self._direction != 'Down':

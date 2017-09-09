@@ -56,9 +56,12 @@ errorText = {'ger': ['Keine Fragensammlung ausgewaehlt! Nochmal!', 'Falsches Pas
              'eng': ['No question file selected. Retry!', 'Bad password. Retry!', 'Error in question file: '],
              'bay': ['Koa Frognkatalog gfunna. Nomoi!', 'Posswoat foisch. Nomoi!', 'Foische Form im Frognkatalog: '],
              }
-dictInit = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen', 'Interaktives Quiz', 'Fuxensnake'],
-            'eng': ['Compile new exam', 'Show question statistics', 'Show all questions', 'Interactive quiz', 'Fox Snake'],
-            'bay': ['Gib ma a neie Pruefung', "Zeig ma d'Statistik", "Zeig olle Frogn her", 'Machma a Quiz', 'Fuxnspui'],
+dictInit = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen', 'Interaktives Quiz',
+                    'Fuxensnake'],
+            'eng': ['Compile new exam', 'Show question statistics', 'Show all questions', 'Interactive quiz',
+                    'Fox Snake'],
+            'bay': ['Gib ma a neie Pruefung', "Zeig ma d'Statistik", "Zeig olle Frogn her", 'Machma a Quiz',
+                    'Fuxnspui'],
             }
 examTitle = {'ger': ['Fuxenprüfung', 'Fuxenlösung'],
              'eng': ['Exam', 'Solution'],
@@ -134,3 +137,7 @@ snakeScore = {'ger': 'Punktestand',
               'eng': 'Score',
               'bay': 'Punkte',
               }
+gameOver = {'ger': ['Spiel vorbei', 'Escape Taste drücken'],
+            'eng': ['Game over', 'Press <esc> to continue'],
+            'bay': ["Aus is'", 'Druck af Escape am Bredl!'],
+            }
