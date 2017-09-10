@@ -29,10 +29,10 @@ N_MAX_LOOP = 10000
 MAX_SPEED = 5 / 50
 START_SPEED = 1 / 50
 SPEED_STEPS = 1
-MAX_TUMBLE_ANGLE = 30
-ROTATION_SPEED_STEP = 0.1
+ROTATION_SPEED_STEP = 0.01
 MAX_DIR_CHANGE = 120  # allow only direction changes up to this angle
 MAX_TUMBLE = 45
+MAX_TUMBLE_MOVE = 20
 
 majorImgPath = files.resource_path('', r'images\major.png')
 foxImgPath = files.resource_path('', r'images\fox.ico')
@@ -45,8 +45,10 @@ def get_angle(x0, y0, x1, y1):
     mag1 = math.sqrt(x1**2 + y1**2)
     if not mag0 or not mag1:
         return 0
-    denominator = mag0 * mag1
-    return math.degrees(math.acos((x0 * x1 + y0 * y1) / denominator))
+    dot = x0 * x1 + y0 * y1
+    det = x0 * y1 - x1 * y0
+    angle = math.degrees(math.atan2(det, dot))
+    return angle
 
 
 class SnakeWindow:
@@ -62,6 +64,8 @@ class SnakeWindow:
         self._yPath = deque([], MAX_QUEUE_LEN)
         self._xVel = 0
         self._yVel = 0
+        self._xVelTumble = 0
+        self._yVelTumble = 0
         self._direction = None
         self._score = 0
         self._nFoxes = 0
@@ -196,7 +200,7 @@ class SnakeWindow:
 
         def move():
             if self._direction is not None:
-                canv.move('major', self._xVel, self._yVel)
+                canv.move('major', self._xVelTumble, self._yVelTumble)
                 itemX, itemY = canv.coords('major')
                 self._xPath.appendleft(itemX)
                 self._yPath.appendleft(itemY)
@@ -226,14 +230,14 @@ class SnakeWindow:
                 self._currentRotation += self._rotationSpeed
                 canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(MAX_TUMBLE * math.sin(self._currentRotation)))
                 canv.itemconfig('major', image=canv.majorImg)
-                # angle = get_angle(STEP_SIZE, 0, self._xVel, self._yVel)
-                # angle += self._currentRotation
-                # angle = math.radians(angle)
-                # self._xVel = STEP_SIZE * math.cos(angle)
-                # self._yVel = -STEP_SIZE * math.sin(angle)
+                angle = get_angle(1, 0, self._xVel, self._yVel)
+                angle += MAX_TUMBLE_MOVE * math.sin(self._currentRotation)
+                angle = math.radians(angle)
+                self._xVelTumble = STEP_SIZE * math.cos(angle)
+                self._yVelTumble = STEP_SIZE * math.sin(angle)
                 # check tail overlap
                 noTailFoxes = [item for item in itemRegister if 'tail' not in item]
-                noTailFoxes.extend(['tail' + str(idx) for idx in range(3)])
+                noTailFoxes.extend(['tail' + str(idx) for idx in range(2)])
                 if check_clipping(itemX, itemY, exclude=noTailFoxes):
                     print('Overlapping with own tail!')
                     _end_game()
