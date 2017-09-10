@@ -359,6 +359,8 @@ class SnakeWindow:
                 event.keysym = 'Down'
             if event.keysym == 'd':
                 event.keysym = 'Right'
+            if not self._nFoxes:
+                self._direction = 'measingless'
             if event.keysym == 'Up' and self._direction != 'Down':
                 self._yVel = -STEP_SIZE
                 self._xVel = 0
