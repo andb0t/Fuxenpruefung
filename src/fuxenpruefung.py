@@ -75,7 +75,7 @@ while True:
 
         root = tk.Tk()
         root.iconbitmap(foxIco)
-        root.title('Foxnake game')
+        root.title(i18n.snakeWelcome[i18n.lang()])
         snake.SnakeWindow(root)
         root.focus_force()
         root.mainloop()

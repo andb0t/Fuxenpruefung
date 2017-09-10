@@ -439,7 +439,7 @@ def main():
     print('Executing only snake!')
     root = tk.Tk()
     root.iconbitmap(foxIco)
-    root.title('Fox snake game')
+    root.title(i18n.snakeWelcome[i18n.lang()])
     SnakeWindow(root)
     root.focus_force()
     root.mainloop()
