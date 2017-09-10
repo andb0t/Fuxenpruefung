@@ -28,8 +28,10 @@ STAR_SIZE = 40
 N_MAX_LOOP = 10000
 MAX_SPEED = 5 / 50
 START_SPEED = 1 / 50
-SPEED_STEPS = 10
+SPEED_STEPS = 1
+MAX_TUMBLE_ANGLE = 30
 ROTATION_SPEED_STEP = 0.1
+MAX_DIR_CHANGE = 120  # allow only direction changes up to this angle
 
 majorImgPath = files.resource_path('', r'images\major.png')
 foxImgPath = files.resource_path('', r'images\fox.ico')
@@ -277,14 +279,14 @@ class SnakeWindow:
             _draw_new_fox()
             _draw_new_beer()
             gameStarted = True
-            master.bind('<Up>', _go_direction)
-            master.bind('<Down>', _go_direction)
-            master.bind('<Right>', _go_direction)
-            master.bind('<Left>', _go_direction)
-            master.bind('w', _go_direction)
-            master.bind('a', _go_direction)
-            master.bind('s', _go_direction)
-            master.bind('d', _go_direction)
+            master.bind('<Up>', _change_direction)
+            master.bind('<Down>', _change_direction)
+            master.bind('<Right>', _change_direction)
+            master.bind('<Left>', _change_direction)
+            master.bind('w', _change_direction)
+            master.bind('a', _change_direction)
+            master.bind('s', _change_direction)
+            master.bind('d', _change_direction)
             master.unbind('<Return>')
             _draw_new_fox(BOX_X_MAX * 0.15, FULL_HEIGHT * 0.05, 'scoreFox', 0.5)
             canv.create_text(BOX_X_MAX * 0.25, FULL_HEIGHT * 0.05, text=':' + str(self._nFoxes),
@@ -325,7 +327,7 @@ class SnakeWindow:
             canv.create_text(BOX_X_MAX / 2, FULL_HEIGHT * 5 / 8, fill='red',
                              text=i18n.gameOver[i18n.lang()][1], tags=('gameOverInstructionText'))
 
-        def _go_direction(event):
+        def _change_direction(event):
             if event.keysym == 'w':
                 event.keysym = 'Up'
             if event.keysym == 'a':
@@ -334,22 +336,32 @@ class SnakeWindow:
                 event.keysym = 'Down'
             if event.keysym == 'd':
                 event.keysym = 'Right'
-            if event.keysym == 'Up' and self._direction != 'Down':
-                self._yVel = -STEP_SIZE
-                self._xVel = 0
+            xVelBefore = self._xVel
+            yVelBefore = self._yVel
+            directionBefore = self._direction
+            rotationRadians = math.radians(self._currentRotation)
+            if event.keysym == 'Up':
+                self._yVel = -STEP_SIZE * math.cos(rotationRadians)
+                self._xVel = -STEP_SIZE * math.sin(rotationRadians)
                 self._direction = event.keysym
-            if event.keysym == 'Down' and self._direction != 'Up':
-                self._yVel = STEP_SIZE
-                self._xVel = 0
+            if event.keysym == 'Down':
+                self._yVel = STEP_SIZE * math.cos(rotationRadians)
+                self._xVel = STEP_SIZE * math.sin(rotationRadians)
                 self._direction = event.keysym
-            if event.keysym == 'Right' and self._direction != 'Left':
-                self._yVel = 0
-                self._xVel = STEP_SIZE
+            if event.keysym == 'Right':
+                self._yVel = -STEP_SIZE * math.sin(rotationRadians)
+                self._xVel = STEP_SIZE * math.cos(rotationRadians)
                 self._direction = event.keysym
-            if event.keysym == 'Left' and self._direction != 'Right':
-                self._yVel = 0
-                self._xVel = -STEP_SIZE
+            if event.keysym == 'Left':
+                self._yVel = STEP_SIZE * math.sin(rotationRadians)
+                self._xVel = -STEP_SIZE * math.cos(rotationRadians)
                 self._direction = event.keysym
+            # forbid direction changes more than MAX_DIR_CHANGE degrees
+            dirChangeAngle = math.acos((self._xVel * xVelBefore + self._yVel * yVelBefore) / STEP_SIZE**2)
+            if math.degrees(dirChangeAngle) > MAX_DIR_CHANGE:
+                self._xVel = xVelBefore
+                self._yVel = yVelBefore
+                self._direction = directionBefore
 
         master.protocol("WM_DELETE_WINDOW", _click_quit)
         master.bind('<Up>', _start)
