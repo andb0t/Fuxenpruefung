@@ -12,7 +12,7 @@ import gui
 import i18n
 
 FULL_WIDTH = 300
-FULL_HEIGHT = 300
+FULL_HEIGHT = 400
 BOX_X_MAX = 300
 BOX_Y_MAX = 300
 BOX_X_MIN = 0
@@ -156,6 +156,7 @@ class SnakeWindow:
         canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_Y_MAX, fill='black', tags=('left'), width=10)
         canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('right'), width=10)
         canv.create_line(BOX_X_MIN, BOX_Y_MAX - 2, BOX_X_MAX, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
+
         canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN / 2, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font='b', fill='orange')
         canv.create_text(BOX_X_MAX / 2, BOX_Y_MAX * 2 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
@@ -260,7 +261,10 @@ class SnakeWindow:
                 # check tail overlap
                 noTailFoxes = [item for item in itemRegister if 'tail' not in item]
                 noTailFoxes.extend(['tail' + str(idx) for idx in range(2)])
-                crashFox = check_clipping(itemX, itemY, exclude=noTailFoxes)
+                crashFox = check_clipping(itemX, itemY, exclude=noTailFoxes,
+                                          xSize=MAJOR_SIZE * 0.1,
+                                          ySize=MAJOR_SIZE * 0.1)
+
                 if crashFox:
                     print('Overlapping with tail', crashFox)
                     _end_game()
@@ -330,14 +334,14 @@ class SnakeWindow:
             master.bind('s', _change_direction)
             master.bind('d', _change_direction)
             master.unbind('<Return>')
-            _draw_new_fox(BOX_X_MAX * 0.15, FULL_HEIGHT * 0.05, 'scoreFox', 0.5)
-            canv.create_text(BOX_X_MAX * 0.25, FULL_HEIGHT * 0.05, text=':' + str(self._nFoxes),
+            _draw_new_fox(BOX_X_MAX * 0.15, BOX_Y_MIN / 2, 'scoreFox', 0.5)
+            canv.create_text(BOX_X_MAX * 0.25, BOX_Y_MIN / 2, text=':' + str(self._nFoxes),
                              font='b', tags=('foxText'))
-            _draw_new_beer(BOX_X_MAX * 0.45, FULL_HEIGHT * 0.05, 'scoreBeer', 0.5)
-            canv.create_text(BOX_X_MAX * 0.55, FULL_HEIGHT * 0.05, text=':' + str(self._nBeers),
+            _draw_new_beer(BOX_X_MAX * 0.45, BOX_Y_MIN / 2, 'scoreBeer', 0.5)
+            canv.create_text(BOX_X_MAX * 0.55, BOX_Y_MIN / 2, text=':' + str(self._nBeers),
                              font='b', tags=('beerText'))
-            _draw_new_star(BOX_X_MAX * 0.75, FULL_HEIGHT * 0.05, 'scoreStar', 0.5)
-            canv.create_text(BOX_X_MAX * 0.85, FULL_HEIGHT * 0.05, text=':' + str(self._nBeers),
+            _draw_new_star(BOX_X_MAX * 0.75, BOX_Y_MIN / 2, 'scoreStar', 0.5)
+            canv.create_text(BOX_X_MAX * 0.85, BOX_Y_MIN / 2, text=':' + str(self._nBeers),
                              font='b', tags=('starText'))
             move()
 
