@@ -12,11 +12,11 @@ import gui
 import i18n
 
 FULL_WIDTH = 300
-FULL_HEIGHT = 300
+FULL_HEIGHT = 350
 BOX_X_MAX = 300
-BOX_Y_MAX = 300
+BOX_Y_MAX = 350
 BOX_X_MIN = 0
-BOX_Y_MIN = 30
+BOX_Y_MIN = 50
 MAX_QUEUE_LEN = 6000
 TAIL_STEP_DISTANCE = 6
 MAJOR_SIZE = 80
@@ -236,9 +236,12 @@ class SnakeWindow:
                     canv.itemconfig('starText', text=': ' + str(self._score))
                     step = (MAX_SPEED - START_SPEED) / N_SPEED_STEPS
                     self._speed = min(self._speed + step, MAX_SPEED)
-                    if self._nBeers == MAX_BEER:
+                    if self._nBeers == MAX_BEER - 1:
+                        canv.itemconfig('eventInfoText', text=i18n.snakeEventInfo[i18n.lang()][1])
+                    elif self._nBeers == MAX_BEER:
                         self._rotationSpeed = START_ROTATION_SPEED
-                    if self._nBeers > MAX_BEER:
+                        canv.itemconfig('eventInfoText', text=i18n.snakeEventInfo[i18n.lang()][2])
+                    elif self._nBeers > MAX_BEER:
                         step = (MAX_ROTATION_SPEED - START_ROTATION_SPEED) / N_ROTATION_SPEED_STEPS
                         self._rotationSpeed = min(self._rotationSpeed + step, MAX_ROTATION_SPEED)
                         step = (MAX_TUMBLE_ANGLE - START_TUMBLE_ANGLE) / N_TUMBLE_STEPS
@@ -323,6 +326,8 @@ class SnakeWindow:
             _draw_new_star(BOX_X_MAX * 0.75, BOX_Y_MIN * 0.4, 'scoreStar', 0.5)
             canv.create_text(BOX_X_MAX * 0.85, BOX_Y_MIN * 0.4, text=':' + str(self._nBeers),
                              font='b', tags=('starText'))
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN * 0.73, fill='red',
+                             text=i18n.snakeEventInfo[i18n.lang()][0], tags=('eventInfoText'))
             _start(event)
 
         def _start(event):
@@ -369,6 +374,7 @@ class SnakeWindow:
         def _end_game():
             cancel()
             remove_items()
+            canv.itemconfig('eventInfoText', text='R.I.P.')
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.5, fill='red', font='b',
                              text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6, fill='red',
@@ -388,6 +394,7 @@ class SnakeWindow:
             canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
             canv.itemconfig('beerText', text=': ' + str(self._nBeers))
             canv.itemconfig('starText', text=': ' + str(self._score))
+            canv.itemconfig('eventInfoText', text=i18n.snakeEventInfo[i18n.lang()][0])
             canv.coords('major', FULL_WIDTH / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2)
             _start(event)
 
@@ -400,6 +407,8 @@ class SnakeWindow:
                 event.keysym = 'Down'
             if event.keysym == 'd':
                 event.keysym = 'Right'
+            if not self._direction:
+                canv.itemconfig('eventInfoText', text=i18n.snakeEventInfo[i18n.lang()][3])
             if not self._nFoxes:
                 self._direction = 'measingless'
             if event.keysym == 'Up' and self._direction != 'Down':
