@@ -11,10 +11,10 @@ import files
 import gui
 import i18n
 
-FULL_WIDTH = 300
-FULL_HEIGHT = 350
-BOX_X_MAX = 300
-BOX_Y_MAX = 350
+FULL_WIDTH = 400
+FULL_HEIGHT = 450
+BOX_X_MAX = 400
+BOX_Y_MAX = 450
 BOX_X_MIN = 0
 BOX_Y_MIN = 50
 MAX_QUEUE_LEN = 6000
@@ -28,7 +28,7 @@ BUCKET_SIZE = 35
 
 MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
-MAX_BEER = 2
+MAX_BEER = 10
 BEER_RESPAWN_CHANCE = 0.7
 
 START_SPEED = 1 / 50
@@ -276,7 +276,7 @@ class SnakeWindow:
                         self._rotationSpeed = min(self._rotationSpeed + step, MAX_ROTATION_SPEED)
                         step = (MAX_TUMBLE_ANGLE - START_TUMBLE_ANGLE) / N_TUMBLE_STEPS
                         self._tumbleAngle = min(self._tumbleAngle + step, MAX_TUMBLE_ANGLE)
-                    if self._nBeers > MAX_BEER + 5:
+                    if self._nBeers == MAX_BEER + 5:
                         _draw_new_bucket()
                     if random.random() < BEER_RESPAWN_CHANCE:
                         _draw_new_beer()
