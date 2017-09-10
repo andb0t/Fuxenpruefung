@@ -21,14 +21,15 @@ MAX_QUEUE_LEN = 1000
 TAIL_STEP_DISTANCE = 6
 STEP_SIZE = 5
 
-MAJOR_SIZE = 70
+MAJOR_SIZE = 80
 FOX_SIZE = 40
 BEER_SIZE = 40
 STAR_SIZE = 40
 N_MAX_LOOP = 10000
 MAX_SPEED = 5 / 50
 START_SPEED = 1 / 50
-SPEED_STEPS = 20
+SPEED_STEPS = 10
+ROTATION_SPEED_STEP = 0.1
 
 majorImgPath = files.resource_path('', r'images\major.png')
 foxImgPath = files.resource_path('', r'images\fox.ico')
@@ -55,6 +56,8 @@ class SnakeWindow:
         self._nBeers = 0
         self._speed = START_SPEED
         self._job = None
+        self._rotationSpeed = 0
+        self._currentRotation = 0
         gameStarted = False
         gameStopped = False
 
@@ -187,6 +190,7 @@ class SnakeWindow:
                 self._yPath.appendleft(itemY)
                 keep_in_box('major')
                 move_fox_tail()
+                # catch foxes
                 if check_clipping(itemX, itemY, include='fox'):
                     self._score += self._nBeers
                     self._nFoxes += 1
@@ -197,14 +201,20 @@ class SnakeWindow:
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
                     _draw_new_fox()
+                # drink beer
                 if check_clipping(itemX, itemY, include='beer'):
                     if self._speed == MAX_SPEED:
-                        self._score += 1
+                        self._rotationSpeed += ROTATION_SPEED_STEP
                     self._nBeers += 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers))
                     canv.itemconfig('starText', text=': ' + str(self._score))
                     _draw_new_beer()
                     self._speed = min(self._speed + (MAX_SPEED - START_SPEED) / SPEED_STEPS, MAX_SPEED)
+                # rotate major and its direction
+                self._currentRotation += self._rotationSpeed
+                canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(self._currentRotation))
+                canv.itemconfig('major', image=canv.majorImg)
+                # check tail overlap
                 noTailFoxes = [item for item in itemRegister if 'tail' not in item]
                 noTailFoxes.extend(['tail' + str(idx) for idx in range(3)])
                 if check_clipping(itemX, itemY, exclude=noTailFoxes):
