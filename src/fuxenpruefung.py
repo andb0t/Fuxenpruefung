@@ -130,7 +130,6 @@ while True:
         questionFile = ''
         continue
 
-
     # Read in data
     qdicts = {}
     for key in questNumbers.keys():

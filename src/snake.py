@@ -286,6 +286,7 @@ class SnakeWindow:
                 if check_clipping(itemX, itemY, include='bucket'):
                     self._nBeers = MAX_BEER - 1
                     delete_widget('bucket')
+                    self._currentRotation = 0
                     self._rotationSpeed = 0
                     self._tumbleAngle = START_TUMBLE_ANGLE
                 # rotate major and its direction
@@ -426,6 +427,7 @@ class SnakeWindow:
             delete_widget('gameOverText')
             delete_widget('gameOverCancelText')
             delete_widget('gameOverRestartText')
+            delete_widget('bucket')
             tailFoxes = [item for item in itemRegister if 'tail' in item]
             for item in tailFoxes:
                 delete_widget(item)
@@ -434,6 +436,8 @@ class SnakeWindow:
             canv.itemconfig('starText', text=': ' + str(self._score))
             canv.itemconfig('eventInfoText', text=i18n.snakeEventInfo[i18n.lang()][0])
             canv.coords('major', FULL_WIDTH / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2)
+            canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(0))
+            canv.itemconfig('major', image=canv.majorImg)
             _start(event)
 
         def _change_direction(event):
