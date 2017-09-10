@@ -12,7 +12,7 @@ import gui
 import i18n
 
 FULL_WIDTH = 300
-FULL_HEIGHT = 400
+FULL_HEIGHT = 300
 BOX_X_MAX = 300
 BOX_Y_MAX = 300
 BOX_X_MIN = 0
@@ -68,23 +68,23 @@ class SnakeWindow:
         master.resizable(0, 0)
 
         itemRegister = []
-        self._xPath = deque([], MAX_QUEUE_LEN)
-        self._yPath = deque([], MAX_QUEUE_LEN)
-        self._xVel = 0
-        self._yVel = 0
-        self._xVelTumble = 0
-        self._yVelTumble = 0
-        self._direction = None
-        self._score = 0
-        self._nFoxes = 0
-        self._nBeers = 0
-        self._speed = START_SPEED
-        self._job = None
-        self._rotationSpeed = 0
-        self._currentRotation = 0
-        self._tumbleAngle = START_TUMBLE_ANGLE
-        gameStarted = False
-        gameStopped = False
+
+        def reset(self):
+            self._xPath = deque([], MAX_QUEUE_LEN)
+            self._yPath = deque([], MAX_QUEUE_LEN)
+            self._xVel = 0
+            self._yVel = 0
+            self._xVelTumble = 0
+            self._yVelTumble = 0
+            self._direction = None
+            self._score = 0
+            self._nFoxes = 0
+            self._nBeers = 0
+            self._speed = START_SPEED
+            self._job = None
+            self._rotationSpeed = 0
+            self._currentRotation = 0
+            self._tumbleAngle = START_TUMBLE_ANGLE
 
         def delete_widget(name):
             canv.delete(name)
@@ -157,7 +157,7 @@ class SnakeWindow:
         canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('right'), width=10)
         canv.create_line(BOX_X_MIN, BOX_Y_MAX - 2, BOX_X_MAX, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
 
-        canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN / 2, text=i18n.snakeWelcome[i18n.lang()],
+        canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN * 0.4, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font='b', fill='orange')
         canv.create_text(BOX_X_MAX / 2, BOX_Y_MAX * 2 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
                          tags=('instructionText'))
@@ -170,7 +170,7 @@ class SnakeWindow:
         canv.create_text(FULL_WIDTH * 0.60, BOX_Y_MAX * 0.9, text='X', tags=('instructionTimes'))
         _draw_new_fox(FULL_WIDTH * 0.70, BOX_Y_MAX * 0.9, "instrFox", 0.5)
 
-        canv.create_image(FULL_WIDTH / 2, FULL_HEIGHT / 2, image=canv.majorImg, tags=('major'))
+        canv.create_image(FULL_WIDTH / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg, tags=('major'))
         itemRegister.append('major')
 
         def move_fox_tail():
@@ -312,8 +312,20 @@ class SnakeWindow:
                     continue
                 return (newX, newY)
 
+        def _init_start(event):
+            reset(self)
+            _draw_new_fox(BOX_X_MAX * 0.15, BOX_Y_MIN * 0.4, 'scoreFox', 0.5)
+            canv.create_text(BOX_X_MAX * 0.25, BOX_Y_MIN * 0.4, text=':' + str(self._nFoxes),
+                             font='b', tags=('foxText'))
+            _draw_new_beer(BOX_X_MAX * 0.45, BOX_Y_MIN * 0.4, 'scoreBeer', 0.5)
+            canv.create_text(BOX_X_MAX * 0.55, BOX_Y_MIN * 0.4, text=':' + str(self._nBeers),
+                             font='b', tags=('beerText'))
+            _draw_new_star(BOX_X_MAX * 0.75, BOX_Y_MIN * 0.4, 'scoreStar', 0.5)
+            canv.create_text(BOX_X_MAX * 0.85, BOX_Y_MIN * 0.4, text=':' + str(self._nBeers),
+                             font='b', tags=('starText'))
+            _start(event)
+
         def _start(event):
-            global gameStarted
             delete_widget('welcomeText')
             delete_widget('instructionText')
             delete_widget('instructionText2')
@@ -324,7 +336,6 @@ class SnakeWindow:
             delete_widget('instructionTimes')
             _draw_new_fox()
             _draw_new_beer()
-            gameStarted = True
             master.bind('<Up>', _change_direction)
             master.bind('<Down>', _change_direction)
             master.bind('<Right>', _change_direction)
@@ -334,20 +345,9 @@ class SnakeWindow:
             master.bind('s', _change_direction)
             master.bind('d', _change_direction)
             master.unbind('<Return>')
-            _draw_new_fox(BOX_X_MAX * 0.15, BOX_Y_MIN / 2, 'scoreFox', 0.5)
-            canv.create_text(BOX_X_MAX * 0.25, BOX_Y_MIN / 2, text=':' + str(self._nFoxes),
-                             font='b', tags=('foxText'))
-            _draw_new_beer(BOX_X_MAX * 0.45, BOX_Y_MIN / 2, 'scoreBeer', 0.5)
-            canv.create_text(BOX_X_MAX * 0.55, BOX_Y_MIN / 2, text=':' + str(self._nBeers),
-                             font='b', tags=('beerText'))
-            _draw_new_star(BOX_X_MAX * 0.75, BOX_Y_MIN / 2, 'scoreStar', 0.5)
-            canv.create_text(BOX_X_MAX * 0.85, BOX_Y_MIN / 2, text=':' + str(self._nBeers),
-                             font='b', tags=('starText'))
             move()
 
         def _quit(self):
-            global gameStopped
-            gameStopped = True
             time.sleep(0.1)
             master.quit()
 
@@ -369,10 +369,27 @@ class SnakeWindow:
         def _end_game():
             cancel()
             remove_items()
-            canv.create_text(BOX_X_MAX / 2, FULL_HEIGHT * 4 / 8, fill='red', font='b',
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.5, fill='red', font='b',
                              text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
-            canv.create_text(BOX_X_MAX / 2, FULL_HEIGHT * 5 / 8, fill='red',
-                             text=i18n.gameOver[i18n.lang()][1], tags=('gameOverInstructionText'))
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6, fill='red',
+                             text=i18n.gameOver[i18n.lang()][1], tags=('gameOverCancelText'))
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.7, fill='red',
+                             text=i18n.gameOver[i18n.lang()][2], tags=('gameOverRestartText'))
+            master.bind('<Return>', _restart)
+
+        def _restart(event):
+            reset(self)
+            delete_widget('gameOverText')
+            delete_widget('gameOverCancelText')
+            delete_widget('gameOverRestartText')
+            tailFoxes = [item for item in itemRegister if 'tail' in item]
+            for item in tailFoxes:
+                delete_widget(item)
+            canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
+            canv.itemconfig('beerText', text=': ' + str(self._nBeers))
+            canv.itemconfig('starText', text=': ' + str(self._score))
+            canv.coords('major', FULL_WIDTH / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2)
+            _start(event)
 
         def _change_direction(event):
             if event.keysym == 'w':
@@ -403,16 +420,16 @@ class SnakeWindow:
                 self._direction = event.keysym
 
         master.protocol("WM_DELETE_WINDOW", _click_quit)
-        master.bind('<Up>', _start)
-        master.bind('<Down>', _start)
-        master.bind('<Right>', _start)
-        master.bind('<Left>', _start)
-        master.bind('w', _start)
-        master.bind('a', _start)
-        master.bind('s', _start)
-        master.bind('d', _start)
+        master.bind('<Up>', _init_start)
+        master.bind('<Down>', _init_start)
+        master.bind('<Right>', _init_start)
+        master.bind('<Left>', _init_start)
+        master.bind('w', _init_start)
+        master.bind('a', _init_start)
+        master.bind('s', _init_start)
+        master.bind('d', _init_start)
         master.bind('<Escape>', _quit)
-        master.bind('<Return>', _start)
+        master.bind('<Return>', _init_start)
 
 
 foxIco = files.resource_path('', r'images\fox.ico')

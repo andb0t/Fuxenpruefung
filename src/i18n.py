@@ -137,7 +137,7 @@ snakeScore = {'ger': 'Punktestand',
               'eng': 'Score',
               'bay': 'Punkte',
               }
-gameOver = {'ger': ['Spiel vorbei', 'Escape Taste drücken'],
-            'eng': ['Game over', 'Press <esc> to continue'],
-            'bay': ["Aus is'", 'Druck af Escape am Bredl!'],
+gameOver = {'ger': ['Spiel vorbei', 'Escape Taste für Abbruch', 'Enter Taste für Neustart'],
+            'eng': ['Game over', '<esc> to continue', '<return> for restart'],
+            'bay': ["Aus is'", 'Druck af Escape wannst gnua host!', 'Nomoi mit da Enter Tastn'],
             }
