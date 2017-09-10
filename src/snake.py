@@ -17,23 +17,30 @@ BOX_X_MAX = 300
 BOX_Y_MAX = 300
 BOX_X_MIN = 0
 BOX_Y_MIN = 30
-MAX_QUEUE_LEN = 1000
+MAX_QUEUE_LEN = 6000
 TAIL_STEP_DISTANCE = 6
 MAJOR_SIZE = 80
 FOX_SIZE = 40
 BEER_SIZE = 40
 STAR_SIZE = 40
 
-STEP_SIZE = 5
-N_MAX_LOOP = 10000
-MAX_SPEED = 5 / 50
+
+MAX_POSITION_LOOPS = 10000
+MOVEMENT_STEP_SIZE = 5
+MAX_BEER = 10
+BEER_RESPAWN_CHANCE = 0.7
+
 START_SPEED = 1 / 50
-SPEED_STEPS = 1
-ROTATION_SPEED = 0.05
-MAX_DIR_CHANGE = 120  # allow only direction changes up to this angle
-MAX_TUMBLE = 45
-MIN_TUMBLE_MOVE = 10
-TUMBLE_STEP = 0.10
+MAX_SPEED = 4 / 50
+N_SPEED_STEPS = 10
+
+START_ROTATION_SPEED = 0.05
+MAX_ROTATION_SPEED = 0.10
+N_ROTATION_SPEED_STEPS = 10
+
+START_TUMBLE_ANGLE = 5
+MAX_TUMBLE_ANGLE = 45
+N_TUMBLE_STEPS = 10
 
 majorImgPath = files.resource_path('', r'images\major.png')
 foxImgPath = files.resource_path('', r'images\fox.ico')
@@ -75,7 +82,7 @@ class SnakeWindow:
         self._job = None
         self._rotationSpeed = 0
         self._currentRotation = 0
-        self._currentTumbleMag = 1
+        self._tumbleAngle = START_TUMBLE_ANGLE
         gameStarted = False
         gameStopped = False
 
@@ -219,31 +226,43 @@ class SnakeWindow:
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
                     _draw_new_fox()
-                    self._currentTumbleMag = max(self._currentTumbleMag - TUMBLE_STEP, 0)
+                    if 'beer' not in itemRegister:
+                        _draw_new_beer()
                 # drink beer
                 if check_clipping(itemX, itemY, include='beer'):
-                    if self._speed == MAX_SPEED:
-                        self._rotationSpeed = ROTATION_SPEED
-                        self._currentTumbleMag += TUMBLE_STEP
                     self._nBeers += 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers))
                     canv.itemconfig('starText', text=': ' + str(self._score))
-                    self._speed = min(self._speed + (MAX_SPEED - START_SPEED) / SPEED_STEPS, MAX_SPEED)
-                    _draw_new_beer()
+                    step = (MAX_SPEED - START_SPEED) / N_SPEED_STEPS
+                    self._speed = min(self._speed + step, MAX_SPEED)
+                    if self._nBeers == MAX_BEER:
+                        self._rotationSpeed = START_ROTATION_SPEED
+                    if self._nBeers > MAX_BEER:
+                        step = (MAX_ROTATION_SPEED - START_ROTATION_SPEED) / N_ROTATION_SPEED_STEPS
+                        self._rotationSpeed = min(self._rotationSpeed + step, MAX_ROTATION_SPEED)
+                        step = (MAX_TUMBLE_ANGLE - START_TUMBLE_ANGLE) / N_TUMBLE_STEPS
+                        self._tumbleAngle = min(self._tumbleAngle + step, MAX_TUMBLE_ANGLE)
+                    if random.random() < BEER_RESPAWN_CHANCE:
+                        _draw_new_beer()
+                    else:
+                        delete_widget('beer')
                 # rotate major and its direction
+                # print('speed', self._speed, 'rotationSpeed', self._rotationSpeed, 'tumbleDegree', self._tumbleAngle)
                 self._currentRotation += self._rotationSpeed
-                canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(MAX_TUMBLE * math.sin(self._currentRotation)))
+                canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(self._tumbleAngle *
+                                                                      math.sin(self._currentRotation)))
                 canv.itemconfig('major', image=canv.majorImg)
                 angle = get_angle(1, 0, self._xVel, self._yVel)
-                angle += self._currentTumbleMag * MIN_TUMBLE_MOVE * math.sin(-self._currentRotation)
+                angle += self._tumbleAngle * math.sin(-self._currentRotation)
                 angle = math.radians(angle)
-                self._xVelTumble = STEP_SIZE * math.cos(angle)
-                self._yVelTumble = STEP_SIZE * math.sin(angle)
+                self._xVelTumble = MOVEMENT_STEP_SIZE * math.cos(angle)
+                self._yVelTumble = MOVEMENT_STEP_SIZE * math.sin(angle)
                 # check tail overlap
                 noTailFoxes = [item for item in itemRegister if 'tail' not in item]
                 noTailFoxes.extend(['tail' + str(idx) for idx in range(2)])
-                if check_clipping(itemX, itemY, exclude=noTailFoxes):
-                    print('Overlapping with own tail!')
+                crashFox = check_clipping(itemX, itemY, exclude=noTailFoxes)
+                if crashFox:
+                    print('Overlapping with tail', crashFox)
                     _end_game()
                     return
             self._job = master.after(int(1 / self._speed), move)
@@ -270,8 +289,8 @@ class SnakeWindow:
                 isCloseX = abs(itemX - x) < xSize / PROXIMITY + itemSizeX / PROXIMITY
                 isCloseY = abs(itemY - y) < xSize / PROXIMITY + itemSizeY / PROXIMITY
                 if isCloseX and isCloseY:
-                    return True
-            return False
+                    return item
+            return ''
 
         def get_new_random_pos(xSize, ySize):
             nTries = 0
@@ -279,7 +298,7 @@ class SnakeWindow:
                 newX = BOX_X_MAX * random.random()
                 newY = BOX_Y_MAX * random.random()
                 # print(nTries, 'Trying newX newY', newX, '/', newY)
-                if nTries > N_MAX_LOOP:
+                if nTries > MAX_POSITION_LOOPS:
                     return (None, None)
                 else:
                     nTries += 1
@@ -337,10 +356,11 @@ class SnakeWindow:
                 self._job = None
 
         def remove_items():
-            keepItems = ['scoreFox', 'scoreBeer', 'scoreStar']
-            for item in itemRegister:
-                if item not in keepItems:
-                    canv.delete(item)
+            # keepItems = ['scoreFox', 'scoreBeer', 'scoreStar']
+            # for item in itemRegister:
+            #     if item not in keepItems:
+            #         canv.delete(item)
+            pass
 
         def _end_game():
             cancel()
@@ -362,20 +382,20 @@ class SnakeWindow:
             if not self._nFoxes:
                 self._direction = 'measingless'
             if event.keysym == 'Up' and self._direction != 'Down':
-                self._yVel = -STEP_SIZE
+                self._yVel = -MOVEMENT_STEP_SIZE
                 self._xVel = 0
                 self._direction = event.keysym
             if event.keysym == 'Down' and self._direction != 'Up':
-                self._yVel = STEP_SIZE
+                self._yVel = MOVEMENT_STEP_SIZE
                 self._xVel = 0
                 self._direction = event.keysym
             if event.keysym == 'Right' and self._direction != 'Left':
                 self._yVel = 0
-                self._xVel = STEP_SIZE
+                self._xVel = MOVEMENT_STEP_SIZE
                 self._direction = event.keysym
             if event.keysym == 'Left' and self._direction != 'Right':
                 self._yVel = 0
-                self._xVel = -STEP_SIZE
+                self._xVel = -MOVEMENT_STEP_SIZE
                 self._direction = event.keysym
 
         master.protocol("WM_DELETE_WINDOW", _click_quit)
