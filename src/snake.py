@@ -26,9 +26,9 @@ FOX_SIZE = 40
 BEER_SIZE = 40
 STAR_SIZE = 40
 N_MAX_LOOP = 10000
-MAX_SPEED = 15
-START_SPEED = 50
-SPEED_STEP = 4
+MAX_SPEED = 5 / 50
+START_SPEED = 1 / 50
+SPEED_STEPS = 20
 
 majorImgPath = files.resource_path('', r'images\major.png')
 foxImgPath = files.resource_path('', r'images\fox.ico')
@@ -204,14 +204,14 @@ class SnakeWindow:
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers))
                     canv.itemconfig('starText', text=': ' + str(self._score))
                     _draw_new_beer()
-                    self._speed = max(int(self._speed - SPEED_STEP), MAX_SPEED)
+                    self._speed = min(self._speed + (MAX_SPEED - START_SPEED) / SPEED_STEPS, MAX_SPEED)
                 noTailFoxes = [item for item in itemRegister if 'tail' not in item]
                 noTailFoxes.extend(['tail' + str(idx) for idx in range(3)])
                 if check_clipping(itemX, itemY, exclude=noTailFoxes):
                     print('Overlapping with own tail!')
                     _end_game()
                     return
-            self._job = master.after(self._speed, move)
+            self._job = master.after(int(1 / self._speed), move)
 
         def check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
             if x > BOX_X_MAX - xSize / 2 or \
