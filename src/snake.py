@@ -23,11 +23,12 @@ MAJOR_SIZE = 80
 FOX_SIZE = 40
 BEER_SIZE = 40
 STAR_SIZE = 40
+BUCKET_SIZE = 35
 
 
 MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
-MAX_BEER = 10
+MAX_BEER = 2
 BEER_RESPAWN_CHANCE = 0.7
 
 START_SPEED = 1 / 50
@@ -46,6 +47,7 @@ majorImgPath = files.resource_path('', r'images\major.png')
 foxImgPath = files.resource_path('', r'images\fox.ico')
 beerImgPath = files.resource_path('', r'images\beer.png')
 starImgPath = files.resource_path('', r'images\star.png')
+bucketImgPath = files.resource_path('', r'images\bucket.png')
 
 
 def get_angle(x0, y0, x1, y1):
@@ -119,6 +121,19 @@ class SnakeWindow:
             if name not in itemRegister:
                 itemRegister.append(name)
 
+        def _draw_new_bucket(newX=None, newY=None, name='bucket', size=1):
+            if not newX and not newY:
+                newX, newY = get_new_random_pos(BUCKET_SIZE, BUCKET_SIZE)
+                if not newX and not newY:
+                    print('Warning: no new free bucket position found!')
+                    _end_game()
+            delete_widget(name)
+            thisBucketImgObj = bucketImgObj.resize((int(BUCKET_SIZE * size), int(BEER_SIZE * size)), Image.ANTIALIAS)
+            canv.bucketImg[name] = ImageTk.PhotoImage(thisBucketImgObj)
+            canv.create_image(newX, newY, image=canv.bucketImg[name], tags=(name))
+            if name not in itemRegister:
+                itemRegister.append(name)
+
         def _draw_new_star(newX=None, newY=None, name='star', size=1):
             if not newX and not newY:
                 newX, newY = get_new_random_pos(STAR_SIZE, STAR_SIZE)
@@ -148,9 +163,13 @@ class SnakeWindow:
         starImgObj = Image.open(starImgPath)
         starImgObj = starImgObj.resize((STAR_SIZE, STAR_SIZE), Image.ANTIALIAS)
 
+        bucketImgObj = Image.open(bucketImgPath)
+        bucketImgObj = bucketImgObj.resize((BUCKET_SIZE, BUCKET_SIZE), Image.ANTIALIAS)
+
         canv.foxImg = {}
         canv.beerImg = {}
         canv.starImg = {}
+        canv.bucketImg = {}
 
         canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MAX, BOX_Y_MIN, fill='black', tags=('top'), width=10)
         canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_Y_MAX, fill='black', tags=('left'), width=10)
@@ -246,10 +265,18 @@ class SnakeWindow:
                         self._rotationSpeed = min(self._rotationSpeed + step, MAX_ROTATION_SPEED)
                         step = (MAX_TUMBLE_ANGLE - START_TUMBLE_ANGLE) / N_TUMBLE_STEPS
                         self._tumbleAngle = min(self._tumbleAngle + step, MAX_TUMBLE_ANGLE)
+                    if self._nBeers > MAX_BEER + 5:
+                        _draw_new_bucket()
                     if random.random() < BEER_RESPAWN_CHANCE:
                         _draw_new_beer()
                     else:
                         delete_widget('beer')
+                # hit bucket
+                if check_clipping(itemX, itemY, include='bucket'):
+                    self._nBeers = MAX_BEER - 1
+                    delete_widget('bucket')
+                    self._rotationSpeed = 0
+                    self._tumbleAngle = 0
                 # rotate major and its direction
                 # print('speed', self._speed, 'rotationSpeed', self._rotationSpeed, 'tumbleDegree', self._tumbleAngle)
                 self._currentRotation += self._rotationSpeed
