@@ -19,20 +19,21 @@ BOX_X_MIN = 0
 BOX_Y_MIN = 30
 MAX_QUEUE_LEN = 1000
 TAIL_STEP_DISTANCE = 6
-STEP_SIZE = 5
-
 MAJOR_SIZE = 80
 FOX_SIZE = 40
 BEER_SIZE = 40
 STAR_SIZE = 40
+
+STEP_SIZE = 5
 N_MAX_LOOP = 10000
 MAX_SPEED = 5 / 50
 START_SPEED = 1 / 50
 SPEED_STEPS = 1
-ROTATION_SPEED_STEP = 0.01
+ROTATION_SPEED = 0.05
 MAX_DIR_CHANGE = 120  # allow only direction changes up to this angle
 MAX_TUMBLE = 45
-MAX_TUMBLE_MOVE = 20
+MIN_TUMBLE_MOVE = 10
+TUMBLE_STEP = 0.10
 
 majorImgPath = files.resource_path('', r'images\major.png')
 foxImgPath = files.resource_path('', r'images\fox.ico')
@@ -74,6 +75,7 @@ class SnakeWindow:
         self._job = None
         self._rotationSpeed = 0
         self._currentRotation = 0
+        self._currentTumbleMag = 1
         gameStarted = False
         gameStopped = False
 
@@ -217,10 +219,12 @@ class SnakeWindow:
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
                     _draw_new_fox()
+                    self._currentTumbleMag = max(self._currentTumbleMag - TUMBLE_STEP, 0)
                 # drink beer
                 if check_clipping(itemX, itemY, include='beer'):
                     if self._speed == MAX_SPEED:
-                        self._rotationSpeed += ROTATION_SPEED_STEP
+                        self._rotationSpeed = ROTATION_SPEED
+                        self._currentTumbleMag += TUMBLE_STEP
                     self._nBeers += 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers))
                     canv.itemconfig('starText', text=': ' + str(self._score))
@@ -231,7 +235,7 @@ class SnakeWindow:
                 canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(MAX_TUMBLE * math.sin(self._currentRotation)))
                 canv.itemconfig('major', image=canv.majorImg)
                 angle = get_angle(1, 0, self._xVel, self._yVel)
-                angle += MAX_TUMBLE_MOVE * math.sin(self._currentRotation)
+                angle += self._currentTumbleMag * MIN_TUMBLE_MOVE * math.sin(-self._currentRotation)
                 angle = math.radians(angle)
                 self._xVelTumble = STEP_SIZE * math.cos(angle)
                 self._yVelTumble = STEP_SIZE * math.sin(angle)
