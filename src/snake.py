@@ -202,6 +202,16 @@ class SnakeWindow:
                 except IndexError:
                     pass
 
+        def move_free_fox():
+            x, y = canv.coords('fox')
+            yShift = (1 - random.randint(0, 2)) * MOVEMENT_STEP_SIZE / 4
+            xShift = (1 - random.randint(0, 2)) * MOVEMENT_STEP_SIZE / 4
+            x, y = x + xShift, y + yShift
+            if check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude='fox'):
+                return
+            canv.move('fox', xShift, yShift)
+            keep_in_box('fox')
+
         def get_new_tail_pos():
             newX, newY = canv.coords('major')
             try:
@@ -235,6 +245,7 @@ class SnakeWindow:
                 self._yPath.appendleft(itemY)
                 keep_in_box('major')
                 move_fox_tail()
+                move_free_fox()
                 # catch foxes
                 if check_clipping(itemX, itemY, include='fox'):
                     self._score += self._nBeers
@@ -276,7 +287,7 @@ class SnakeWindow:
                     self._nBeers = MAX_BEER - 1
                     delete_widget('bucket')
                     self._rotationSpeed = 0
-                    self._tumbleAngle = 0
+                    self._tumbleAngle = START_TUMBLE_ANGLE
                 # rotate major and its direction
                 # print('speed', self._speed, 'rotationSpeed', self._rotationSpeed, 'tumbleDegree', self._tumbleAngle)
                 self._currentRotation += self._rotationSpeed
