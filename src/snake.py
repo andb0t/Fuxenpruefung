@@ -32,11 +32,21 @@ SPEED_STEPS = 1
 MAX_TUMBLE_ANGLE = 30
 ROTATION_SPEED_STEP = 0.1
 MAX_DIR_CHANGE = 120  # allow only direction changes up to this angle
+MAX_TUMBLE = 45
 
 majorImgPath = files.resource_path('', r'images\major.png')
 foxImgPath = files.resource_path('', r'images\fox.ico')
 beerImgPath = files.resource_path('', r'images\beer.png')
 starImgPath = files.resource_path('', r'images\star.png')
+
+
+def get_angle(x0, y0, x1, y1):
+    mag0 = math.sqrt(x0**2 + y0**2)
+    mag1 = math.sqrt(x1**2 + y1**2)
+    if not mag0 or not mag1:
+        return 0
+    denominator = mag0 * mag1
+    return math.degrees(math.acos((x0 * x1 + y0 * y1) / denominator))
 
 
 class SnakeWindow:
@@ -210,12 +220,17 @@ class SnakeWindow:
                     self._nBeers += 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers))
                     canv.itemconfig('starText', text=': ' + str(self._score))
-                    _draw_new_beer()
                     self._speed = min(self._speed + (MAX_SPEED - START_SPEED) / SPEED_STEPS, MAX_SPEED)
+                    _draw_new_beer()
                 # rotate major and its direction
                 self._currentRotation += self._rotationSpeed
-                canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(self._currentRotation))
+                canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(MAX_TUMBLE * math.sin(self._currentRotation)))
                 canv.itemconfig('major', image=canv.majorImg)
+                # angle = get_angle(STEP_SIZE, 0, self._xVel, self._yVel)
+                # angle += self._currentRotation
+                # angle = math.radians(angle)
+                # self._xVel = STEP_SIZE * math.cos(angle)
+                # self._yVel = -STEP_SIZE * math.sin(angle)
                 # check tail overlap
                 noTailFoxes = [item for item in itemRegister if 'tail' not in item]
                 noTailFoxes.extend(['tail' + str(idx) for idx in range(3)])
@@ -336,32 +351,22 @@ class SnakeWindow:
                 event.keysym = 'Down'
             if event.keysym == 'd':
                 event.keysym = 'Right'
-            xVelBefore = self._xVel
-            yVelBefore = self._yVel
-            directionBefore = self._direction
-            rotationRadians = math.radians(self._currentRotation)
-            if event.keysym == 'Up':
-                self._yVel = -STEP_SIZE * math.cos(rotationRadians)
-                self._xVel = -STEP_SIZE * math.sin(rotationRadians)
+            if event.keysym == 'Up' and self._direction != 'Down':
+                self._yVel = -STEP_SIZE
+                self._xVel = 0
                 self._direction = event.keysym
-            if event.keysym == 'Down':
-                self._yVel = STEP_SIZE * math.cos(rotationRadians)
-                self._xVel = STEP_SIZE * math.sin(rotationRadians)
+            if event.keysym == 'Down' and self._direction != 'Up':
+                self._yVel = STEP_SIZE
+                self._xVel = 0
                 self._direction = event.keysym
-            if event.keysym == 'Right':
-                self._yVel = -STEP_SIZE * math.sin(rotationRadians)
-                self._xVel = STEP_SIZE * math.cos(rotationRadians)
+            if event.keysym == 'Right' and self._direction != 'Left':
+                self._yVel = 0
+                self._xVel = STEP_SIZE
                 self._direction = event.keysym
-            if event.keysym == 'Left':
-                self._yVel = STEP_SIZE * math.sin(rotationRadians)
-                self._xVel = -STEP_SIZE * math.cos(rotationRadians)
+            if event.keysym == 'Left' and self._direction != 'Right':
+                self._yVel = 0
+                self._xVel = -STEP_SIZE
                 self._direction = event.keysym
-            # forbid direction changes more than MAX_DIR_CHANGE degrees
-            dirChangeAngle = math.acos((self._xVel * xVelBefore + self._yVel * yVelBefore) / STEP_SIZE**2)
-            if math.degrees(dirChangeAngle) > MAX_DIR_CHANGE:
-                self._xVel = xVelBefore
-                self._yVel = yVelBefore
-                self._direction = directionBefore
 
         master.protocol("WM_DELETE_WINDOW", _click_quit)
         master.bind('<Up>', _start)
