@@ -142,9 +142,9 @@ gameOver = {'ger': ['Spiel vorbei', 'Escape Taste f√ºr Abbruch', 'Enter Taste f√
             'bay': ["Aus is'", 'Druck af Escape wannst gnua host!', 'Nomoi mit da Enter Tastn'],
             }
 snakeEventInfo = {'ger': ['Start mit Pfeiltaste', 'Achtung, bald bist du voll', 'Du bist betrunken!',
-                          'Schnapp dir die Fuxen!'],
+                          'Schnapp dir die Fuxen!', 'Ein Besuch beim Papst?'],
                   'eng': ['Start with arrow keys', 'Take care, you loose control', 'You are drunk!',
-                          "Gotta catch 'em all!"],
+                          "Gotta catch 'em all!", 'Maybe you should use the bucket...'],
                   'bay': ['Pfeildastn fian Start', 'Glei bist voi', 'Du bist voi!',
-                          "Fang d'Fuxn!"],
+                          "Fang d'Fuxn!", 'I dad erstamoi speim'],
                   }

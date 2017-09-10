@@ -28,7 +28,7 @@ BUCKET_SIZE = 35
 
 MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
-MAX_BEER = 10
+MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
 
 START_SPEED = 1 / 50
@@ -278,6 +278,7 @@ class SnakeWindow:
                         self._tumbleAngle = min(self._tumbleAngle + step, MAX_TUMBLE_ANGLE)
                     if self._nBeers == MAX_BEER + 5:
                         _draw_new_bucket()
+                        canv.itemconfig('eventInfoText', text=i18n.snakeEventInfo[i18n.lang()][4])
                     if random.random() < BEER_RESPAWN_CHANCE:
                         _draw_new_beer()
                     else:
