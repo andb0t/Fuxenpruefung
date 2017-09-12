@@ -56,9 +56,12 @@ errorText = {'ger': ['Keine Fragensammlung ausgewaehlt! Nochmal!', 'Falsches Pas
              'eng': ['No question file selected. Retry!', 'Bad password. Retry!', 'Error in question file: '],
              'bay': ['Koa Frognkatalog gfunna. Nomoi!', 'Posswoat foisch. Nomoi!', 'Foische Form im Frognkatalog: '],
              }
-dictInit = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen', 'Interaktives Quiz'],
-            'eng': ['Compile new exam', 'Show question statistics', 'Show all questions', 'Interactive quiz'],
-            'bay': ['Gib ma a neie Pruefung', "Zeig ma d'Statistik", "Zeig olle Frogn her", 'Machma a Quiz'],
+dictInit = {'ger': ['Erstelle neue Fuxenprüfung', 'Zeige Fragenstatistik', 'Zeige alle Fragen', 'Interaktives Quiz',
+                    'Fuxensnake'],
+            'eng': ['Compile new exam', 'Show question statistics', 'Show all questions', 'Interactive quiz',
+                    'Fox Snake'],
+            'bay': ['Gib ma a neie Pruefung', "Zeig ma d'Statistik", "Zeig olle Frogn her", 'Machma a Quiz',
+                    'Fuxnspui'],
             }
 examTitle = {'ger': ['Fuxenprüfung', 'Fuxenlösung'],
              'eng': ['Exam', 'Solution'],
@@ -122,3 +125,26 @@ answerCorrect = {'ger': ['Richtig', 'Falsch', 'Übersprungen'],
                  'eng': ['Correct', 'Wrong', 'Skipped'],
                  'bay': ['Hod gstimmt', 'Foisch', 'Übersprunga'],
                  }
+snakeWelcome = {'ger': 'Fuxensnake',
+                'eng': 'Fox Snake',
+                'bay': 'Fuxnspui',
+                }
+snakeInstruction = {'ger': ['Bist du bereit?', 'Enter Taste drücken!'],
+                    'eng': ['Are you ready?', 'Then press the return key!'],
+                    'bay': ['Bist bereit?', 'Druck af Enter am Bredl!'],
+                    }
+snakeScore = {'ger': 'Punktestand',
+              'eng': 'Score',
+              'bay': 'Punkte',
+              }
+gameOver = {'ger': ['Spiel vorbei', 'Escape Taste für Abbruch', 'Enter Taste für Neustart'],
+            'eng': ['Game over', '<esc> to continue', '<return> for restart'],
+            'bay': ["Aus is'", 'Druck af Escape wannst gnua host!', 'Nomoi mit da Enter Tastn'],
+            }
+snakeEventInfo = {'ger': ['Start mit Pfeiltaste', 'Achtung, bald bist du voll', 'Du bist betrunken!',
+                          'Schnapp dir die Fuxen!', 'Ein Besuch beim Papst?'],
+                  'eng': ['Start with arrow keys', 'Take care, you loose control', 'You are drunk!',
+                          "Gotta catch 'em all!", 'Maybe you should use the bucket...'],
+                  'bay': ['Pfeildastn fian Start', 'Glei bist voi', 'Du bist voi!',
+                          "Fang d'Fuxn!", 'I dad erstamoi speim'],
+                  }

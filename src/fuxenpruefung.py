@@ -14,6 +14,7 @@ import i18n
 import gui
 import files
 import sound
+import snake
 
 
 def change_catagories(category, categoryUpdate):
@@ -67,6 +68,21 @@ while True:
         categories[idx][0] = questNumbers[shortName]
         idx += 1
 
+    print('Selected task:', i18n.dictInit[i18n.lang()][taskVar])
+
+    if taskVar == 4:
+        mainroot.destroy()
+
+        root = tk.Tk()
+        root.iconbitmap(foxIco)
+        root.title(i18n.snakeWelcome[i18n.lang()])
+        snake.SnakeWindow(root)
+        root.focus_force()
+        root.mainloop()
+        root.destroy()
+
+        continue
+
     # ask for question file
     FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt', filetypes=[('', '*.txt;*.zip')])
     if not questionFile:
@@ -113,8 +129,6 @@ while True:
         zipPasswd = ''
         questionFile = ''
         continue
-
-    print('Selected task:', i18n.dictInit[i18n.lang()][taskVar])
 
     # Read in data
     qdicts = {}
