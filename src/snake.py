@@ -372,13 +372,16 @@ class SnakeWindow:
         def _init_start(event):
             reset(self)
             _draw_new_fox(BOX_X_MAX * 0.15, BOX_Y_MIN * 0.4, 'scoreFox', 0.5)
-            canv.create_text(BOX_X_MAX * 0.25, BOX_Y_MIN * 0.4, text=':' + str(self._nFoxes),
+            canv.create_text(BOX_X_MAX * 0.25, BOX_Y_MIN * 0.4,
+                             text=':' + str(self._nFoxes),
                              font='b', tags=('foxText'))
             _draw_new_beer(BOX_X_MAX * 0.45, BOX_Y_MIN * 0.4, 'scoreBeer', 0.5)
-            canv.create_text(BOX_X_MAX * 0.55, BOX_Y_MIN * 0.4, text=':' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
+            canv.create_text(BOX_X_MAX * 0.55, BOX_Y_MIN * 0.4,
+                             text=':' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
                              font='b', tags=('beerText'))
             _draw_new_star(BOX_X_MAX * 0.75, BOX_Y_MIN * 0.4, 'scoreStar', 0.5)
-            canv.create_text(BOX_X_MAX * 0.85, BOX_Y_MIN * 0.4, text=':' + str(self._nBeers),
+            canv.create_text(BOX_X_MAX * 0.85, BOX_Y_MIN * 0.4,
+                             text=':' + str(self._nBeers),
                              font='b', tags=('starText'))
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN * 0.73, fill='red',
                              text=i18n.snakeEventInfo[i18n.lang()][0], tags=('eventInfoText'))
