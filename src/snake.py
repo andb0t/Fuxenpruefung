@@ -33,7 +33,7 @@ BEER_RESPAWN_CHANCE = 0.7
 
 START_SPEED = 1 / 50
 MAX_SPEED = 4 / 50
-N_SPEED_STEPS = 6
+N_SPEED_STEPS = 10
 
 START_ROTATION_SPEED = 0.05
 MAX_ROTATION_SPEED = 0.10
@@ -83,7 +83,7 @@ class SnakeWindow:
             self._nFoxes = 0
             self._nBeers = 0
             self._speed = START_SPEED
-            self._job = None
+            self._job = {}
             self._rotationSpeed = 0
             self._currentRotation = 0
             self._tumbleAngle = START_TUMBLE_ANGLE
@@ -206,19 +206,23 @@ class SnakeWindow:
 
         def move_free_fox():
             x, y = canv.coords('fox')
+            MAX_ALLOWED_ANGLE = 60
             while True:
                 yShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
                 xShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
                 angle = get_angle(xShift, yShift, self._foxlastXvec, self._foxlastYvec)
-                if abs(angle) < 60:
+                if abs(angle) < MAX_ALLOWED_ANGLE:
                     break
-            self._foxlastXvec = xShift
-            self._foxlastYvec = yShift
             x, y = x + xShift, y + yShift
-            if check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude='fox'):
-                return
-            canv.move('fox', xShift, yShift)
-            keep_in_box('fox')
+            if not check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude='fox'):
+                self._foxlastXvec = xShift
+                self._foxlastYvec = yShift
+                canv.move('fox', xShift, yShift)
+                keep_in_box('fox')
+            else:
+                self._foxlastXvec = -self._foxlastXvec
+                self._foxlastYvec = -self._foxlastYvec
+            self._job['move_free_fox'] = master.after(int(1 / START_SPEED), move_free_fox)
 
         def get_new_tail_pos():
             newX, newY = canv.coords('major')
@@ -253,7 +257,6 @@ class SnakeWindow:
                 self._yPath.appendleft(itemY)
                 keep_in_box('major')
                 move_fox_tail()
-                move_free_fox()
                 # catch foxes
                 if check_clipping(itemX, itemY, include='fox'):
                     self._score += self._nBeers
@@ -272,7 +275,7 @@ class SnakeWindow:
                 # drink beer
                 if check_clipping(itemX, itemY, include='beer'):
                     self._nBeers += 1
-                    canv.itemconfig('beerText', text=': ' + str(self._nBeers))
+                    canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     canv.itemconfig('starText', text=': ' + str(self._score))
                     step = (MAX_SPEED - START_SPEED) / N_SPEED_STEPS
                     self._speed = min(self._speed + step, MAX_SPEED)
@@ -296,6 +299,7 @@ class SnakeWindow:
                 # hit bucket
                 if check_clipping(itemX, itemY, include='bucket'):
                     self._nBeers = MAX_BEER - 1
+                    canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     delete_widget('bucket')
                     self._currentRotation = 0
                     self._rotationSpeed = 0
@@ -322,7 +326,7 @@ class SnakeWindow:
                     print('Overlapping with tail', crashFox)
                     _end_game()
                     return
-            self._job = master.after(int(1 / self._speed), move)
+            self._job['move'] = master.after(int(1 / self._speed), move)
 
         def check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
             if x > BOX_X_MAX - xSize / 2 or \
@@ -371,7 +375,7 @@ class SnakeWindow:
             canv.create_text(BOX_X_MAX * 0.25, BOX_Y_MIN * 0.4, text=':' + str(self._nFoxes),
                              font='b', tags=('foxText'))
             _draw_new_beer(BOX_X_MAX * 0.45, BOX_Y_MIN * 0.4, 'scoreBeer', 0.5)
-            canv.create_text(BOX_X_MAX * 0.55, BOX_Y_MIN * 0.4, text=':' + str(self._nBeers),
+            canv.create_text(BOX_X_MAX * 0.55, BOX_Y_MIN * 0.4, text=':' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
                              font='b', tags=('beerText'))
             _draw_new_star(BOX_X_MAX * 0.75, BOX_Y_MIN * 0.4, 'scoreStar', 0.5)
             canv.create_text(BOX_X_MAX * 0.85, BOX_Y_MIN * 0.4, text=':' + str(self._nBeers),
@@ -401,6 +405,8 @@ class SnakeWindow:
             master.bind('d', _change_direction)
             master.unbind('<Return>')
             move()
+            move_free_fox()
+
 
         def _quit(self):
             time.sleep(0.1)
@@ -410,9 +416,9 @@ class SnakeWindow:
             _quit(self)
 
         def cancel():
-            if self._job is not None:
-                master.after_cancel(self._job)
-                self._job = None
+            for job in self._job:
+                master.after_cancel(self._job[job])
+            self._job = {}
 
         def remove_items():
             # keepItems = ['scoreFox', 'scoreBeer', 'scoreStar']
@@ -443,7 +449,7 @@ class SnakeWindow:
             for item in tailFoxes:
                 delete_widget(item)
             canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
-            canv.itemconfig('beerText', text=': ' + str(self._nBeers))
+            canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
             canv.itemconfig('starText', text=': ' + str(self._score))
             canv.itemconfig('eventInfoText', text=i18n.snakeEventInfo[i18n.lang()][0])
             canv.coords('major', FULL_WIDTH / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2)
