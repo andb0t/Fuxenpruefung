@@ -32,8 +32,8 @@ MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
 
 START_SPEED = 1 / 50
-MAX_SPEED = 4 / 50
-N_SPEED_STEPS = 10
+MAX_SPEED = 6 / 50
+N_SPEED_STEPS = 15
 
 START_ROTATION_SPEED = 0.05
 MAX_ROTATION_SPEED = 0.10
@@ -293,7 +293,7 @@ class SnakeWindow:
                 # rotate major and its direction
                 # print('speed', self._speed, 'rotationSpeed', self._rotationSpeed, 'tumbleDegree', self._tumbleAngle)
                 self._currentRotation += self._rotationSpeed
-                canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(self._tumbleAngle *
+                canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(self._tumbleAngle * 3 *
                                                                       math.sin(self._currentRotation)))
                 canv.itemconfig('major', image=canv.majorImg)
                 angle = get_angle(1, 0, self._xVel, self._yVel)
