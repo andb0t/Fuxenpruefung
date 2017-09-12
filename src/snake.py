@@ -32,8 +32,8 @@ MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
 
 START_SPEED = 1 / 50
-MAX_SPEED = 6 / 50
-N_SPEED_STEPS = 15
+MAX_SPEED = 4 / 50
+N_SPEED_STEPS = 6
 
 START_ROTATION_SPEED = 0.05
 MAX_ROTATION_SPEED = 0.10
@@ -87,6 +87,8 @@ class SnakeWindow:
             self._rotationSpeed = 0
             self._currentRotation = 0
             self._tumbleAngle = START_TUMBLE_ANGLE
+            self._foxlastXvec = random.random()
+            self._foxlastYvec = random.random()
 
         def delete_widget(name):
             canv.delete(name)
@@ -204,8 +206,14 @@ class SnakeWindow:
 
         def move_free_fox():
             x, y = canv.coords('fox')
-            yShift = (1 - random.randint(0, 2)) * MOVEMENT_STEP_SIZE / 4
-            xShift = (1 - random.randint(0, 2)) * MOVEMENT_STEP_SIZE / 4
+            while True:
+                yShift = random.randint(-1, 1) * MOVEMENT_STEP_SIZE / 2
+                xShift = random.randint(-1, 1) * MOVEMENT_STEP_SIZE / 2
+                angle = get_angle(xShift, yShift, self._foxlastXvec, self._foxlastYvec)
+                if abs(angle) < 60:
+                    break
+            self._foxlastXvec = xShift
+            self._foxlastYvec = yShift
             x, y = x + xShift, y + yShift
             if check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude='fox'):
                 return
@@ -257,6 +265,8 @@ class SnakeWindow:
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
                     _draw_new_fox()
+                    self._foxlastXvec = random.random()
+                    self._foxlastYvec = random.random()
                     if 'beer' not in itemRegister:
                         _draw_new_beer()
                 # drink beer
@@ -293,7 +303,7 @@ class SnakeWindow:
                 # rotate major and its direction
                 # print('speed', self._speed, 'rotationSpeed', self._rotationSpeed, 'tumbleDegree', self._tumbleAngle)
                 self._currentRotation += self._rotationSpeed
-                canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(self._tumbleAngle * 3 *
+                canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(self._tumbleAngle * 2 *
                                                                       math.sin(self._currentRotation)))
                 canv.itemconfig('major', image=canv.majorImg)
                 angle = get_angle(1, 0, self._xVel, self._yVel)
