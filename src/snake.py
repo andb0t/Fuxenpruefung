@@ -207,8 +207,8 @@ class SnakeWindow:
         def move_free_fox():
             x, y = canv.coords('fox')
             while True:
-                yShift = random.randint(-1, 1) * MOVEMENT_STEP_SIZE / 2
-                xShift = random.randint(-1, 1) * MOVEMENT_STEP_SIZE / 2
+                yShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
+                xShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
                 angle = get_angle(xShift, yShift, self._foxlastXvec, self._foxlastYvec)
                 if abs(angle) < 60:
                     break
