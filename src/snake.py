@@ -48,6 +48,7 @@ foxImgPath = files.resource_path('', r'images\fox.ico')
 beerImgPath = files.resource_path('', r'images\beer.png')
 starImgPath = files.resource_path('', r'images\star.png')
 bucketImgPath = files.resource_path('', r'images\bucket.png')
+floorImgPath = files.resource_path('', r'images\floor.jpg')
 
 
 def get_angle(x0, y0, x1, y1):
@@ -168,10 +169,16 @@ class SnakeWindow:
         bucketImgObj = Image.open(bucketImgPath)
         bucketImgObj = bucketImgObj.resize((BUCKET_SIZE, BUCKET_SIZE), Image.ANTIALIAS)
 
+        floorImgObj = Image.open(floorImgPath)
+        floorImgObj = floorImgObj.resize((BOX_X_MAX - BOX_X_MIN, BOX_Y_MAX - BOX_Y_MIN), Image.ANTIALIAS)
+        canv.floorImg = ImageTk.PhotoImage(floorImgObj)
+
         canv.foxImg = {}
         canv.beerImg = {}
         canv.starImg = {}
         canv.bucketImg = {}
+
+        canv.create_image((BOX_X_MAX + BOX_X_MIN) / 2, (BOX_Y_MAX + BOX_Y_MIN) / 2, image=canv.floorImg, tags=('floor'))
 
         canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MAX, BOX_Y_MIN, fill='black', tags=('top'), width=10)
         canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_Y_MAX, fill='black', tags=('left'), width=10)
