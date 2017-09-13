@@ -13,8 +13,8 @@ from tkinter import filedialog, simpledialog
 import i18n
 import gui
 import files
-import sound
 import snake
+import sound_win as sound
 
 
 def change_catagories(category, categoryUpdate):

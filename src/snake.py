@@ -417,7 +417,6 @@ class SnakeWindow:
             move()
             move_free_fox()
 
-
         def _quit(self):
             time.sleep(0.1)
             master.quit()

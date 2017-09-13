@@ -4,7 +4,7 @@ import webbrowser
 import tkinter as tk
 
 import i18n
-import sound
+import sound_win as sound
 import files
 
 foxPng = files.resource_path('', r'images\fox.png')

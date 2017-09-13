@@ -35,3 +35,17 @@ def toggle_sound(doSwitch=True):
         if doSwitch:
             start_sound()
         return 'mute'
+
+
+def main():
+    print('Playing the sound on your system!')
+    start_sound()
+    print('Hit <enter> key to toggle sound on and off!')
+    while True:
+        pressedKey = input()
+        if pressedKey == '':
+            toggle_sound()
+
+
+if __name__ == '__main__':
+    main()
