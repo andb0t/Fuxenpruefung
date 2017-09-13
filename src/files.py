@@ -1,6 +1,7 @@
 import sys
 import os
 
+
 def resource_path(basePath, relativePath):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:

@@ -14,7 +14,10 @@ import i18n
 import gui
 import files
 import snake
-import sound_win as sound
+try:
+    import sound_linux as sound
+except ImportError:
+    import sound_win as sound
 
 
 def change_catagories(category, categoryUpdate):
