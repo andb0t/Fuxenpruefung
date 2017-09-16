@@ -1,5 +1,6 @@
 import math
 import random
+import sys
 import time
 from collections import deque
 
@@ -44,6 +45,7 @@ MAX_TUMBLE_ANGLE = 45
 N_TUMBLE_STEPS = 10
 
 majorImgPath = files.resource_path('', r'images\major.png')
+foxIco = files.resource_path('', r'images\fox.ico')
 foxImgPath = files.resource_path('', r'images\fox.ico')
 beerImgPath = files.resource_path('', r'images\beer.png')
 starImgPath = files.resource_path('', r'images\star.png')
@@ -509,13 +511,13 @@ class SnakeWindow:
         master.bind('<Return>', _init_start)
 
 
-foxIco = files.resource_path('', r'images\fox.ico')
 
 
 def main():
     print('Executing only snake!')
     root = tk.Tk()
-    root.iconbitmap(foxIco)
+    if sys.platform == 'win32':
+        root.iconbitmap(foxIco)
     root.title(i18n.snakeWelcome[i18n.lang()])
     SnakeWindow(root)
     root.focus_force()

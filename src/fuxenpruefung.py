@@ -1,5 +1,6 @@
 import os
 import random
+import sys
 import subprocess
 import zipfile
 import functools
@@ -54,7 +55,8 @@ while True:
     change_catagories(categories, categoryUpdate)
     category_numbers = map(lambda x: x[0], categories)
     mainroot = tk.Tk()
-    mainroot.iconbitmap(foxIco)
+    if sys.platform == 'win32':
+        mainroot.iconbitmap(foxIco)
     mainroot.title('Fux!')
     mainapp = gui.InitWindow(mainroot, category_numbers, taskVar)
     mainroot.focus_force()
@@ -77,7 +79,8 @@ while True:
         mainroot.destroy()
 
         root = tk.Tk()
-        root.iconbitmap(foxIco)
+        if sys.platform == 'win32':
+            root.iconbitmap(foxIco)
         root.title(i18n.snakeWelcome[i18n.lang()])
         snake.SnakeWindow(root)
         root.focus_force()
@@ -92,7 +95,7 @@ while True:
         questionFile = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
 
     passwordError = False
-    if questionFile.endswith('.zip'):
+    if questionFile != () and questionFile.endswith('.zip'):
         zf = zipfile.ZipFile(questionFile)
         for zinfo in zf.infolist():
             isEncrypted = zinfo.flag_bits & 0x1
@@ -117,7 +120,8 @@ while True:
     if passwordError:
         errorIdx = 1
         root = tk.Tk()
-        root.iconbitmap(foxIco)
+        if sys.platform == 'win32':
+            root.iconbitmap(foxIco)
         root.title(i18n.errorTitle[i18n.lang()])
         lines = []
         lines.append(i18n.errorText[i18n.lang()][errorIdx])
@@ -166,7 +170,8 @@ while True:
         except ValueError:
             errorIdx = 2
             root = tk.Tk()
-            root.iconbitmap(foxIco)
+            if sys.platform == 'win32':
+                root.iconbitmap(foxIco)
             root.title(i18n.errorTitle[i18n.lang()])
             lines = []
             lines.append(i18n.errorText[i18n.lang()][errorIdx] + ' ' + line)
@@ -218,11 +223,12 @@ while True:
                     count += 1
                     print('{}.'.format(count), answer, file=myfile)
 
-        sys_command = 'notepad '+i18n.examFile[i18n.lang()][1]
-        subprocess.Popen(sys_command)
-        time.sleep(0.1)
-        sys_command = 'notepad '+i18n.examFile[i18n.lang()][0]
-        subprocess.Popen(sys_command)
+        if sys.platform == 'win32':
+            sys_command = 'notepad '+i18n.examFile[i18n.lang()][1]
+            subprocess.Popen(sys_command)
+            time.sleep(0.1)
+            sys_command = 'notepad '+i18n.examFile[i18n.lang()][0]
+            subprocess.Popen(sys_command)
 
     elif taskVar == 1:
         tot_n_questions = len(qdictsAll)
@@ -243,7 +249,8 @@ while True:
             lines.append((key+': ', str(count_dict[key]), '{:.0f} %'.format(100*count_dict[key]/tot_n_questions)))
 
         root = tk.Tk()
-        root.iconbitmap(foxIco)
+        if sys.platform == 'win32':
+            root.iconbitmap(foxIco)
         root.title('Fux!')
         app = gui.InfoWindow(root, lines)
         root.focus_force()
@@ -263,7 +270,8 @@ while True:
                           qdictsAll[key][4],
                           ))
         root = tk.Tk()
-        root.iconbitmap(foxIco)
+        if sys.platform == 'win32':
+            root.iconbitmap(foxIco)
         root.title('Fux!')
         app = gui.TextWindow(root, header, lines)
         root.focus_force()
@@ -278,7 +286,8 @@ while True:
         answersCount = [0, 0, 0]
 
         root = tk.Tk()
-        root.iconbitmap(foxIco)
+        if sys.platform == 'win32':
+            root.iconbitmap(foxIco)
         root.title(i18n.quizTitle[i18n.lang()])
         questionList = [str(idx + 1) + '. ' + question for idx, question in enumerate(questionList)]
         app = gui.QuizWindow(root, questionList)
@@ -315,7 +324,8 @@ while True:
         lines.append(interpretationText)
 
         root = tk.Tk()
-        root.iconbitmap(foxIco)
+        if sys.platform == 'win32':
+            root.iconbitmap(foxIco)
         root.title('Fux!')
         app = gui.InfoWindow(root, lines)
         root.focus_force()

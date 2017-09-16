@@ -9,4 +9,7 @@ def resource_path(basePath, relativePath):
         basePath = sys._MEIPASS
     except Exception:
         basePath = os.path.abspath(".")
-    return os.path.join(basePath, relativePath)
+    finalPath = os.path.join(basePath, relativePath)
+    if sys.platform != 'win32':
+        finalPath = finalPath.replace('\\', '/')
+    return finalPath
