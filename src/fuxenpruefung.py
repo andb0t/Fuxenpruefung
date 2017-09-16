@@ -114,12 +114,8 @@ while True:
 
     mainroot.destroy()
 
-    if not questionFile or passwordError:
-        errorIdx = 0
-        if not questionFile:
-            errorIdx = 0
-        elif passwordError:
-            errorIdx = 1
+    if passwordError:
+        errorIdx = 1
         root = tk.Tk()
         root.iconbitmap(foxIco)
         root.title(i18n.errorTitle[i18n.lang()])
@@ -131,6 +127,9 @@ while True:
         root.destroy()
         zipPasswd = ''
         questionFile = ''
+        continue
+
+    if not questionFile:
         continue
 
     # Read in data
