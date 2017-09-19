@@ -1,13 +1,17 @@
-build*
-dist*
-__pycache__*
-fuxenpruefung.txt
-fuxenloesung.txt
-solution.txt
+# Project
+!fragensammlung_beispiel.zip
+*.zip
+colors.png
 exam.txt
 fragensammlung.txt
-.dropbox
-*.zip
+fuxenloesung.txt
+fuxenpruefung.txt
+solution.txt
+
+# Windows
+build*
 desktop.ini
-!fragensammlung_beispiel.zip
-colors.png
+dist*
+
+# Python
+__pycache__
