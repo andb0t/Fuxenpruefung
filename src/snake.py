@@ -9,7 +9,7 @@ from PIL import Image
 from PIL import ImageTk
 
 import files
-import gui
+import gui_utils
 import i18n
 
 FULL_WIDTH = 400
@@ -67,7 +67,7 @@ def get_angle(x0, y0, x1, y1):
 class SnakeWindow:
 
     def __init__(self, master):
-        gui.center_window(master)
+        gui_utils.center_window(master)
 
         master.geometry('%sx%s+%s+%s' % (FULL_WIDTH, FULL_HEIGHT, 100, 100))
         master.resizable(0, 0)

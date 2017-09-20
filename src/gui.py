@@ -4,6 +4,7 @@ import webbrowser
 import tkinter as tk
 
 import i18n
+import gui_utils
 try:
     import sound_linux as sound
 except ImportError:
@@ -14,29 +15,12 @@ foxPng = files.resource_path('', r'images\fox.png')
 github_button_png = files.resource_path('', 'images\github.png')
 
 
-def combine_funcs(*funcs):
-    def combined_func(*args, **kwargs):
-        for f in funcs:
-            f(*args, **kwargs)
-    return combined_func
-
-
 def callback_GitHub(event):
     webbrowser.open_new(r"https://github.com/andb0t/Fuxenpruefung")
 
 
 def callback_AGV(event):
     webbrowser.open_new(r"http://agv-muenchen.de/")
-
-
-def center_window(root, xdist=0, ydist=0):
-    # get screen width and height
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
-    # calculate position x and y coordinates
-    x = (screen_width*xdist)
-    y = (screen_height*ydist)
-    root.geometry('+%d+%d' % (x, y))
 
 
 def set_image(button, file, zoom, height):
@@ -58,7 +42,7 @@ class InitWindow:
 
     def __init__(self, master, categories, radioinit=0):
 
-        center_window(master)
+        gui_utils.center_window(master)
 
         master.protocol("WM_DELETE_WINDOW", sys.exit)
 
@@ -127,7 +111,7 @@ class InitWindow:
             set_text(_quit_button, i18n.startButtonText[i18n.lang()][1])
             set_text(_link_label, i18n.linkLabelText[i18n.lang()])
 
-        _lang_button = tk.Button(master, command=combine_funcs(set_switch_language))
+        _lang_button = tk.Button(master, command=gui_utils.combine_funcs(set_switch_language))
         set_image(_lang_button, i18n.lang_button_image(), 1, 20)
         _lang_button.grid(row=_row_count, column=0)
 
@@ -140,7 +124,7 @@ class InitWindow:
             sound.toggle_sound()
             set_image(_sound_button, sound.sound_button_image(), 4, 20)
 
-        _sound_button = tk.Button(master, command=combine_funcs(set_toggle_sound))
+        _sound_button = tk.Button(master, command=gui_utils.combine_funcs(set_toggle_sound))
         set_image(_sound_button, sound.sound_button_image(), 4, 20)
         _sound_button.grid(row=_row_count, column=1)
 
@@ -181,7 +165,7 @@ class InfoWindow:
 
     def __init__(self, master, lines):
 
-        center_window(master)
+        gui_utils.center_window(master)
 
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
@@ -221,7 +205,7 @@ class TextWindow:
 
     def __init__(self, master, header, lines):
 
-        center_window(master)
+        gui_utils.center_window(master)
 
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
@@ -282,7 +266,7 @@ class YesNoWindow:
         self.OKvalue.set(0)
         thisOKvalue = self.OKvalue
 
-        center_window(master)
+        gui_utils.center_window(master)
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
         _row_count = 0
@@ -339,7 +323,7 @@ class QuizWindow:
         self.currentQuestion.set(0)
         thisCurrentQuestion = self.currentQuestion
 
-        center_window(master)
+        gui_utils.center_window(master)
 
         self.one_msg = []
         self._row_count = 0
@@ -425,7 +409,7 @@ class QuizWindow:
 class ResultWindow:
 
     def __init__(self, master, answers):
-        center_window(master)
+        gui_utils.center_window(master)
         master.protocol("WM_DELETE_WINDOW", master.quit)
 
         _row_count = 0
