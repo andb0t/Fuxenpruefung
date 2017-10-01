@@ -12,10 +12,10 @@ import i18n
 foxIco = files.resource_path('', r'images\fox.ico')
 
 
-def open_question_file(questionFile, mainroot, zipPasswd):
+def open_question_file(questionFile, zipPasswd):
     fileOpenOptions = dict(initialdir='.', defaultextension='.txt', filetypes=[('', '*.txt;*.zip')])
     if not questionFile:
-        questionFile = filedialog.askopenfilename(parent=mainroot, **fileOpenOptions)
+        questionFile = filedialog.askopenfilename(**fileOpenOptions)
 
     passwordError = False
     if questionFile != () and questionFile.endswith('.zip'):

@@ -73,7 +73,7 @@ while True:
         continue
 
     try:
-        zipFile, zipPasswd, questionFile = data.open_question_file(questionFile, mainroot, zipPasswd)
+        zipFile, zipPasswd, questionFile = data.open_question_file(questionFile, zipPasswd)
     except TypeError:
         zipFile, zipPasswd = '', ''
         mainroot.destroy()
@@ -82,7 +82,6 @@ while True:
     mainroot.destroy()
     qdicts, qdictsAll = data.read_data(questNumbers, questionFile, zipFile, zipPasswd)
 
-    # process tasks below
     if taskVar == 0:
         tasks.new_exam(qdicts, questNumbers, categories)
 
