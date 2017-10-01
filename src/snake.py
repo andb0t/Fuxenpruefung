@@ -36,6 +36,7 @@ MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
 MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
+N_FREE_FOXES = 3
 
 START_SPEED = 1 / 50
 MAX_SPEED = 4 / 50
@@ -87,8 +88,11 @@ class SnakeWindow:
             self._rotationSpeed = 0
             self._currentRotation = 0
             self._tumbleAngle = START_TUMBLE_ANGLE
-            self._foxlastXvec = random.random()
-            self._foxlastYvec = random.random()
+            self._foxlastXvec = []
+            self._foxlastYvec = []
+            for idx in range(N_FREE_FOXES):
+                self._foxlastXvec.append(random.random())
+                self._foxlastYvec.append(random.random())
 
         def delete_widget(name):
             canv.delete(name)
@@ -211,23 +215,25 @@ class SnakeWindow:
                     pass
 
         def move_free_fox():
-            x, y = canv.coords('fox')
-            MAX_ALLOWED_ANGLE = 60
-            while True:
-                yShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
-                xShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
-                angle = get_angle(xShift, yShift, self._foxlastXvec, self._foxlastYvec)
-                if abs(angle) < MAX_ALLOWED_ANGLE:
-                    break
-            x, y = x + xShift, y + yShift
-            if not check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude='fox'):
-                self._foxlastXvec = xShift
-                self._foxlastYvec = yShift
-                canv.move('fox', xShift, yShift)
-                keep_in_box('fox')
-            else:
-                self._foxlastXvec = -self._foxlastXvec
-                self._foxlastYvec = -self._foxlastYvec
+            for idx in range(N_FREE_FOXES):
+                name = 'fox' + str(idx)
+                x, y = canv.coords(name)
+                MAX_ALLOWED_ANGLE = 60
+                while True:
+                    yShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
+                    xShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
+                    angle = get_angle(xShift, yShift, self._foxlastXvec[idx], self._foxlastYvec[idx])
+                    if abs(angle) < MAX_ALLOWED_ANGLE:
+                        break
+                x, y = x + xShift, y + yShift
+                if not check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude=name):
+                    self._foxlastXvec[idx] = xShift
+                    self._foxlastYvec[idx] = yShift
+                    canv.move(name, xShift, yShift)
+                    keep_in_box(name)
+                else:
+                    self._foxlastXvec[idx] = -self._foxlastXvec[idx]
+                    self._foxlastYvec[idx] = -self._foxlastYvec[idx]
             self._job['move_free_fox'] = master.after(int(1 / START_SPEED), move_free_fox)
 
         def get_new_tail_pos():
@@ -264,7 +270,9 @@ class SnakeWindow:
                 keep_in_box('major')
                 move_fox_tail()
                 # catch foxes
-                if check_clipping(itemX, itemY, include='fox'):
+                freeFoxList = list(map(lambda x: 'fox' + str(x), range(N_FREE_FOXES)))
+                foxCollision = check_clipping(itemX, itemY, include=freeFoxList)
+                if foxCollision:
                     sound.play_sound(files.blopWav)
                     self._score += self._nBeers
                     self._nFoxes += 1
@@ -274,9 +282,10 @@ class SnakeWindow:
                     _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes-1))
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
-                    _draw_new_fox()
-                    self._foxlastXvec = random.random()
-                    self._foxlastYvec = random.random()
+                    _draw_new_fox(name=foxCollision)
+                    foxIdx = int(foxCollision.lstrip('fox'))
+                    self._foxlastXvec[foxIdx] = random.random()
+                    self._foxlastYvec[foxIdx] = random.random()
                     if 'beer' not in itemRegister:
                         _draw_new_beer()
                 # drink beer
@@ -406,7 +415,8 @@ class SnakeWindow:
             delete_widget('instrFox')
             delete_widget('instructionEquals')
             delete_widget('instructionTimes')
-            _draw_new_fox()
+            for idx in range(N_FREE_FOXES):
+                _draw_new_fox(name='fox' + str(idx))
             _draw_new_beer()
             master.bind('<Up>', _change_direction)
             master.bind('<Down>', _change_direction)
