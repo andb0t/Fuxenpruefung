@@ -1,9 +1,6 @@
-import os
 import sys
-import zipfile
 
 import tkinter as tk
-from tkinter import filedialog, simpledialog
 
 import data
 import i18n
@@ -75,55 +72,14 @@ while True:
         tasks.play_snake()
         continue
 
-    # ask for question file
-    FILEOPENOPTIONS = dict(initialdir='.', defaultextension='.txt', filetypes=[('', '*.txt;*.zip')])
-    if not questionFile:
-        questionFile = filedialog.askopenfilename(parent=mainroot, **FILEOPENOPTIONS)
-
-    passwordError = False
-    if questionFile != () and questionFile.endswith('.zip'):
-        zipFile = zipfile.ZipFile(questionFile)
-        for zinfo in zipFile.infolist():
-            isEncrypted = zinfo.flag_bits & 0x1
-        if isEncrypted and zipPasswd == '':
-            zipPasswd = simpledialog.askstring(i18n.passwordText[i18n.lang()][0],
-                                               i18n.passwordText[i18n.lang()][1], show='*')
-            try:
-                zipPasswd_bytes = str.encode(zipPasswd)
-            except TypeError:
-                zipPasswd_bytes = b'1234'
-            print(os.path.splitext(questionFile)[0])
-            base = os.path.basename(questionFile)
-            try:
-                with zipFile.open(os.path.splitext(base)[0]+'.txt', pwd=zipPasswd_bytes):
-                    pass
-            except RuntimeError:
-                print('Bad password!')
-                passwordError = True
-    else:
-        zipFile = ''
+    try:
+        zipFile, zipPasswd, questionFile = data.open_question_file(questionFile, mainroot, zipPasswd)
+    except TypeError:
+        zipFile, zipPasswd = '', ''
+        mainroot.destroy()
+        continue
 
     mainroot.destroy()
-
-    if passwordError:
-        errorIdx = 1
-        root = tk.Tk()
-        if sys.platform == 'win32':
-            root.iconbitmap(foxIco)
-        root.title(i18n.errorTitle[i18n.lang()])
-        lines = []
-        lines.append(i18n.errorText[i18n.lang()][errorIdx])
-        app = gui.InfoWindow(root, lines)
-        root.focus_force()
-        root.mainloop()
-        root.destroy()
-        zipPasswd = ''
-        questionFile = ''
-        continue
-
-    if not questionFile:
-        continue
-
     qdicts, qdictsAll = data.read_data(questNumbers, questionFile, zipFile, zipPasswd)
 
     # process tasks below
