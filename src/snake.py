@@ -44,14 +44,6 @@ START_TUMBLE_ANGLE = 5
 MAX_TUMBLE_ANGLE = 45
 N_TUMBLE_STEPS = 10
 
-majorImgPath = files.resource_path('', r'images\major.png')
-foxIco = files.resource_path('', r'images\fox.ico')
-foxImgPath = files.resource_path('', r'images\fox.ico')
-beerImgPath = files.resource_path('', r'images\beer.png')
-starImgPath = files.resource_path('', r'images\star.png')
-bucketImgPath = files.resource_path('', r'images\bucket.png')
-floorImgPath = files.resource_path('', r'images\floor.jpg')
-
 
 def get_angle(x0, y0, x1, y1):
     mag0 = math.sqrt(x0**2 + y0**2)
@@ -155,23 +147,23 @@ class SnakeWindow:
         canv = tk.Canvas(master, highlightthickness=0)
         canv.pack(fill='both', expand=True)
 
-        majorImgObj = Image.open(majorImgPath)
+        majorImgObj = Image.open(files.majorImgPath)
         majorImgObj = majorImgObj.resize((MAJOR_SIZE, MAJOR_SIZE), Image.ANTIALIAS)
         canv.majorImg = ImageTk.PhotoImage(majorImgObj)
 
-        foxImgObj = Image.open(foxImgPath)
+        foxImgObj = Image.open(files.foxImgPath)
         foxImgObj = foxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
 
-        beerImgObj = Image.open(beerImgPath)
+        beerImgObj = Image.open(files.beerImgPath)
         beerImgObj = beerImgObj.resize((BEER_SIZE, BEER_SIZE), Image.ANTIALIAS)
 
-        starImgObj = Image.open(starImgPath)
+        starImgObj = Image.open(files.starImgPath)
         starImgObj = starImgObj.resize((STAR_SIZE, STAR_SIZE), Image.ANTIALIAS)
 
-        bucketImgObj = Image.open(bucketImgPath)
+        bucketImgObj = Image.open(files.bucketImgPath)
         bucketImgObj = bucketImgObj.resize((BUCKET_SIZE, BUCKET_SIZE), Image.ANTIALIAS)
 
-        floorImgObj = Image.open(floorImgPath)
+        floorImgObj = Image.open(files.floorImgPath)
         floorImgObj = floorImgObj.resize((BOX_X_MAX - BOX_X_MIN, BOX_Y_MAX - BOX_Y_MIN), Image.ANTIALIAS)
         canv.floorImg = ImageTk.PhotoImage(floorImgObj)
 
@@ -511,13 +503,11 @@ class SnakeWindow:
         master.bind('<Return>', _init_start)
 
 
-
-
 def main():
     print('Executing only snake!')
     root = tk.Tk()
     if sys.platform == 'win32':
-        root.iconbitmap(foxIco)
+        root.iconbitmap(files.foxIco)
     root.title(i18n.snakeWelcome[i18n.lang()])
     SnakeWindow(root)
     root.focus_force()

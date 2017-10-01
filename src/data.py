@@ -9,8 +9,6 @@ import files
 import gui
 import i18n
 
-foxIco = files.resource_path('', r'images\fox.ico')
-
 
 def open_question_file(questionFile, zipPasswd):
     fileOpenOptions = dict(initialdir='.', defaultextension='.txt', filetypes=[('', '*.txt;*.zip')])
@@ -44,7 +42,7 @@ def open_question_file(questionFile, zipPasswd):
         errorIdx = 1
         root = tk.Tk()
         if sys.platform == 'win32':
-            root.iconbitmap(foxIco)
+            root.iconbitmap(files.foxIco)
         root.title(i18n.errorTitle[i18n.lang()])
         lines = []
         lines.append(i18n.errorText[i18n.lang()][errorIdx])
@@ -100,7 +98,7 @@ def read_data(questNumbers, questionFile, zipFile, zipPasswd):
             errorIdx = 2
             root = tk.Tk()
             if sys.platform == 'win32':
-                root.iconbitmap(foxIco)
+                root.iconbitmap(files.foxIco)
             root.title(i18n.errorTitle[i18n.lang()])
             lines = []
             lines.append(i18n.errorText[i18n.lang()][errorIdx] + ' ' + line)

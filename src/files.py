@@ -13,3 +13,14 @@ def resource_path(basePath, relativePath):
     if sys.platform != 'win32':
         finalPath = finalPath.replace('\\', '/')
     return finalPath
+
+
+beerImgPath = resource_path('', r'images\beer.png')
+bucketImgPath = resource_path('', r'images\bucket.png')
+floorImgPath = resource_path('', r'images\floor.jpg')
+foxIco = resource_path('', r'images\fox.ico')
+foxImgPath = resource_path('', r'images\fox.ico')
+foxPng = resource_path('', r'images\fox.png')
+github_button_png = resource_path('', 'images\github.png')
+majorImgPath = resource_path('', r'images\major.png')
+starImgPath = resource_path('', r'images\star.png')
