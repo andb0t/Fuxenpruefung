@@ -151,7 +151,7 @@ class SnakeWindow:
         majorImgObj = majorImgObj.resize((MAJOR_SIZE, MAJOR_SIZE), Image.ANTIALIAS)
         canv.majorImg = ImageTk.PhotoImage(majorImgObj)
 
-        foxImgObj = Image.open(files.foxImgPath)
+        foxImgObj = Image.open(files.foxIco)
         foxImgObj = foxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
 
         beerImgObj = Image.open(files.beerImgPath)
