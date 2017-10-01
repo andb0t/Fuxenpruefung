@@ -11,6 +11,7 @@ import tkinter as tk
 import files
 import gui
 import i18n
+import snake
 
 
 foxIco = files.resource_path('', r'images\fox.ico')
@@ -158,6 +159,17 @@ def show_statistics(qdicts, qdictsAll, categories):
         root.iconbitmap(foxIco)
     root.title('Fux!')
     gui.InfoWindow(root, lines)
+    root.focus_force()
+    root.mainloop()
+    root.destroy()
+
+
+def play_snake():
+    root = tk.Tk()
+    if sys.platform == 'win32':
+        root.iconbitmap(foxIco)
+    root.title(i18n.snakeWelcome[i18n.lang()])
+    snake.SnakeWindow(root)
     root.focus_force()
     root.mainloop()
     root.destroy()

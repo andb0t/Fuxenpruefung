@@ -8,7 +8,6 @@ from tkinter import filedialog, simpledialog
 import i18n
 import gui
 import files
-import snake
 import tasks
 try:
     import sound_linux as sound
@@ -72,16 +71,7 @@ while True:
 
     if taskVar == 4:
         mainroot.destroy()
-
-        root = tk.Tk()
-        if sys.platform == 'win32':
-            root.iconbitmap(foxIco)
-        root.title(i18n.snakeWelcome[i18n.lang()])
-        snake.SnakeWindow(root)
-        root.focus_force()
-        root.mainloop()
-        root.destroy()
-
+        tasks.play_snake()
         continue
 
     # ask for question file
