@@ -1,11 +1,7 @@
 import os
 import random
 import sys
-import subprocess
 import zipfile
-import functools
-import operator
-import time
 import collections
 
 import tkinter as tk
@@ -15,6 +11,7 @@ import i18n
 import gui
 import files
 import snake
+import tasks
 try:
     import sound_linux as sound
 except ImportError:
@@ -201,34 +198,7 @@ while True:
 
     # process tasks below
     if taskVar == 0:
-        ran_qdicts = randomize_questions()
-
-        with open(i18n.examFile[i18n.lang()][0], 'w', encoding='utf8') as myfile:
-            print(i18n.examTitle[i18n.lang()][0]+"\n", file=myfile)
-            count = 0
-            for default, longName, shortName in categories:
-                for question, answer, vspace in ran_qdicts[shortName]:
-                    count += 1
-                    questionlines = question.split("\\\\")
-                    print('{}.'.format(count), questionlines[0], file=myfile)
-                    for item in questionlines[1:]:
-                        print('\to '+item, file=myfile)
-                    print('\n'*int(vspace), file=myfile)
-
-        with open(i18n.examFile[i18n.lang()][1], 'w', encoding='utf8') as myfile:
-            print(i18n.examTitle[i18n.lang()][1]+"\n", file=myfile)
-            count = 0
-            for default, longName, shortName in categories:
-                for question, answer, vspace in ran_qdicts[shortName]:
-                    count += 1
-                    print('{}.'.format(count), answer, file=myfile)
-
-        if sys.platform == 'win32':
-            sys_command = 'notepad '+i18n.examFile[i18n.lang()][1]
-            subprocess.Popen(sys_command)
-            time.sleep(0.1)
-            sys_command = 'notepad '+i18n.examFile[i18n.lang()][0]
-            subprocess.Popen(sys_command)
+        tasks.new_exam(qdicts, questNumbers, categories)
 
     elif taskVar == 1:
         tot_n_questions = len(qdictsAll)
@@ -258,76 +228,7 @@ while True:
         root.destroy()
 
     elif taskVar == 2:
-
-        header = i18n.allquestionsHeader[i18n.lang()]
-        lines = []
-        lines.append(i18n.allquestionsColHeader[i18n.lang()])
-        for key in qdictsAll:
-            lines.append((qdictsAll[key][0],
-                          qdictsAll[key][1],
-                          qdictsAll[key][2],
-                          qdictsAll[key][3],
-                          qdictsAll[key][4],
-                          ))
-        root = tk.Tk()
-        if sys.platform == 'win32':
-            root.iconbitmap(foxIco)
-        root.title('Fux!')
-        app = gui.TextWindow(root, header, lines)
-        root.focus_force()
-        root.mainloop()
-        root.destroy()
+        tasks.show_questions(qdictsAll)
 
     elif taskVar == 3:
-
-        ran_qdicts = randomize_questions(exclude=['J', 'P'])
-        questionList = functools.reduce(operator.add, ran_qdicts.values())
-        questionList = map(lambda x: x[0], questionList)
-        answersCount = [0, 0, 0]
-
-        root = tk.Tk()
-        if sys.platform == 'win32':
-            root.iconbitmap(foxIco)
-        root.title(i18n.quizTitle[i18n.lang()])
-        questionList = [str(idx + 1) + '. ' + question for idx, question in enumerate(questionList)]
-        app = gui.QuizWindow(root, questionList)
-        root.focus_force()
-        root.mainloop()
-        root.destroy()
-        if app.quit.get():
-            continue
-        success = app.success.get()
-        failure = app.failure.get()
-        skip = app.skip.get()
-        if not (success + failure):
-            continue
-
-        answersCount = [success, failure, skip]
-
-        lines = []
-        lines.append(i18n.quizHeader[i18n.lang()][0])
-        lines.append(i18n.statisticsColHeader[i18n.lang()])
-        tot_n_questions = functools.reduce(operator.add, answersCount)
-        successRate = answersCount[0]/(tot_n_questions - answersCount[2])
-        successIndex = int(successRate * (len(i18n.quizInterpretation[i18n.lang()]) - 1))
-        quizInterpretation = i18n.quizInterpretation[i18n.lang()][successIndex]
-        if successRate == 1:
-            quizInterpretation = i18n.quizInterpretation[i18n.lang()][-1]
-
-        keys = i18n.answerCorrect[i18n.lang()]
-        for idx, key in enumerate(keys):
-            lines.append((key+': ', str(answersCount[idx]), '{:.0f} %'.format(100*answersCount[idx]/tot_n_questions)))
-        interpretationText = i18n.quizHeader[i18n.lang()][1] + ': '
-        interpretationText += str(int(100 * successRate)) + ' % '
-        interpretationText += i18n.quizCorrect[i18n.lang()] + '. '
-        interpretationText += quizInterpretation + '!'
-        lines.append(interpretationText)
-
-        root = tk.Tk()
-        if sys.platform == 'win32':
-            root.iconbitmap(foxIco)
-        root.title('Fux!')
-        app = gui.InfoWindow(root, lines)
-        root.focus_force()
-        root.mainloop()
-        root.destroy()
+        tasks.interactive_quiz(qdicts, questNumbers)
