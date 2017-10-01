@@ -1,8 +1,6 @@
 import os
-import random
 import sys
 import zipfile
-import collections
 
 import tkinter as tk
 from tkinter import filedialog, simpledialog
@@ -184,48 +182,12 @@ while True:
         qdictsAll[questCounter] = question, answer, category, difficulty, vspace
         questCounter += 1
 
-    def randomize_questions(exclude=''):
-        ran_qdicts = {}
-        for qdict_str in qdicts:
-            if qdict_str in exclude:
-                continue
-            qdict = qdicts[qdict_str]
-            keys = list(qdict.keys())
-            random.shuffle(keys)
-            ran_QnA = [(qdict[key][:2]+(qdict[key][3],)) for key in keys][:questNumbers[qdict_str]]
-            ran_qdicts[qdict_str] = ran_QnA
-        return ran_qdicts
-
     # process tasks below
     if taskVar == 0:
         tasks.new_exam(qdicts, questNumbers, categories)
 
     elif taskVar == 1:
-        tot_n_questions = len(qdictsAll)
-        # create message
-        lines = []
-        lines.append(i18n.statisticsHeader[i18n.lang()][0])
-        lines.append(i18n.statisticsColHeader[i18n.lang()])
-        for default, longName, shortName in categories:
-            lines.append((longName+': ', str(len(qdicts[shortName])),
-                         '{:.0f} %'.format(100*len(qdicts[shortName])/tot_n_questions)))
-
-        lines.append(i18n.statisticsHeader[i18n.lang()][1])
-        lines.append(i18n.statisticsColHeader[i18n.lang()])
-        count_dict = collections.Counter([x[2] for x in qdictsAll.values()])
-        keys = list(count_dict.keys())
-        keys.sort()
-        for key in keys:
-            lines.append((key+': ', str(count_dict[key]), '{:.0f} %'.format(100*count_dict[key]/tot_n_questions)))
-
-        root = tk.Tk()
-        if sys.platform == 'win32':
-            root.iconbitmap(foxIco)
-        root.title('Fux!')
-        app = gui.InfoWindow(root, lines)
-        root.focus_force()
-        root.mainloop()
-        root.destroy()
+        tasks.show_statistics(qdicts, qdictsAll, categories)
 
     elif taskVar == 2:
         tasks.show_questions(qdictsAll)

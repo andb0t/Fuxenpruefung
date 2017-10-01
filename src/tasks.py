@@ -1,3 +1,4 @@
+import collections
 import functools
 import operator
 import random
@@ -129,6 +130,34 @@ def show_questions(qdictsAll):
         root.iconbitmap(foxIco)
     root.title('Fux!')
     gui.TextWindow(root, header, lines)
+    root.focus_force()
+    root.mainloop()
+    root.destroy()
+
+
+def show_statistics(qdicts, qdictsAll, categories):
+    tot_n_questions = len(qdictsAll)
+    # create message
+    lines = []
+    lines.append(i18n.statisticsHeader[i18n.lang()][0])
+    lines.append(i18n.statisticsColHeader[i18n.lang()])
+    for default, longName, shortName in categories:
+        lines.append((longName+': ', str(len(qdicts[shortName])),
+                     '{:.0f} %'.format(100*len(qdicts[shortName])/tot_n_questions)))
+
+    lines.append(i18n.statisticsHeader[i18n.lang()][1])
+    lines.append(i18n.statisticsColHeader[i18n.lang()])
+    count_dict = collections.Counter([x[2] for x in qdictsAll.values()])
+    keys = list(count_dict.keys())
+    keys.sort()
+    for key in keys:
+        lines.append((key+': ', str(count_dict[key]), '{:.0f} %'.format(100*count_dict[key]/tot_n_questions)))
+
+    root = tk.Tk()
+    if sys.platform == 'win32':
+        root.iconbitmap(foxIco)
+    root.title('Fux!')
+    gui.InfoWindow(root, lines)
     root.focus_force()
     root.mainloop()
     root.destroy()
