@@ -10,7 +10,9 @@ import i18n
 foxIco = files.resource_path('', r'images\fox.ico')
 
 
-def read_data(questNumbers, questionFile, zipFile, zipPasswd_bytes):
+def read_data(questNumbers, questionFile, zipFile, zipPasswd):
+    zipPasswd_bytes = str.encode(zipPasswd)
+
     qdicts = {}
     for key in questNumbers.keys():
         qdicts[key] = {}
@@ -53,7 +55,7 @@ def read_data(questNumbers, questionFile, zipFile, zipPasswd_bytes):
             root.focus_force()
             root.mainloop()
             root.destroy()
-            # zipPasswd = ''
+            zipPasswd = ''
             questionFile = ''
             continue
 

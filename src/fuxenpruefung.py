@@ -102,7 +102,6 @@ while True:
                 passwordError = True
     else:
         zipFile = ''
-        zipPasswd_bytes = b''
 
     mainroot.destroy()
 
@@ -125,7 +124,7 @@ while True:
     if not questionFile:
         continue
 
-    qdicts, qdictsAll = data.read_data(questNumbers, questionFile, zipFile, zipPasswd_bytes)
+    qdicts, qdictsAll = data.read_data(questNumbers, questionFile, zipFile, zipPasswd)
 
     # process tasks below
     if taskVar == 0:
