@@ -15,8 +15,7 @@ def sound_button_image():
 
 def start_sound():
     global SOUND_IS_ON
-    songWav = files.resource_path('', r'sounds\Ehr_unser_Zier.wav')
-    winsound.PlaySound(songWav, winsound.SND_FILENAME | winsound.SND_ASYNC)
+    winsound.PlaySound(files.songWav, winsound.SND_FILENAME | winsound.SND_ASYNC)
     SOUND_IS_ON = True
 
 
