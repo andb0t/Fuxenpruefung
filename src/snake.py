@@ -332,6 +332,7 @@ class SnakeWindow:
                                           ySize=MAJOR_SIZE * 0.1)
 
                 if crashFox:
+                    sound.play_sound(files.blastWav)
                     print('Overlapping with tail', crashFox)
                     _end_game()
                     return

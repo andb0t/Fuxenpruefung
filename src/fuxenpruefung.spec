@@ -33,6 +33,7 @@ a.datas += [(r'sounds\Ehr_unser_Zier.wav', r'src\sounds\Ehr_unser_Zier.wav', 'DA
 a.datas += [(r'sounds\Blop.wav', r'src\sounds\Blop.wav', 'DATA')]
 a.datas += [(r'sounds\Slurp.wav', r'src\sounds\Slurp.wav', 'DATA')]
 a.datas += [(r'sounds\Hiccup.wav', r'src\sounds\Hiccup.wav', 'DATA')]
+a.datas += [(r'sounds\Blast.wav', r'src\sounds\Blast.wav', 'DATA')]
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
