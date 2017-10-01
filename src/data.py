@@ -10,7 +10,7 @@ import gui
 import i18n
 
 
-def open_question_file(questionFile, zipPasswd):
+def open_data(questionFile, zipPasswd):
     fileOpenOptions = dict(initialdir='.', defaultextension='.txt', filetypes=[('', '*.txt;*.zip')])
     if not questionFile:
         questionFile = filedialog.askopenfilename(**fileOpenOptions)

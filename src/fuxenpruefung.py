@@ -31,10 +31,6 @@ categoryUpdate = {}
 
 
 while True:
-
-    lang_button_png = i18n.lang_button_image()
-    sound_buttong_png = sound.sound_button_image()
-
     categories = [
                   [16, i18n.longNames[i18n.lang()][0], i18n.shortNames[i18n.lang()][0]],
                   [6, i18n.longNames[i18n.lang()][1], i18n.shortNames[i18n.lang()][1]],
@@ -72,7 +68,7 @@ while True:
         continue
 
     try:
-        zipFile, zipPasswd, questionFile = data.open_question_file(questionFile, zipPasswd)
+        zipFile, zipPasswd, questionFile = data.open_data(questionFile, zipPasswd)
     except TypeError:
         zipFile, zipPasswd = '', ''
         mainroot.destroy()
