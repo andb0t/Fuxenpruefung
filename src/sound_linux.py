@@ -66,6 +66,10 @@ def toggle_sound(doSwitch=True):
         return 'mute'
 
 
+def play_sound(sound):
+    pass
+
+
 def main():
     print('Playing the sound on your system!')
     start_sound()

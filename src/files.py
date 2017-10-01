@@ -25,3 +25,6 @@ majorImgPath = resource_path('', r'images\major.png')
 starImgPath = resource_path('', r'images\star.png')
 
 songWav = resource_path('', r'sounds\Ehr_unser_Zier.wav')
+blopWav = resource_path('', r'sounds\Blop.wav')
+slurpWav = resource_path('', r'sounds\Slurp.wav')
+hiccupWav = resource_path('', r'sounds\Hiccup.wav')

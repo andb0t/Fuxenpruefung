@@ -11,6 +11,11 @@ from PIL import ImageTk
 import files
 import gui_utils
 import i18n
+try:
+    import sound_linux as sound
+except ImportError:
+    import sound_win as sound
+
 
 FULL_WIDTH = 400
 FULL_HEIGHT = 450
@@ -260,6 +265,7 @@ class SnakeWindow:
                 move_fox_tail()
                 # catch foxes
                 if check_clipping(itemX, itemY, include='fox'):
+                    sound.play_sound(files.blopWav)
                     self._score += self._nBeers
                     self._nFoxes += 1
                     canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
@@ -275,6 +281,7 @@ class SnakeWindow:
                         _draw_new_beer()
                 # drink beer
                 if check_clipping(itemX, itemY, include='beer'):
+                    sound.play_sound(files.slurpWav)
                     self._nBeers += 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     canv.itemconfig('starText', text=': ' + str(self._score))
@@ -299,6 +306,7 @@ class SnakeWindow:
                         delete_widget('beer')
                 # hit bucket
                 if check_clipping(itemX, itemY, include='bucket'):
+                    sound.play_sound(files.hiccupWav)
                     self._nBeers = MAX_BEER - 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     delete_widget('bucket')

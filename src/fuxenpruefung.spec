@@ -30,6 +30,9 @@ a.datas += [(r'images\bay_ger.png', r'src\images\bay_ger.png', 'DATA')]
 a.datas += [(r'images\sound.png', r'src\images\sound.png', 'DATA')]
 a.datas += [(r'images\mute.png', r'src\images\mute.png', 'DATA')]
 a.datas += [(r'sounds\Ehr_unser_Zier.wav', r'src\sounds\Ehr_unser_Zier.wav', 'DATA')]
+a.datas += [(r'sounds\Blop.wav', r'src\sounds\Blop.wav', 'DATA')]
+a.datas += [(r'sounds\Slurp.wav', r'src\sounds\Slurp.wav', 'DATA')]
+a.datas += [(r'sounds\Hiccup.wav', r'src\sounds\Hiccup.wav', 'DATA')]
 exe = EXE(pyz,
           a.scripts,
           a.binaries,

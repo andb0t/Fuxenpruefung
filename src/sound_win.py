@@ -36,6 +36,10 @@ def toggle_sound(doSwitch=True):
         return 'mute'
 
 
+def play_sound(sound):
+    winsound.PlaySound(sound, winsound.SND_FILENAME | winsound.SND_ASYNC)
+
+
 def main():
     print('Playing the sound on your system!')
     start_sound()
