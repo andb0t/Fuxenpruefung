@@ -7,16 +7,14 @@
 
 This is a small program to create a random questionnaire from a list of questions. It is primarily written for easily compiling and correcting exams.
 
-The selection of questions is randomized, and so is the order of appearance. The number of questions from different categories of difficulty can be set.
+The selection of questions is randomized, and so is the order of appearance. The number of questions from different categories of difficulty can be set. The program creates two formatted text documents, the solutions for the examiner and the questionnaire for the examinee.
 
-The program creates two formatted text documents, the solutions for the examiner and the questionnaire for the examinee.
-
+A quiz and a snake game are provided as well for leisure time entertainment.
 
 
 
 ## Usage:
 The program requires a question file, structured like the example question files in `questions` directory contained in the project and explained under *Question file syntax* below. It can also read input from an encrypted ZIP file, such as the one delivered within the project (password: *password*). This is useful if you do not want to risk your students to get hold of the answers.
-
 
 
 
@@ -89,6 +87,11 @@ If you would like to execute it via the shell use this:
 ```shell
 $ cd src
 $ python fuxenpruefung.py
+```
+For starting the snake game only, do:
+```shell
+$ cd src
+$ python snake.py
 ```
 
 ### Dependencies and compilation
