@@ -36,7 +36,7 @@ MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
 MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
-N_FREE_FOXES = 3
+N_FREE_FOXES = 10
 
 START_SPEED = 1 / 50
 MAX_SPEED = 4 / 50
@@ -234,6 +234,8 @@ class SnakeWindow:
                 else:
                     self._foxlastXvec[idx] = -self._foxlastXvec[idx]
                     self._foxlastYvec[idx] = -self._foxlastYvec[idx]
+                    canv.move(name, self._foxlastXvec[idx], self._foxlastYvec[idx])
+                    keep_in_box(name)
             self._job['move_free_fox'] = master.after(int(1 / START_SPEED), move_free_fox)
 
         def get_new_tail_pos():
@@ -523,7 +525,7 @@ class SnakeWindow:
 
 
 def main():
-    print('Executing only snake!')
+    print('Executing snake game!')
     root = tk.Tk()
     if sys.platform == 'win32':
         root.iconbitmap(files.foxIco)
