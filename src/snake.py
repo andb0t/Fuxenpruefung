@@ -36,7 +36,8 @@ MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
 MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
-N_FREE_FOXES = 10
+N_FREE_FOXES = 3
+N_BEERS = 4
 
 START_SPEED = 1 / 50
 MAX_SPEED = 4 / 50
@@ -271,8 +272,9 @@ class SnakeWindow:
                 self._yPath.appendleft(itemY)
                 keep_in_box('major')
                 move_fox_tail()
-                # catch foxes
+                beerList = list(map(lambda x: 'beer' + str(x), range(N_BEERS)))
                 freeFoxList = list(map(lambda x: 'fox' + str(x), range(N_FREE_FOXES)))
+                # catch foxes
                 foxCollision = check_clipping(itemX, itemY, include=freeFoxList)
                 if foxCollision:
                     sound.play_sound(files.blopWav)
@@ -288,10 +290,13 @@ class SnakeWindow:
                     foxIdx = int(foxCollision.lstrip('fox'))
                     self._foxlastXvec[foxIdx] = random.random()
                     self._foxlastYvec[foxIdx] = random.random()
-                    if 'beer' not in itemRegister:
-                        _draw_new_beer()
+                    if not any(i in itemRegister for i in beerList):
+                        for beerName in beerList:
+                            if random.random() < BEER_RESPAWN_CHANCE:
+                                _draw_new_beer(name=beerName)
                 # drink beer
-                if check_clipping(itemX, itemY, include='beer'):
+                beerCollision = check_clipping(itemX, itemY, include=beerList)
+                if beerCollision:
                     sound.play_sound(files.slurpWav)
                     self._nBeers += 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
@@ -312,9 +317,9 @@ class SnakeWindow:
                         _draw_new_bucket()
                         canv.itemconfig('eventInfoText', text=i18n.snakeEventInfo[i18n.lang()][4])
                     if random.random() < BEER_RESPAWN_CHANCE:
-                        _draw_new_beer()
+                        _draw_new_beer(name=beerCollision)
                     else:
-                        delete_widget('beer')
+                        delete_widget(beerCollision)
                 # hit bucket
                 if check_clipping(itemX, itemY, include='bucket'):
                     sound.play_sound(files.hiccupWav)
@@ -419,7 +424,8 @@ class SnakeWindow:
             delete_widget('instructionTimes')
             for idx in range(N_FREE_FOXES):
                 _draw_new_fox(name='fox' + str(idx))
-            _draw_new_beer()
+            for idx in range(N_BEERS):
+                _draw_new_beer(name='beer' + str(idx))
             master.bind('<Up>', _change_direction)
             master.bind('<Down>', _change_direction)
             master.bind('<Right>', _change_direction)
