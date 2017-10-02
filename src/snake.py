@@ -18,11 +18,11 @@ except ImportError:
 
 
 FULL_WIDTH = 400
-FULL_HEIGHT = 450
-BOX_X_MAX = 400
-BOX_Y_MAX = 450
+FULL_HEIGHT = 500
 BOX_X_MIN = 0
+BOX_X_MAX = 400
 BOX_Y_MIN = 50
+BOX_Y_MAX = 450
 MAX_QUEUE_LEN = 2000
 TAIL_STEP_DISTANCE = 6
 MAJOR_SIZE = 80
@@ -30,7 +30,6 @@ FOX_SIZE = 40
 BEER_SIZE = 40
 STAR_SIZE = 40
 BUCKET_SIZE = 35
-
 
 MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
@@ -397,16 +396,17 @@ class SnakeWindow:
 
         def _init_start(event):
             reset(self)
-            _draw_new_fox(BOX_X_MAX * 0.15, BOX_Y_MIN * 0.4, 'scoreFox', 0.5)
-            canv.create_text(BOX_X_MAX * 0.25, BOX_Y_MIN * 0.4,
+            yPos = (BOX_Y_MAX + FULL_HEIGHT) / 2
+            _draw_new_fox(BOX_X_MAX * 0.15, yPos, 'scoreFox', 0.5)
+            canv.create_text(BOX_X_MAX * 0.25, yPos,
                              text=':' + str(self._nFoxes),
                              font='b', tags=('foxText'))
-            _draw_new_beer(BOX_X_MAX * 0.45, BOX_Y_MIN * 0.4, 'scoreBeer', 0.5)
-            canv.create_text(BOX_X_MAX * 0.55, BOX_Y_MIN * 0.4,
+            _draw_new_beer(BOX_X_MAX * 0.45, yPos, 'scoreBeer', 0.5)
+            canv.create_text(BOX_X_MAX * 0.55, yPos,
                              text=':' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
                              font='b', tags=('beerText'))
-            _draw_new_star(BOX_X_MAX * 0.75, BOX_Y_MIN * 0.4, 'scoreStar', 0.5)
-            canv.create_text(BOX_X_MAX * 0.85, BOX_Y_MIN * 0.4,
+            _draw_new_star(BOX_X_MAX * 0.75, yPos, 'scoreStar', 0.5)
+            canv.create_text(BOX_X_MAX * 0.85, yPos,
                              text=':' + str(self._nBeers),
                              font='b', tags=('starText'))
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN * 0.73, fill='red',
@@ -414,7 +414,7 @@ class SnakeWindow:
             _start(event)
 
         def _start(event):
-            delete_widget('welcomeText')
+            # delete_widget('welcomeText')
             delete_widget('instructionText')
             delete_widget('instructionText2')
             delete_widget('instrStar')
