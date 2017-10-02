@@ -95,7 +95,9 @@ $ python snake.py
 ```
 
 ### Dependencies and compilation
-All used packages are part of the standard python distribution, the others are available via channels like `anaconda`. Most notabily, it uses `winsound` for playing music, so this feature only exists on windows, yet. If you want to compile the project from source, use this:
+Most of the packages used in this project are part of the standard python distribution, the others are available via package managers like `anaconda` or `pip`.
+
+If you want to compile the project from source on Windows, use this:
 ```shell
 pyinstaller src/fuxenpruefung.spec
 ```
