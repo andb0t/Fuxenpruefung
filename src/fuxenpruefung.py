@@ -71,10 +71,10 @@ while True:
         zipFile, zipPasswd, questionFile = data.open_data(questionFile, zipPasswd)
     except TypeError:
         zipFile, zipPasswd = '', ''
-        mainroot.destroy()
         continue
+    finally:
+        mainroot.destroy()
 
-    mainroot.destroy()
     qdicts, qdictsAll = data.read_data(questNumbers, questionFile, zipFile, zipPasswd)
 
     if taskVar == 0:
