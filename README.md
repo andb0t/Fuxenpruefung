@@ -51,13 +51,13 @@ The program expects questions in the following format, each part separated by a 
 ```
 The difficulty/work intensity related with a question is set via H (high), M (medium), S (small), J (joke), P (permanent), A (archived). For example:
 ```
-S # What is the name of this program? # Fuxenprüfung # IT # 1
+# What is the name of this program? # Fuxenprüfung # IT # 1
 ```
 would denote a small question asking for the name of the program, which is an IT related question and needs one line for the answer *Fuxenprüfung*.
 
 For Multiple Choice questions use '\\\\' for every option, e.g.:
 ```
-S # What is python?\\A snake\\A programming language# A # Example # 0
+# What is python?\\A snake\\A programming language# A # Example # 0
 ```
 would result in a multiple choice question with two bullet points and no space after it, since they are meant to be ticked.
 
@@ -85,13 +85,13 @@ Simply create your own branch and go for it! An early pull request with the `WIP
 ### Alternative execution
 If you would like to execute it via the shell use this:
 ```shell
-$ cd src
-$ python3 fuxenpruefung.py
+cd src
+python3 fuxenpruefung.py
 ```
 For starting the snake game only, do:
 ```shell
-$ cd src
-$ python3 snake.py
+cd src
+python3 snake.py
 ```
 
 ### Dependencies and compilation
@@ -108,7 +108,7 @@ pip3 install -r requirements.txt
 If you want to compile the project from source first install the dependencies:
 ```shell
 pip install requests==2.5.1  # pyinstaller 3.2.1 still has a bug with newer versions of requests
-# yaml package: download correct wheel from http://www.lfd.uci.edu/~gohlke/pythonlibs/#pyyaml
+# yaml package: download wheel, e.g. from http://www.lfd.uci.edu/~gohlke/pythonlibs/#pyyaml
 pip install PyYAML-3.12-cp35-cp35m-win_amd64.whl
 ```
 Then compile executable:
