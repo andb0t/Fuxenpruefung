@@ -442,6 +442,9 @@ class SnakeWindow:
                 keys = sorted(scores[0].keys())
             except IndexError:
                 canv.itemconfig('load_highscore', text='No data available')
+            except TypeError:
+                canv.itemconfig('load_highscore',
+                                text='Webserver not reachable!\nPlease check your internet connection.')
             if keys:
                 delete_widget('load_highscore')
 

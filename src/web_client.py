@@ -10,7 +10,16 @@ URL_POST = 'https://fuxenserver.herokuapp.com/scores'
 def read_highscore():
     print('Retrieving info from', URL_READ, '...')
 
-    response = requests.get(URL_READ)
+    try:
+        response = requests.get(URL_READ)
+    except requests.exceptions.RequestException as e:
+        print(e)
+        print('Connection error. Return None.')
+        return None
+
+    if not response:
+        print('Got no response from server. Return None.')
+        return None
     scores = response.json()
 
     print('Got response from server')
