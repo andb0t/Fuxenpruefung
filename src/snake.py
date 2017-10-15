@@ -63,7 +63,7 @@ class SnakeWindow:
     infoBoxWidth = FULL_WIDTH - boxWidth
     infoBoxXMax = FULL_WIDTH
     infoBoxXMin = BOX_X_MAX
-    username = ''
+    username = 'Michael'
 
     def __init__(self, master):
         gui_utils.center_window(master)
@@ -397,6 +397,9 @@ class SnakeWindow:
                     continue
                 return (newX, newY)
 
+        def post_score():
+            web_client.post_score(username=self.username, score=self._score)
+
         def display_highscore():
             xCenter = self.infoBoxXMin + self.infoBoxWidth * 0.5
             canv.create_text(xCenter, BOX_Y_MIN + self.boxHeight * 0.5,
@@ -422,7 +425,6 @@ class SnakeWindow:
                                  headers=keys, values=scores, nRows=N_HIGHSCORES + 1,
                                  title='Global highscore list', tags='global_highscore', errText=errText)
 
-            # userScores = [score for score in scores if score['username'] == 'Michael']
             try:
                 userScores = [score for score in scores if score['username'] == self.username]
             except TypeError:
@@ -508,6 +510,7 @@ class SnakeWindow:
                              text=i18n.gameOver[i18n.lang()][1], tags=('gameOverCancelText'))
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.7, fill='red',
                              text=i18n.gameOver[i18n.lang()][2], tags=('gameOverRestartText'))
+            post_score()
             master.bind('<Return>', _restart)
 
         def _restart(event):
@@ -526,6 +529,14 @@ class SnakeWindow:
             canv.coords('major', BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2)
             canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(0))
             canv.itemconfig('major', image=canv.majorImg)
+            for widgetID in canv.find_all():
+                widget = canv.gettags(widgetID)[0]
+                if 'global_highscore' in widget:
+                    print('Deleting', widget)
+                    delete_widget(widget)
+                    if 'personal_highscore' in widget:
+                        print('Deleting', widget)
+                        delete_widget(widget)
             _start(event)
 
         def _change_direction(event):

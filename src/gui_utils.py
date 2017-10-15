@@ -63,12 +63,13 @@ def draw_table(master, canv, subBoxXMin, subBoxXMax, boxYMin, boxYMax, headers, 
     canv.create_text(xCenter, boxYMin,
                      text=title, font='b', tags=(tags))
     canv.create_rectangle(subBoxXMin, boxYMin + vSpace, subBoxXMax, boxYMax + vSpace,
-                          fill='black')
+                          fill='black', tags=(tags + '_frame'))
     if not values:
         minY = boxYMin + vSpace + distToSubBox
         maxY = boxYMax + vSpace - distToSubBox
         bg = master.cget("background")
-        canv.create_rectangle(subBoxXMin + distToSubBox, minY, subBoxXMax - distToSubBox, maxY, fill=bg)
+        canv.create_rectangle(subBoxXMin + distToSubBox, minY, subBoxXMax - distToSubBox, maxY,
+                              fill=bg, tags=(tags + '_background'))
         if not errText:
             errText = 'Not available'
         canv.create_text(xCenter, (minY + maxY) / 2, text=errText, tags=(tags + '_empty'))
