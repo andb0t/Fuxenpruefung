@@ -113,7 +113,6 @@ pip install PyYAML-3.12-cp35-cp35m-win_amd64.whl
 ```
 Then compile executable:
 ```shell
-iogndsagjsangsad
 pyinstaller src/fuxenpruefung.spec
 ```
 
