@@ -225,15 +225,16 @@ class SnakeWindow:
         canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN * 0.4, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font=("Times", 25, "bold"), fill='orange')
 
-        instructionY = BOX_Y_MIN + self.boxHeight * 0.4
+        deltaY = self.boxHeight * 0.07
+        instructionY = BOX_Y_MIN + self.boxHeight * 0.35
         canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][0],
                          tags=('instructionText'))
 
-        instructionY += self.boxHeight * 0.1
+        instructionY += deltaY
         canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][1] + ':',
                          tags=('instructionText2'))
 
-        instructionY += self.boxHeight * 0.1
+        instructionY += deltaY
         _draw_new_star(self.infoBoxXMin + self.infoBoxWidth * 0.30, instructionY, "instrStar", 0.5)
         canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.40, instructionY,
                          text='=', tags=('instructionEquals'))
@@ -242,21 +243,25 @@ class SnakeWindow:
                          text='X', tags=('instructionTimes'))
         _draw_new_fox(self.infoBoxXMin + self.infoBoxWidth * 0.70, instructionY, "instrFox", 0.5)
 
-        instructionY += self.boxHeight * 0.1
+        instructionY += deltaY
         canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][2],
                          tags=('instructionText3'))
+
+        instructionY += deltaY
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][3],
+                         tags=('instructionText4'))
 
         canv.create_image(BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg,
                           tags=('major'))
         itemRegister.append('major')
 
-        _draw_new_fox(FULL_WIDTH * 0.25, self.bottomRowY, 'scoreFox', 0.5)
+        _draw_new_fox(FULL_WIDTH * 0.27, self.bottomRowY, 'scoreFox', 0.5)
         canv.create_text(FULL_WIDTH * 0.30, self.bottomRowY, text=': ' + str(self._nFoxes),
                          font='b', tags=('foxText'))
         _draw_new_beer(FULL_WIDTH * 0.50, self.bottomRowY, 'scoreBeer', 0.5)
         canv.create_text(FULL_WIDTH * 0.55, self.bottomRowY, text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
                          font='b', tags=('beerText'))
-        _draw_new_star(FULL_WIDTH * 0.75, self.bottomRowY, 'scoreStar', 0.5)
+        _draw_new_star(FULL_WIDTH * 0.77, self.bottomRowY, 'scoreStar', 0.5)
         canv.create_text(FULL_WIDTH * 0.80, self.bottomRowY, text=': ' + str(self._nBeers),
                          font='b', tags=('starText'))
 
@@ -491,18 +496,6 @@ class SnakeWindow:
 
         def _init_start(event):
             reset(self)
-            # _draw_new_fox(BOX_X_MAX * 0.15, self.bottomRowY, 'scoreFox', 0.5)
-            # canv.create_text(BOX_X_MAX * 0.25, self.bottomRowY,
-            #                  text=':' + str(self._nFoxes),
-            #                  font='b', tags=('foxText'))
-            # _draw_new_beer(BOX_X_MAX * 0.45, self.bottomRowY, 'scoreBeer', 0.5)
-            # canv.create_text(BOX_X_MAX * 0.55, self.bottomRowY,
-            #                  text=':' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
-            #                  font='b', tags=('beerText'))
-            # _draw_new_star(BOX_X_MAX * 0.75, self.bottomRowY, 'scoreStar', 0.5)
-            # canv.create_text(BOX_X_MAX * 0.85, self.bottomRowY,
-            #                  text=':' + str(self._nBeers),
-            #                  font='b', tags=('starText'))
             _start(event)
 
         def _start(event):
@@ -510,6 +503,7 @@ class SnakeWindow:
             delete_widget('instructionText')
             delete_widget('instructionText2')
             delete_widget('instructionText3')
+            delete_widget('instructionText4')
             delete_widget('instrStar')
             delete_widget('instrBeer')
             delete_widget('instrFox')
