@@ -104,10 +104,11 @@ class SnakeWindow:
                 pass
 
         def _set_username():
-            userName = simpledialog.askstring('User name', 'Enter your user name:')
+            userName = simpledialog.askstring(i18n.snakeUserNameRequest[i18n.lang()][2],
+                                              i18n.snakeUserNameRequest[i18n.lang()][0] + ':')
             if userName:
                 self.userName = userName
-                self.userNameButton['text'] = self.userName + ' (click to change)'
+                self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
 
         def _draw_new_fox(newX=None, newY=None, name='fox', size=1):
             if not newX and not newY:
@@ -164,7 +165,7 @@ class SnakeWindow:
         canv = tk.Canvas(master, highlightthickness=0)
         canv.pack(fill='both', expand=True)
 
-        self.userNameButton = tk.Button(master, text='Set user name', command=_set_username)
+        self.userNameButton = tk.Button(master, text=i18n.snakeUserNameRequest[i18n.lang()][0], command=_set_username)
         self.userNameButton.place(x=FULL_WIDTH, y=BOX_Y_MIN * 0.4, anchor='e')
 
         majorImgObj = Image.open(files.majorImgPath)
@@ -416,16 +417,16 @@ class SnakeWindow:
 
         def display_highscore():
             canv.create_text((self.infoBoxXMin + self.infoBoxXMax) * 0.5, BOX_Y_MIN + self.boxHeight * 0.5,
-                             text='Loading highscore...', font='b', tags=('load_highscore'))
+                             text=i18n.snakeHighScore[i18n.lang()][0] + '...', font='b', tags=('load_highscore'))
             scores = web_client.read_highscore()
             keys = None
             errText = None
             try:
                 keys = sorted(scores[0].keys())
             except IndexError:
-                errText = 'No data available'
+                errText = i18n.snakeWebErr[i18n.lang()][0]
             except TypeError:
-                errText = 'Webserver not reachable!\nPlease check your internet connection.'
+                errText = i18n.snakeWebErr[i18n.lang()][1]
             delete_widget('load_highscore')
             hSpace = 10
             vSpace = 20
@@ -436,7 +437,7 @@ class SnakeWindow:
             topBoxYMax = topBoxYMin + self.boxHeight * 0.4
             gui_utils.draw_table(master, canv, subBoxXMin, subBoxXMax, topBoxYMin, topBoxYMax,
                                  headers=keys, values=scores, nRows=N_HIGHSCORES + 1,
-                                 title='Global highscore list', tags='global_highscore', errText=errText)
+                                 title=i18n.snakeHighScore[i18n.lang()][2], tags='global_highscore', errText=errText)
 
             try:
                 userScores = [score for score in scores if score['username'] == self.userName]
@@ -445,10 +446,10 @@ class SnakeWindow:
             lowBoxYMin = BOX_Y_MIN + self.boxHeight * 0.5 + vSpace * 0.5
             lowBoxYMax = lowBoxYMin + self.boxHeight * 0.4
             if not self.userName:
-                errText = 'No user name set'
+                errText = i18n.snakeWebErr[i18n.lang()][2]
             gui_utils.draw_table(master, canv, subBoxXMin, subBoxXMax, lowBoxYMin, lowBoxYMax,
                                  headers=keys, values=userScores, nRows=N_HIGHSCORES + 1,
-                                 title='Personal highscore list', tags='personal_highscore', errText=errText)
+                                 title=i18n.snakeHighScore[i18n.lang()][1], tags='personal_highscore', errText=errText)
 
         def _init_start(event):
             reset(self)

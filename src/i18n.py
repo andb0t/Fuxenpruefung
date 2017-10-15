@@ -129,9 +129,9 @@ snakeWelcome = {'ger': 'Fuxensnake',
                 'eng': 'Fox Snake',
                 'bay': 'Fuxnspui',
                 }
-snakeInstruction = {'ger': ['Bist du bereit?', 'Enter Taste drücken!'],
-                    'eng': ['Are you ready?', 'Then press the return key!'],
-                    'bay': ['Bist bereit?', 'Druck af Enter am Bredl!'],
+snakeInstruction = {'ger': ['Bist du bereit?', 'Zum Start Enter Taste drücken!'],
+                    'eng': ['Are you ready?', 'Press the return key to start!'],
+                    'bay': ['Bist bereit?', 'Druck af Enter zum Spuin!'],
                     }
 snakeScore = {'ger': 'Punktestand',
               'eng': 'Score',
@@ -148,3 +148,18 @@ snakeEventInfo = {'ger': ['Start mit Pfeiltaste', 'Achtung, das steigt ins Blut!
                   'bay': ['Pfeildastn fian Start', 'Glei bist voi', 'Du bist voi!',
                           "Fang d'Fuxn!", 'I dad erstamoi speim'],
                   }
+snakeUserNameRequest = {'ger': ['Name eingeben', 'zum Ändern klicken', 'Name'],
+                        'eng': ['Enter your name', 'click to change', 'Name'],
+                        'bay': ['Wia hoastn?', 'Do drucka fia ondan Nom', 'Nom'],
+                        }
+snakeHighScore = {'ger': ['Punktestand wird geladen', 'Persönlicher Highscore', 'Globaler Highscore'],
+                  'eng': ['Loading highscore', 'Personal highscore', 'Global highscore'],
+                  'bay': ['Heiskor werd glon', 'Dei Heiskor', 'Heiskor vo olle'],
+                  }
+snakeWebErr = {'ger': ['Keine Daten verfügbar', 'Webserver nicht erreichbar\nÜberprüfe deine Internetverbindung.',
+                       'Kein Name gesetzt'],
+               'eng': ['No data available', 'Webserver not reachable!\nPlease check your internet connection.',
+                       'No user name set'],
+               'bay': ['Koane Datn do', 'Webserver antwoat ned\nBist überhabts verbunna?.',
+                       'Koa Nom ned eigem'],
+               }
