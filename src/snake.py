@@ -74,13 +74,13 @@ class SimpleTable(tk.Frame):
         for column in range(columns):
             self.grid_columnconfigure(column, weight=1)
 
-    def set(self, row, column, value):
+    def set(self, row, column, value, **args):
         widget = self._widgets[row][column]
-        widget.configure(text=value)
+        widget.configure(text=value, **args)
 
     def headers(self, headers):
         for col, header in enumerate(headers):
-            self.set(0, col, header.capitalize())
+            self.set(0, col, header.capitalize(), font='bold')
 
     def data(self, scores, keys):
         for row, score in enumerate(scores):
