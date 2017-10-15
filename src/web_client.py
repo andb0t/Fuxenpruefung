@@ -7,7 +7,7 @@ URL_READ = 'https://fuxenserver.herokuapp.com/highscore'
 URL_POST = 'https://fuxenserver.herokuapp.com/scores'
 
 
-def read_entries():
+def read_highscore():
     print('Retrieving info from', URL_READ, '...')
 
     response = requests.get(URL_READ)
@@ -25,7 +25,7 @@ def read_entries():
     print(tabulate.tabulate(table, headers=keys, tablefmt='grid'))
 
 
-def post_entry(username, score, message):
+def post_score(username, score, message):
     print('Posting info to', URL_POST, '...')
     response = requests.post(URL_POST,
                              json={
@@ -47,9 +47,9 @@ def main():
     args = parser.parse_args()
 
     if args.task == 'post':
-        post_entry(username=args.name, score=args.score, message=args.msg)
+        post_score(username=args.name, score=args.score, message=args.msg)
     elif args.task == 'read':
-        read_entries()
+        read_highscore()
 
 
 if __name__ == '__main__':
