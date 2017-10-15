@@ -42,7 +42,7 @@ def open_data(questionFile, zipPasswd):
         errorIdx = 1
         root = tk.Tk()
         if sys.platform == 'win32':
-            root.iconbitmap(files.foxIco)
+            root.iconbitmap(files.FOX_ICO_PATH)
         root.title(i18n.errorTitle[i18n.lang()])
         lines = []
         lines.append(i18n.errorText[i18n.lang()][errorIdx])
@@ -98,7 +98,7 @@ def read_data(questNumbers, questionFile, zipFile, zipPasswd):
             errorIdx = 2
             root = tk.Tk()
             if sys.platform == 'win32':
-                root.iconbitmap(files.foxIco)
+                root.iconbitmap(files.FOX_ICO_PATH)
             root.title(i18n.errorTitle[i18n.lang()])
             lines = []
             lines.append(i18n.errorText[i18n.lang()][errorIdx] + ' ' + line)

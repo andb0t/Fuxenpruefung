@@ -43,7 +43,7 @@ while True:
     category_numbers = map(lambda x: x[0], categories)
     mainroot = tk.Tk()
     if sys.platform == 'win32':
-        mainroot.iconbitmap(files.foxIco)
+        mainroot.iconbitmap(files.FOX_ICO_PATH)
     mainroot.title('Fux!')
     mainapp = gui.InitWindow(mainroot, category_numbers, taskVar)
     mainroot.focus_force()

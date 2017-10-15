@@ -5,7 +5,7 @@ import files
 
 SOUND_IS_ON = False
 
-wf = wave.open(files.songWav, 'rb')
+wf = wave.open(files.SONG_WAV_PATH, 'rb')
 
 # instantiate PyAudio (1)
 p = pyaudio.PyAudio()

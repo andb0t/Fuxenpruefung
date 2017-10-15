@@ -66,7 +66,7 @@ def interactive_quiz(qdicts, questNumbers):
 
     root = tk.Tk()
     if sys.platform == 'win32':
-        root.iconbitmap(files.foxIco)
+        root.iconbitmap(files.FOX_ICO_PATH)
     root.title(i18n.quizTitle[i18n.lang()])
     questionList = [str(idx + 1) + '. ' + question for idx, question in enumerate(questionList)]
     app = gui.QuizWindow(root, questionList)
@@ -104,7 +104,7 @@ def interactive_quiz(qdicts, questNumbers):
 
     root = tk.Tk()
     if sys.platform == 'win32':
-        root.iconbitmap(files.foxIco)
+        root.iconbitmap(files.FOX_ICO_PATH)
     root.title('Fux!')
     app = gui.InfoWindow(root, lines)
     root.focus_force()
@@ -125,7 +125,7 @@ def show_questions(qdictsAll):
                       ))
     root = tk.Tk()
     if sys.platform == 'win32':
-        root.iconbitmap(files.foxIco)
+        root.iconbitmap(files.FOX_ICO_PATH)
     root.title('Fux!')
     gui.TextWindow(root, header, lines)
     root.focus_force()
@@ -153,7 +153,7 @@ def show_statistics(qdicts, qdictsAll, categories):
 
     root = tk.Tk()
     if sys.platform == 'win32':
-        root.iconbitmap(files.foxIco)
+        root.iconbitmap(files.FOX_ICO_PATH)
     root.title('Fux!')
     gui.InfoWindow(root, lines)
     root.focus_force()
@@ -164,7 +164,7 @@ def show_statistics(qdicts, qdictsAll, categories):
 def play_snake():
     root = tk.Tk()
     if sys.platform == 'win32':
-        root.iconbitmap(files.foxIco)
+        root.iconbitmap(files.FOX_ICO_PATH)
     root.title(i18n.snakeWelcome[i18n.lang()])
     snake.SnakeWindow(root)
     root.focus_force()

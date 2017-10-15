@@ -53,7 +53,7 @@ class InitWindow:
         _head_label.grid(row=_row_count, columnspan=4)
         _row_count += 1
 
-        _photo = tk.PhotoImage(file=files.foxPng)
+        _photo = tk.PhotoImage(file=files.FOX_IMG_PATH)
         _photo = _photo.subsample(5, 5)
         _photo_label = tk.Label(master, image=_photo)
         _photo_label.photo = _photo
@@ -113,7 +113,7 @@ class InitWindow:
         _lang_button.grid(row=_row_count, column=0)
 
         _github_button = tk.Button(master)
-        set_image(_github_button, files.github_button_png, 5, 20)
+        set_image(_github_button, files.GITHUB_IMG_PATH, 5, 20)
         _github_button.bind("<Button-1>", callback_GitHub)
         _github_button.grid(row=_row_count, column=3)
 

@@ -15,19 +15,19 @@ def resource_path(basePath, relativePath):
     return finalPath
 
 
-beerImgPath = resource_path('', r'images\beer.png')
-bucketImgPath = resource_path('', r'images\bucket.png')
-floorImgPath = resource_path('', r'images\floor.jpg')
-foxIco = resource_path('', r'images\fox.ico')
-foxPng = resource_path('', r'images\fox.png')
-github_button_png = resource_path('', 'images\github.png')
-majorImgPath = resource_path('', r'images\major.png')
-starImgPath = resource_path('', r'images\star.png')
+BEER_IMG_PATH = resource_path('', r'images\beer.png')
+BUCKET_IMG_PATH = resource_path('', r'images\bucket.png')
+FLOOR_IMG_PATH = resource_path('', r'images\floor.jpg')
+FOX_ICO_PATH = resource_path('', r'images\fox.ico')
+FOX_IMG_PATH = resource_path('', r'images\fox.png')
+GITHUB_IMG_PATH = resource_path('', 'images\github.png')
+MAJOR_IMG_PATH = resource_path('', r'images\major.png')
+STAR_IMG_PATH = resource_path('', r'images\star.png')
 
-songWav = resource_path('', r'sounds\Ehr_unser_Zier.wav')
-blopWav = resource_path('', r'sounds\Blop.wav')
-slurpWav = resource_path('', r'sounds\Slurp.wav')
-hiccupWav = resource_path('', r'sounds\Hiccup.wav')
-blastWav = resource_path('', r'sounds\Blast.wav')
+SONG_WAV_PATH = resource_path('', r'sounds\Ehr_unser_Zier.wav')
+BLOP_WAV_PATH = resource_path('', r'sounds\Blop.wav')
+SLURP_WAV_PATH = resource_path('', r'sounds\Slurp.wav')
+HICCUP_WAV_PATH = resource_path('', r'sounds\Hiccup.wav')
+BLAST_WAV_PATH = resource_path('', r'sounds\Blast.wav')
 
-CONFIG_FILE = '.fuxensnake_settings.yml'
+SNAKE_CONFIG_FILE = '.fuxensnake_settings.yml'

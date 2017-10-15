@@ -69,8 +69,8 @@ class SnakeWindow:
     infoBoxXCenter = (infoBoxXMin + infoBoxXMax) / 2
     infoBoxWidth = infoBoxXMax - infoBoxXMin
     userName = ''
-    if os.path.isfile(files.CONFIG_FILE):
-        with open(files.CONFIG_FILE, 'r') as stream:
+    if os.path.isfile(files.SNAKE_CONFIG_FILE):
+        with open(files.SNAKE_CONFIG_FILE, 'r') as stream:
             try:
                 config = yaml.load(stream)
                 userName = config['username']
@@ -123,7 +123,7 @@ class SnakeWindow:
                 return
             self.userName = userName
             self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
-            with open(files.CONFIG_FILE, 'w') as outfile:
+            with open(files.SNAKE_CONFIG_FILE, 'w') as outfile:
                 yaml.dump({'username': self.userName}, outfile, default_flow_style=False)
 
         def _draw_new_fox(newX=None, newY=None, name='fox', size=1):
@@ -186,23 +186,23 @@ class SnakeWindow:
             self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
         self.userNameButton.place(x=FULL_WIDTH, y=BOX_Y_MIN * 0.4, anchor='e')
 
-        majorImgObj = Image.open(files.majorImgPath)
+        majorImgObj = Image.open(files.MAJOR_IMG_PATH)
         majorImgObj = majorImgObj.resize((MAJOR_SIZE, MAJOR_SIZE), Image.ANTIALIAS)
         canv.majorImg = ImageTk.PhotoImage(majorImgObj)
 
-        foxImgObj = Image.open(files.foxIco)
+        foxImgObj = Image.open(files.FOX_ICO_PATH)
         foxImgObj = foxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
 
-        beerImgObj = Image.open(files.beerImgPath)
+        beerImgObj = Image.open(files.BEER_IMG_PATH)
         beerImgObj = beerImgObj.resize((BEER_SIZE, BEER_SIZE), Image.ANTIALIAS)
 
-        starImgObj = Image.open(files.starImgPath)
+        starImgObj = Image.open(files.STAR_IMG_PATH)
         starImgObj = starImgObj.resize((STAR_SIZE, STAR_SIZE), Image.ANTIALIAS)
 
-        bucketImgObj = Image.open(files.bucketImgPath)
+        bucketImgObj = Image.open(files.BUCKET_IMG_PATH)
         bucketImgObj = bucketImgObj.resize((BUCKET_SIZE, BUCKET_SIZE), Image.ANTIALIAS)
 
-        floorImgObj = Image.open(files.floorImgPath)
+        floorImgObj = Image.open(files.FLOOR_IMG_PATH)
         floorImgObj = floorImgObj.resize((BOX_X_MAX - BOX_X_MIN, BOX_Y_MAX - BOX_Y_MIN), Image.ANTIALIAS)
         canv.floorImg = ImageTk.PhotoImage(floorImgObj)
 
@@ -310,7 +310,7 @@ class SnakeWindow:
                 # catch foxes
                 foxCollision = check_clipping(itemX, itemY, include=freeFoxList)
                 if foxCollision:
-                    sound.play_sound(files.blopWav)
+                    sound.play_sound(files.BLOP_WAV_PATH)
                     self._score += self._nBeers
                     self._nFoxes += 1
                     canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
@@ -330,7 +330,7 @@ class SnakeWindow:
                 # drink beer
                 beerCollision = check_clipping(itemX, itemY, include=beerList)
                 if beerCollision:
-                    sound.play_sound(files.slurpWav)
+                    sound.play_sound(files.SLURP_WAV_PATH)
                     self._nBeers += 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     canv.itemconfig('starText', text=': ' + str(self._score))
@@ -355,7 +355,7 @@ class SnakeWindow:
                         delete_widget(beerCollision)
                 # hit bucket
                 if check_clipping(itemX, itemY, include='bucket'):
-                    sound.play_sound(files.hiccupWav)
+                    sound.play_sound(files.HICCUP_WAV_PATH)
                     self._nBeers = MAX_BEER - 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     delete_widget('bucket')
@@ -381,7 +381,7 @@ class SnakeWindow:
                                           ySize=MAJOR_SIZE * 0.1)
 
                 if crashFox:
-                    sound.play_sound(files.blastWav)
+                    sound.play_sound(files.BLAST_WAV_PATH)
                     print('Overlapping with tail', crashFox)
                     _end_game()
                     return
@@ -621,7 +621,7 @@ def main():
     print('Executing snake game!')
     root = tk.Tk()
     if sys.platform == 'win32':
-        root.iconbitmap(files.foxIco)
+        root.iconbitmap(files.FOX_ICO_PATH)
     root.title(i18n.snakeWelcome[i18n.lang()])
     SnakeWindow(root)
     root.focus_force()
