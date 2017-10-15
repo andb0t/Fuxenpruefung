@@ -1,8 +1,10 @@
 import math
+import os
 import random
 import sys
 import threading
 import time
+import yaml
 from collections import deque
 
 import tkinter as tk
@@ -67,6 +69,15 @@ class SnakeWindow:
     infoBoxXCenter = (infoBoxXMin + infoBoxXMax) / 2
     infoBoxWidth = infoBoxXMax - infoBoxXMin
     userName = ''
+    if os.path.isfile(files.CONFIG_FILE):
+        with open(files.CONFIG_FILE, 'r') as stream:
+            try:
+                config = yaml.load(stream)
+                userName = config['username']
+            except yaml.YAMLError as exc:
+                print(exc)
+    else:
+        userName = ''
 
     def __init__(self, master):
         gui_utils.center_window(master)
@@ -112,6 +123,8 @@ class SnakeWindow:
                 return
             self.userName = userName
             self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
+            with open(files.CONFIG_FILE, 'w') as outfile:
+                yaml.dump({'username': self.userName}, outfile, default_flow_style=False)
 
         def _draw_new_fox(newX=None, newY=None, name='fox', size=1):
             if not newX and not newY:
@@ -169,6 +182,8 @@ class SnakeWindow:
         canv.pack(fill='both', expand=True)
 
         self.userNameButton = tk.Button(master, text=i18n.snakeUserNameRequest[i18n.lang()][0], command=_set_username)
+        if self.userName:
+            self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
         self.userNameButton.place(x=FULL_WIDTH, y=BOX_Y_MIN * 0.4, anchor='e')
 
         majorImgObj = Image.open(files.majorImgPath)

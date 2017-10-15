@@ -105,8 +105,13 @@ pip3 install -r requirements.txt
 ```
 
 #### Windows
-If you want to compile the project from source use this:
+If you want to compile the project from source first install the dependencies:
 ```shell
 pip install requests==2.5.1  # pyinstaller 3.2.1 still has a bug with newer versions of requests
+# yaml package: download correct wheel from http://www.lfd.uci.edu/~gohlke/pythonlibs/#pyyaml
+pip install PyYAML-3.12-cp35-cp35m-win_amd64.whl
+```
+Then compile executable:
+```shell
 pyinstaller src/fuxenpruefung.spec
 ```

@@ -29,3 +29,5 @@ blopWav = resource_path('', r'sounds\Blop.wav')
 slurpWav = resource_path('', r'sounds\Slurp.wav')
 hiccupWav = resource_path('', r'sounds\Hiccup.wav')
 blastWav = resource_path('', r'sounds\Blast.wav')
+
+CONFIG_FILE = '.fuxensnake_settings.yml'
