@@ -54,9 +54,6 @@ START_TUMBLE_ANGLE = 5
 MAX_TUMBLE_ANGLE = 45
 N_TUMBLE_STEPS = 10
 
-N_HIGHSCORES = 20
-MAX_LENGTH_USERNAME = 20
-
 
 class SnakeWindow:
 
@@ -108,13 +105,9 @@ class SnakeWindow:
 
         def _set_username():
             userName = simpledialog.askstring(i18n.snakeUserNameRequest[i18n.lang()][2],
-                                              ' '.join([i18n.snakeUserNameRequest[i18n.lang()][0],
-                                                        '(' + str(MAX_LENGTH_USERNAME),
-                                                        i18n.snakeUserNameRequest[i18n.lang()][3] + '):']))
+                                              i18n.snakeUserNameRequest[i18n.lang()][0] + ':')
             if not userName:
                 return
-            if len(userName) > MAX_LENGTH_USERNAME:
-                userName = userName[:MAX_LENGTH_USERNAME]
             self.userName = userName
             self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
 
