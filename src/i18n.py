@@ -4,8 +4,32 @@ import files
 CURRENT_LANGUAGE = 'ger'
 
 
+class dictionary:
+    def __init__():
+        pass
+    score = {'ger': 'Punkte',
+             'bay': 'Punkte',
+             }
+    rank = {'ger': 'Platz',
+            'bay': 'Bloz',
+            }
+    time = {'ger': 'Datum',
+            'bay': 'Datum',
+            }
+    username = {'ger': 'Name',
+                'bay': 'Nom',
+                }
+
+
 def lang():
     return CURRENT_LANGUAGE
+
+
+def translate(word):
+    try:
+        return getattr(dictionary, word.lower())[lang()]
+    except KeyError:
+        return word
 
 
 def lang_button_image():

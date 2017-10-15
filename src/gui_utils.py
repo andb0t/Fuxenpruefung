@@ -1,5 +1,7 @@
 import tkinter as tk
 
+import i18n
+
 
 def combine_funcs(*funcs):
     def combined_func(*args, **kwargs):
@@ -42,7 +44,7 @@ class SimpleTable(tk.Frame):
 
     def headers(self, headers):
         for col, header in enumerate(headers):
-            self.set(0, col, header.capitalize(), font='bold')
+            self.set(0, col, i18n.translate(header).capitalize(), font='bold')
 
     def data(self, scores, keys):
         for row, score in enumerate(scores):
