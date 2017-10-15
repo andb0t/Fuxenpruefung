@@ -91,6 +91,34 @@ class SimpleTable(tk.Frame):
                     break
 
 
+def draw_table(master, canv, subBoxXMin, subBoxXMax, boxYMin, boxYMax, headers, values,
+               title='table', tags='table', errText=None):
+    distToSubBox = 1
+    xCenter = (subBoxXMax + subBoxXMin) / 2
+    vSpace = 15
+    boxHeight = boxYMax - boxYMin
+
+    canv.create_text(xCenter, boxYMin,
+                     text=title, font='b', tags=(tags))
+    canv.create_rectangle(subBoxXMin, boxYMin + vSpace, subBoxXMax, boxYMax + vSpace,
+                          fill='black')
+    if not values:
+        minY = boxYMin + vSpace + distToSubBox
+        maxY = boxYMax + vSpace - distToSubBox
+        bg = master.cget("background")
+        canv.create_rectangle(subBoxXMin + distToSubBox, minY, subBoxXMax - distToSubBox, maxY, fill=bg)
+        if not errText:
+            errText = 'Not available'
+        canv.create_text(xCenter, (minY + maxY) / 2, text=errText, tags=(tags + '_empty'))
+        return
+    t = SimpleTable(master, N_HIGHSCORES + 1, len(headers))
+    t.place(x=subBoxXMin + distToSubBox, y=boxYMin + vSpace + distToSubBox,
+            width=subBoxXMax - subBoxXMin - distToSubBox,
+            height=boxHeight - distToSubBox)
+    t.headers(headers)
+    t.data(values, headers)
+
+
 class SnakeWindow:
 
     boxWidth = BOX_X_MAX - BOX_X_MIN
@@ -98,6 +126,7 @@ class SnakeWindow:
     infoBoxWidth = FULL_WIDTH - boxWidth
     infoBoxXMax = FULL_WIDTH
     infoBoxXMin = BOX_X_MAX
+    username = ''
 
     def __init__(self, master):
         gui_utils.center_window(master)
@@ -437,38 +466,35 @@ class SnakeWindow:
                              text='Loading highscore...', font='b', tags=('load_highscore'))
             scores = web_client.read_highscore()
             keys = None
+            errText = None
             try:
                 keys = sorted(scores[0].keys())
             except IndexError:
-                canv.itemconfig('load_highscore', text='No data available')
+                errText = 'No data available'
             except TypeError:
-                canv.itemconfig('load_highscore',
-                                text='Webserver not reachable!\nPlease check your internet connection.')
-            if keys:
-                delete_widget('load_highscore')
+                errText = 'Webserver not reachable!\nPlease check your internet connection.'
+            delete_widget('load_highscore')
+            hSpace = 10
+            vSpace = 20
+            subBoxXMin = self.infoBoxXMin + hSpace
+            subBoxXMax = self.infoBoxXMax - hSpace
 
-                distToEdge = 10
-                distToSubBox = 1
-                subBoxXMin = self.infoBoxXMin + distToEdge
-                subBoxXMax = self.infoBoxXMax - distToEdge
+            topBoxYMin = BOX_Y_MIN + vSpace
+            topBoxYMax = topBoxYMin + self.boxHeight * 0.4
+            draw_table(master, canv, subBoxXMin, subBoxXMax, topBoxYMin, topBoxYMax,
+                       headers=keys, values=scores,
+                       title='Global highscore list', tags='global_highscore', errText=errText)
 
-                canv.create_text(xCenter, BOX_Y_MIN + 20,
-                                 text='Global highscore list', font='b', tags=('global_highscore'))
-                topBoxYMin = BOX_Y_MIN + 40
-                topBoxYMax = topBoxYMin + self.boxHeight * 0.4
-                topBoxHeight = topBoxYMax - topBoxYMin
-                canv.create_rectangle(subBoxXMin, topBoxYMin, subBoxXMax, topBoxYMax, fill='black')
-                t = SimpleTable(master, N_HIGHSCORES + 1, len(keys))
-                t.place(x=subBoxXMin + distToSubBox, y=topBoxYMin + distToSubBox,
-                        width=self.infoBoxWidth - 2 * distToEdge - distToSubBox,
-                        height=topBoxHeight - distToSubBox)
-                t.headers(keys)
-                t.data(scores, keys)
-
-                canv.create_text(xCenter, BOX_Y_MIN + self.boxHeight * 0.5 + 20,
-                                 text='Personal highscore list', font='b', tags=('personal_highscore'))
-                canv.create_text(xCenter, BOX_Y_MIN + self.boxHeight * 0.75,
-                                 text='Not available', font='b', tags=('no_personal_highscore'))
+            # userScores = [score for score in scores if score['username'] == 'Michael']
+            try:
+                userScores = [score for score in scores if score['username'] == self.username]
+            except TypeError:
+                userScores = None
+            lowBoxYMin = BOX_Y_MIN + self.boxHeight * 0.5 + vSpace * 0.5
+            lowBoxYMax = lowBoxYMin + self.boxHeight * 0.4
+            draw_table(master, canv, subBoxXMin, subBoxXMax, lowBoxYMin, lowBoxYMax,
+                       headers=keys, values=userScores,
+                       title='Personal highscore list', tags='personal_highscore', errText=errText)
 
         def _init_start(event):
             reset(self)
