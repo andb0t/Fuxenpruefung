@@ -398,6 +398,8 @@ class SnakeWindow:
                 return (newX, newY)
 
         def post_score():
+            if not self.username:
+                return
             web_client.post_score(username=self.username, score=self._score)
 
         def display_highscore():
