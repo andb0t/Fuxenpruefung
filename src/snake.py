@@ -549,11 +549,14 @@ class SnakeWindow:
         def _end_game():
             cancel()
             remove_items()
-            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.5, fill='red', font='b',
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.4,
+                             fill='orange', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
-            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6, fill='red',
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.5,
+                             fill='orange', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][1], tags=('gameOverCancelText'))
-            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.7, fill='red',
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6,
+                             fill='orange', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][2], tags=('gameOverRestartText'))
             post_score()
             master.bind('<Return>', _restart)
