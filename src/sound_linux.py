@@ -92,6 +92,7 @@ def play_sound(sound):
     except wave.Error:
         print('Warning: caught wave.Error!')
 
+
 def main():
     print('Playing the sound on your system!')
     start_sound()

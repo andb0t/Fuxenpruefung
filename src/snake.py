@@ -12,9 +12,9 @@ import files
 import gui_utils
 import i18n
 try:
-    import sound_linux as sound
-except ImportError:
     import sound_win as sound
+except ImportError:
+    import sound_linux as sound
 
 
 FULL_WIDTH = 400

@@ -6,9 +6,9 @@ import tkinter as tk
 import i18n
 import gui_utils
 try:
-    import sound_linux as sound
-except ImportError:
     import sound_win as sound
+except ImportError:
+    import sound_linux as sound
 import files
 
 

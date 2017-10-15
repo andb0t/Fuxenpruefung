@@ -86,18 +86,26 @@ Simply create your own branch and go for it! An early pull request with the `WIP
 If you would like to execute it via the shell use this:
 ```shell
 $ cd src
-$ python fuxenpruefung.py
+$ python3 fuxenpruefung.py
 ```
 For starting the snake game only, do:
 ```shell
 $ cd src
-$ python snake.py
+$ python3 snake.py
 ```
 
 ### Dependencies and compilation
-Most of the packages used in this project are part of the standard python distribution, the others are available via package managers like `anaconda` or `pip`.
+Most of the packages used in this project are part of the standard python distribution, the others are available via package managers like `anaconda` or `pip`. The project uses python3.
 
-If you want to compile the project from source on Windows, use this:
+#### Linux
+Package manager packages are listed in `requirements.txt`. Some packages are not available via `pip` and have to be installed differently. The entire setup should look like this:
+```shell
+sudo apt-get install python3-tk python3-pil.imagetk python3-pyaudio
+pip3 install -r requirements.txt
+```
+
+#### Windows
+If you want to compile the project from source use this:
 ```shell
 pyinstaller src/fuxenpruefung.spec
 ```

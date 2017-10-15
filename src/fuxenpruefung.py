@@ -8,9 +8,9 @@ import gui
 import files
 import tasks
 try:
-    import sound_linux as sound
-except ImportError:
     import sound_win as sound
+except ImportError:
+    import sound_linux as sound
 
 
 def change_catagories(category, categoryUpdate):
