@@ -1,4 +1,4 @@
-<img src="src/images/fox.png" width="20"><img src="src/images/fox.png" width="50"><img src="src/images/fox.png" width="100"><img src="src/images/fox.png" width="50"><img src="src/images/fox.png" width="20">
+<img src="src/images/fox.png" width="19"><img src="src/images/fox.png" width="50"><img src="src/images/fox.png" width="100"><img src="src/images/fox.png" width="50"><img src="src/images/fox.png" width="20">
 
 
 # Fuxenprüfungsgenerator
@@ -113,5 +113,13 @@ pip install PyYAML-3.12-cp35-cp35m-win_amd64.whl
 ```
 Then compile executable:
 ```shell
+iogndsagjsangsad
 pyinstaller src/fuxenpruefung.spec
 ```
+
+
+### Contributors
+The program has been designed and developed by
+* Andreas Maier, @andb0t
+The following lists contributors, in alphabetical order
+* Kim Albertson, @ashlaban
