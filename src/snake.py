@@ -433,7 +433,6 @@ class SnakeWindow:
 
         def display_highscore():
             xCenter = self.infoBoxXMin + self.infoBoxWidth * 0.5
-            xDistToEdge = 10
             canv.create_text(xCenter, BOX_Y_MIN + self.boxHeight * 0.5,
                              text='Loading highscore...', font='b', tags=('load_highscore'))
             scores = web_client.read_highscore()
@@ -448,12 +447,21 @@ class SnakeWindow:
             if keys:
                 delete_widget('load_highscore')
 
+                distToEdge = 10
+                distToSubBox = 1
+                subBoxXMin = self.infoBoxXMin + distToEdge
+                subBoxXMax = self.infoBoxXMax - distToEdge
+
                 canv.create_text(xCenter, BOX_Y_MIN + 20,
                                  text='Global highscore list', font='b', tags=('global_highscore'))
+                topBoxYMin = BOX_Y_MIN + 40
+                topBoxYMax = topBoxYMin + self.boxHeight * 0.4
+                topBoxHeight = topBoxYMax - topBoxYMin
+                canv.create_rectangle(subBoxXMin, topBoxYMin, subBoxXMax, topBoxYMax, fill='black')
                 t = SimpleTable(master, N_HIGHSCORES + 1, len(keys))
-                t.place(x=self.infoBoxXMin + xDistToEdge, y=BOX_Y_MIN + 40,
-                        width=self.infoBoxWidth - 2 * xDistToEdge,
-                        height=self.boxHeight * 0.4)
+                t.place(x=subBoxXMin + distToSubBox, y=topBoxYMin + distToSubBox,
+                        width=self.infoBoxWidth - 2 * distToEdge - distToSubBox,
+                        height=topBoxHeight - distToSubBox)
                 t.headers(keys)
                 t.data(scores, keys)
 
