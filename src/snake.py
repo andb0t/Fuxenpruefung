@@ -1,6 +1,7 @@
 import math
 import random
 import sys
+import threading
 import time
 from collections import deque
 
@@ -11,6 +12,8 @@ from PIL import ImageTk
 import files
 import gui_utils
 import i18n
+import maths
+import web_client
 try:
     import sound_win as sound
 except ImportError:
@@ -51,18 +54,10 @@ MAX_TUMBLE_ANGLE = 45
 N_TUMBLE_STEPS = 10
 
 
-def get_angle(x0, y0, x1, y1):
-    mag0 = math.sqrt(x0**2 + y0**2)
-    mag1 = math.sqrt(x1**2 + y1**2)
-    if not mag0 or not mag1:
-        return 0
-    dot = x0 * x1 + y0 * y1
-    det = x0 * y1 - x1 * y0
-    angle = math.degrees(math.atan2(det, dot))
-    return angle
-
-
 class SnakeWindow:
+
+    t1 = threading.Thread(target=web_client.read_highscore)
+    t1.start()
 
     def __init__(self, master):
         gui_utils.center_window(master)
@@ -222,7 +217,7 @@ class SnakeWindow:
                 while True:
                     yShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
                     xShift = (1 - 2 * random.random()) * MOVEMENT_STEP_SIZE
-                    angle = get_angle(xShift, yShift, self._foxlastXvec[idx], self._foxlastYvec[idx])
+                    angle = maths.get_angle(xShift, yShift, self._foxlastXvec[idx], self._foxlastYvec[idx])
                     if abs(angle) < MAX_ALLOWED_ANGLE:
                         break
                 x, y = x + xShift, y + yShift
@@ -334,7 +329,7 @@ class SnakeWindow:
                 canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(self._tumbleAngle * 2 *
                                                                       math.sin(self._currentRotation)))
                 canv.itemconfig('major', image=canv.majorImg)
-                angle = get_angle(1, 0, self._xVel, self._yVel)
+                angle = maths.get_angle(1, 0, self._xVel, self._yVel)
                 angle += self._tumbleAngle * math.sin(-self._currentRotation)
                 angle = math.radians(angle)
                 self._xVelTumble = MOVEMENT_STEP_SIZE * math.cos(angle)
