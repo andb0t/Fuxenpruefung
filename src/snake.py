@@ -56,69 +56,6 @@ N_TUMBLE_STEPS = 10
 N_HIGHSCORES = 20
 
 
-class SimpleTable(tk.Frame):
-    def __init__(self, parent, rows, columns):
-        tk.Frame.__init__(self, parent)
-        self._widgets = []
-        for row in range(rows):
-            current_row = []
-            for column in range(columns):
-                relief = 'solid'
-                if row > 0:
-                    relief = 'groove'
-                label = tk.Label(self, borderwidth=1, relief=relief)
-                label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
-                current_row.append(label)
-            self._widgets.append(current_row)
-
-        for column in range(columns):
-            self.grid_columnconfigure(column, weight=1)
-
-    def set(self, row, column, value, **args):
-        widget = self._widgets[row][column]
-        widget.configure(text=value, **args)
-
-    def headers(self, headers):
-        for col, header in enumerate(headers):
-            self.set(0, col, header.capitalize(), font='bold')
-
-    def data(self, scores, keys):
-        for row, score in enumerate(scores):
-            for col, val in enumerate(score.keys()):
-                try:
-                    self.set(row + 1, col, score[keys[col]])
-                except IndexError:
-                    break
-
-
-def draw_table(master, canv, subBoxXMin, subBoxXMax, boxYMin, boxYMax, headers, values,
-               title='table', tags='table', errText=None):
-    distToSubBox = 1
-    xCenter = (subBoxXMax + subBoxXMin) / 2
-    vSpace = 15
-    boxHeight = boxYMax - boxYMin
-
-    canv.create_text(xCenter, boxYMin,
-                     text=title, font='b', tags=(tags))
-    canv.create_rectangle(subBoxXMin, boxYMin + vSpace, subBoxXMax, boxYMax + vSpace,
-                          fill='black')
-    if not values:
-        minY = boxYMin + vSpace + distToSubBox
-        maxY = boxYMax + vSpace - distToSubBox
-        bg = master.cget("background")
-        canv.create_rectangle(subBoxXMin + distToSubBox, minY, subBoxXMax - distToSubBox, maxY, fill=bg)
-        if not errText:
-            errText = 'Not available'
-        canv.create_text(xCenter, (minY + maxY) / 2, text=errText, tags=(tags + '_empty'))
-        return
-    t = SimpleTable(master, N_HIGHSCORES + 1, len(headers))
-    t.place(x=subBoxXMin + distToSubBox, y=boxYMin + vSpace + distToSubBox,
-            width=subBoxXMax - subBoxXMin - distToSubBox,
-            height=boxHeight - distToSubBox)
-    t.headers(headers)
-    t.data(values, headers)
-
-
 class SnakeWindow:
 
     boxWidth = BOX_X_MAX - BOX_X_MIN
@@ -481,9 +418,9 @@ class SnakeWindow:
 
             topBoxYMin = BOX_Y_MIN + vSpace
             topBoxYMax = topBoxYMin + self.boxHeight * 0.4
-            draw_table(master, canv, subBoxXMin, subBoxXMax, topBoxYMin, topBoxYMax,
-                       headers=keys, values=scores,
-                       title='Global highscore list', tags='global_highscore', errText=errText)
+            gui_utils.draw_table(master, canv, subBoxXMin, subBoxXMax, topBoxYMin, topBoxYMax,
+                                 headers=keys, values=scores, nRows=N_HIGHSCORES + 1,
+                                 title='Global highscore list', tags='global_highscore', errText=errText)
 
             # userScores = [score for score in scores if score['username'] == 'Michael']
             try:
@@ -492,9 +429,9 @@ class SnakeWindow:
                 userScores = None
             lowBoxYMin = BOX_Y_MIN + self.boxHeight * 0.5 + vSpace * 0.5
             lowBoxYMax = lowBoxYMin + self.boxHeight * 0.4
-            draw_table(master, canv, subBoxXMin, subBoxXMax, lowBoxYMin, lowBoxYMax,
-                       headers=keys, values=userScores,
-                       title='Personal highscore list', tags='personal_highscore', errText=errText)
+            gui_utils.draw_table(master, canv, subBoxXMin, subBoxXMax, lowBoxYMin, lowBoxYMax,
+                                 headers=keys, values=userScores, nRows=N_HIGHSCORES + 1,
+                                 title='Personal highscore list', tags='personal_highscore', errText=errText)
 
         def _init_start(event):
             reset(self)
