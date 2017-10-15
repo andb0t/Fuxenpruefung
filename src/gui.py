@@ -200,7 +200,7 @@ def sticky_gen(count):
 
 class TextWindow:
 
-    def __init__(self, master, header, lines):
+    def __init__(self, master, header, lines, width=1200, height=600):
 
         gui_utils.center_window(master)
 
@@ -209,11 +209,8 @@ class TextWindow:
         _head_label = tk.Label(master, text=header)
         _head_label.pack(side=tk.TOP)
 
-        _OK_button = tk.Button(master, text="OK", command=master.quit)
-        _OK_button.pack(side=tk.TOP)
-
         # --- create canvas with scrollbar ---
-        _canvas = tk.Canvas(master, width=1200, height=600)
+        _canvas = tk.Canvas(master, width=width, height=height)
         _canvas.pack(side=tk.LEFT)
         _scrollbar = tk.Scrollbar(master, command=_canvas.yview)
         _scrollbar.pack(side=tk.LEFT, fill='y')
