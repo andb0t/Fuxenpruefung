@@ -148,9 +148,9 @@ snakeEventInfo = {'ger': ['Start mit Pfeiltaste', 'Achtung, das steigt ins Blut!
                   'bay': ['Pfeildastn fian Start', 'Glei bist voi', 'Du bist voi!',
                           "Fang d'Fuxn!", 'I dad erstamoi speim'],
                   }
-snakeUserNameRequest = {'ger': ['Name eingeben', 'zum Ändern klicken', 'Name'],
-                        'eng': ['Enter your name', 'click to change', 'Name'],
-                        'bay': ['Wia hoastn?', 'Do drucka fia ondan Nom', 'Nom'],
+snakeUserNameRequest = {'ger': ['Name eingeben', 'zum Ändern klicken', 'Name', 'Zeichen maximal'],
+                        'eng': ['Enter your name', 'click to change', 'Name', 'characters maximum'],
+                        'bay': ['Wia hoastn?', 'Do drucka fia ondan Nom', 'Nom', 'Buchstobn, koana drüba!'],
                         }
 snakeHighScore = {'ger': ['Punktestand wird geladen', 'Persönlicher Highscore', 'Globaler Highscore'],
                   'eng': ['Loading highscore', 'Personal highscore', 'Global highscore'],

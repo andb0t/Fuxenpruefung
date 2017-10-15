@@ -55,6 +55,7 @@ MAX_TUMBLE_ANGLE = 45
 N_TUMBLE_STEPS = 10
 
 N_HIGHSCORES = 20
+MAX_LENGTH_USERNAME = 20
 
 
 class SnakeWindow:
@@ -64,6 +65,8 @@ class SnakeWindow:
     infoBoxXMax = FULL_WIDTH
     infoBoxXMin = BOX_X_MAX
     bottomRowY = (BOX_Y_MAX + FULL_HEIGHT) / 2
+    infoBoxXCenter = (infoBoxXMin + infoBoxXMax) / 2
+    infoBoxWidth = infoBoxXMax - infoBoxXMin
     userName = ''
 
     def __init__(self, master):
@@ -105,10 +108,15 @@ class SnakeWindow:
 
         def _set_username():
             userName = simpledialog.askstring(i18n.snakeUserNameRequest[i18n.lang()][2],
-                                              i18n.snakeUserNameRequest[i18n.lang()][0] + ':')
-            if userName:
-                self.userName = userName
-                self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
+                                              ' '.join([i18n.snakeUserNameRequest[i18n.lang()][0],
+                                                        '(' + str(MAX_LENGTH_USERNAME),
+                                                        i18n.snakeUserNameRequest[i18n.lang()][3] + '):']))
+            if not userName:
+                return
+            if len(userName) > MAX_LENGTH_USERNAME:
+                userName = userName[:MAX_LENGTH_USERNAME]
+            self.userName = userName
+            self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
 
         def _draw_new_fox(newX=None, newY=None, name='fox', size=1):
             if not newX and not newY:
@@ -203,16 +211,18 @@ class SnakeWindow:
 
         canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN * 0.4, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font='b', fill='orange')
-        canv.create_text(BOX_X_MAX / 2, BOX_Y_MAX * 2 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
+        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX * 2 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
                          tags=('instructionText'))
-        canv.create_text(BOX_X_MIN + self.boxWidth / 2, BOX_Y_MAX * 6 / 8, text=i18n.snakeInstruction[i18n.lang()][1],
+        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX * 6 / 8, text=i18n.snakeInstruction[i18n.lang()][1],
                          tags=('instructionText2'))
 
-        _draw_new_star(BOX_X_MIN + self.boxWidth * 0.30, BOX_Y_MAX * 0.9, "instrStar", 0.5)
-        canv.create_text(BOX_X_MIN + self.boxWidth * 0.40, BOX_Y_MAX * 0.9, text='=', tags=('instructionEquals'))
-        _draw_new_beer(BOX_X_MIN + self.boxWidth * 0.50, BOX_Y_MAX * 0.9, "instrBeer", 0.5)
-        canv.create_text(BOX_X_MIN + self.boxWidth * 0.60, BOX_Y_MAX * 0.9, text='X', tags=('instructionTimes'))
-        _draw_new_fox(BOX_X_MIN + self.boxWidth * 0.70, BOX_Y_MAX * 0.9, "instrFox", 0.5)
+        _draw_new_star(self.infoBoxXMin + self.infoBoxWidth * 0.30, BOX_Y_MAX * 0.9, "instrStar", 0.5)
+        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.40, BOX_Y_MAX * 0.9,
+                         text='=', tags=('instructionEquals'))
+        _draw_new_beer(self.infoBoxXMin + self.infoBoxWidth * 0.50, BOX_Y_MAX * 0.9, "instrBeer", 0.5)
+        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.60, BOX_Y_MAX * 0.9,
+                         text='X', tags=('instructionTimes'))
+        _draw_new_fox(self.infoBoxXMin + self.infoBoxWidth * 0.70, BOX_Y_MAX * 0.9, "instrFox", 0.5)
 
         canv.create_image(BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg,
                           tags=('major'))
@@ -416,7 +426,7 @@ class SnakeWindow:
             web_client.post_score(username=self.userName, score=self._score)
 
         def display_highscore():
-            canv.create_text((self.infoBoxXMin + self.infoBoxXMax) * 0.5, BOX_Y_MIN + self.boxHeight * 0.5,
+            canv.create_text(self.infoBoxXCenter, BOX_Y_MIN + self.boxHeight * 0.5,
                              text=i18n.snakeHighScore[i18n.lang()][0] + '...', font='b', tags=('load_highscore'))
             scores = web_client.read_highscore()
             keys = None
