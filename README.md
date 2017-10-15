@@ -107,5 +107,6 @@ pip3 install -r requirements.txt
 #### Windows
 If you want to compile the project from source use this:
 ```shell
+pip install requests==2.5.1  # pyinstaller 3.2.1 still has a bug with newer versions of requests
 pyinstaller src/fuxenpruefung.spec
 ```
