@@ -119,7 +119,7 @@ pyinstaller src/fuxenpruefung.spec
 
 ### Contributors
 The program has been designed and developed by
-* Andreas Maier, @andb0t
+* [Andreas Maier](https://github.com/andb0t)
 
 The following lists contributors, in alphabetical order
-* Kim Albertson, @ashlaban
+* [Kim Albertson](https://github.com/ashlaban)
