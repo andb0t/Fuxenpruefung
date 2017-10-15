@@ -86,6 +86,9 @@ class SnakeWindow:
         master.resizable(0, 0)
 
         itemRegister = []
+        self._score = 0
+        self._nFoxes = 0
+        self._nBeers = 0
 
         def reset(self):
             self._xPath = deque([], MAX_QUEUE_LEN)
@@ -220,7 +223,7 @@ class SnakeWindow:
         canv.create_line(0, BOX_Y_MAX - 2, FULL_WIDTH, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
 
         canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN * 0.4, text=i18n.snakeWelcome[i18n.lang()],
-                         tags=('welcomeText'), font='b', fill='orange')
+                         tags=('welcomeText'), font=("Times", 25, "bold"), fill='orange')
 
         instructionY = BOX_Y_MIN + self.boxHeight * 0.4
         canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][0],
@@ -246,6 +249,16 @@ class SnakeWindow:
         canv.create_image(BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg,
                           tags=('major'))
         itemRegister.append('major')
+
+        _draw_new_fox(FULL_WIDTH * 0.25, self.bottomRowY, 'scoreFox', 0.5)
+        canv.create_text(FULL_WIDTH * 0.30, self.bottomRowY, text=': ' + str(self._nFoxes),
+                         font='b', tags=('foxText'))
+        _draw_new_beer(FULL_WIDTH * 0.50, self.bottomRowY, 'scoreBeer', 0.5)
+        canv.create_text(FULL_WIDTH * 0.55, self.bottomRowY, text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
+                         font='b', tags=('beerText'))
+        _draw_new_star(FULL_WIDTH * 0.75, self.bottomRowY, 'scoreStar', 0.5)
+        canv.create_text(FULL_WIDTH * 0.80, self.bottomRowY, text=': ' + str(self._nBeers),
+                         font='b', tags=('starText'))
 
         def move_fox_tail():
             for idx in range(self._nFoxes):
@@ -478,18 +491,18 @@ class SnakeWindow:
 
         def _init_start(event):
             reset(self)
-            _draw_new_fox(BOX_X_MAX * 0.15, self.bottomRowY, 'scoreFox', 0.5)
-            canv.create_text(BOX_X_MAX * 0.25, self.bottomRowY,
-                             text=':' + str(self._nFoxes),
-                             font='b', tags=('foxText'))
-            _draw_new_beer(BOX_X_MAX * 0.45, self.bottomRowY, 'scoreBeer', 0.5)
-            canv.create_text(BOX_X_MAX * 0.55, self.bottomRowY,
-                             text=':' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
-                             font='b', tags=('beerText'))
-            _draw_new_star(BOX_X_MAX * 0.75, self.bottomRowY, 'scoreStar', 0.5)
-            canv.create_text(BOX_X_MAX * 0.85, self.bottomRowY,
-                             text=':' + str(self._nBeers),
-                             font='b', tags=('starText'))
+            # _draw_new_fox(BOX_X_MAX * 0.15, self.bottomRowY, 'scoreFox', 0.5)
+            # canv.create_text(BOX_X_MAX * 0.25, self.bottomRowY,
+            #                  text=':' + str(self._nFoxes),
+            #                  font='b', tags=('foxText'))
+            # _draw_new_beer(BOX_X_MAX * 0.45, self.bottomRowY, 'scoreBeer', 0.5)
+            # canv.create_text(BOX_X_MAX * 0.55, self.bottomRowY,
+            #                  text=':' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
+            #                  font='b', tags=('beerText'))
+            # _draw_new_star(BOX_X_MAX * 0.75, self.bottomRowY, 'scoreStar', 0.5)
+            # canv.create_text(BOX_X_MAX * 0.85, self.bottomRowY,
+            #                  text=':' + str(self._nBeers),
+            #                  font='b', tags=('starText'))
             _start(event)
 
         def _start(event):
