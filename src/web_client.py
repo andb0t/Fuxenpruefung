@@ -23,6 +23,7 @@ def read_highscore():
     for s in scores:
         table.append([s[key] for key in keys])
     print(tabulate.tabulate(table, headers=keys, tablefmt='grid'))
+    return scores
 
 
 def post_score(username, score, message):

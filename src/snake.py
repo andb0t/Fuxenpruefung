@@ -20,7 +20,7 @@ except ImportError:
     import sound_linux as sound
 
 
-FULL_WIDTH = 400
+FULL_WIDTH = 800
 FULL_HEIGHT = 500
 BOX_X_MIN = 0
 BOX_X_MAX = 400
@@ -53,11 +53,51 @@ START_TUMBLE_ANGLE = 5
 MAX_TUMBLE_ANGLE = 45
 N_TUMBLE_STEPS = 10
 
+N_HIGHSCORES = 20
+
+
+class SimpleTable(tk.Frame):
+    def __init__(self, parent, rows, columns):
+        tk.Frame.__init__(self, parent)
+        self._widgets = []
+        for row in range(rows):
+            current_row = []
+            for column in range(columns):
+                relief = 'solid'
+                if row > 0:
+                    relief = 'groove'
+                label = tk.Label(self, borderwidth=1, relief=relief)
+                label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
+                current_row.append(label)
+            self._widgets.append(current_row)
+
+        for column in range(columns):
+            self.grid_columnconfigure(column, weight=1)
+
+    def set(self, row, column, value):
+        widget = self._widgets[row][column]
+        widget.configure(text=value)
+
+    def headers(self, headers):
+        for col, header in enumerate(headers):
+            self.set(0, col, header.capitalize())
+
+    def data(self, scores, keys):
+        for row, score in enumerate(scores):
+            for col, val in enumerate(score.keys()):
+                try:
+                    self.set(row + 1, col, score[keys[col]])
+                except IndexError:
+                    break
+
 
 class SnakeWindow:
 
-    t1 = threading.Thread(target=web_client.read_highscore)
-    t1.start()
+    boxWidth = BOX_X_MAX - BOX_X_MIN
+    boxHeight = BOX_Y_MAX - BOX_Y_MIN
+    infoBoxWidth = FULL_WIDTH - boxWidth
+    infoBoxXMax = FULL_WIDTH
+    infoBoxXMin = BOX_X_MAX
 
     def __init__(self, master):
         gui_utils.center_window(master)
@@ -178,25 +218,27 @@ class SnakeWindow:
 
         canv.create_image((BOX_X_MAX + BOX_X_MIN) / 2, (BOX_Y_MAX + BOX_Y_MIN) / 2, image=canv.floorImg, tags=('floor'))
 
-        canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MAX, BOX_Y_MIN, fill='black', tags=('top'), width=10)
+        canv.create_line(0, BOX_Y_MIN, FULL_WIDTH, BOX_Y_MIN, fill='black', tags=('top'), width=10)
         canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_Y_MAX, fill='black', tags=('left'), width=10)
-        canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('right'), width=10)
-        canv.create_line(BOX_X_MIN, BOX_Y_MAX - 2, BOX_X_MAX, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
+        canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('middle'), width=10)
+        canv.create_line(FULL_WIDTH, BOX_Y_MIN, FULL_WIDTH, BOX_Y_MAX, fill='black', tags=('right'), width=10)
+        canv.create_line(0, BOX_Y_MAX - 2, FULL_WIDTH, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
 
         canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN * 0.4, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font='b', fill='orange')
         canv.create_text(BOX_X_MAX / 2, BOX_Y_MAX * 2 / 8, text=i18n.snakeInstruction[i18n.lang()][0],
                          tags=('instructionText'))
-        canv.create_text(FULL_WIDTH / 2, BOX_Y_MAX * 6 / 8, text=i18n.snakeInstruction[i18n.lang()][1],
+        canv.create_text(BOX_X_MIN + self.boxWidth / 2, BOX_Y_MAX * 6 / 8, text=i18n.snakeInstruction[i18n.lang()][1],
                          tags=('instructionText2'))
 
-        _draw_new_star(FULL_WIDTH * 0.30, BOX_Y_MAX * 0.9, "instrStar", 0.5)
-        canv.create_text(FULL_WIDTH * 0.40, BOX_Y_MAX * 0.9, text='=', tags=('instructionEquals'))
-        _draw_new_beer(FULL_WIDTH * 0.50, BOX_Y_MAX * 0.9, "instrBeer", 0.5)
-        canv.create_text(FULL_WIDTH * 0.60, BOX_Y_MAX * 0.9, text='X', tags=('instructionTimes'))
-        _draw_new_fox(FULL_WIDTH * 0.70, BOX_Y_MAX * 0.9, "instrFox", 0.5)
+        _draw_new_star(BOX_X_MIN + self.boxWidth * 0.30, BOX_Y_MAX * 0.9, "instrStar", 0.5)
+        canv.create_text(BOX_X_MIN + self.boxWidth * 0.40, BOX_Y_MAX * 0.9, text='=', tags=('instructionEquals'))
+        _draw_new_beer(BOX_X_MIN + self.boxWidth * 0.50, BOX_Y_MAX * 0.9, "instrBeer", 0.5)
+        canv.create_text(BOX_X_MIN + self.boxWidth * 0.60, BOX_Y_MAX * 0.9, text='X', tags=('instructionTimes'))
+        _draw_new_fox(BOX_X_MIN + self.boxWidth * 0.70, BOX_Y_MAX * 0.9, "instrFox", 0.5)
 
-        canv.create_image(FULL_WIDTH / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg, tags=('major'))
+        canv.create_image(BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg,
+                          tags=('major'))
         itemRegister.append('major')
 
         def move_fox_tail():
@@ -389,6 +431,34 @@ class SnakeWindow:
                     continue
                 return (newX, newY)
 
+        def display_highscore():
+            xCenter = self.infoBoxXMin + self.infoBoxWidth * 0.5
+            xDistToEdge = 10
+            canv.create_text(xCenter, BOX_Y_MIN + self.boxHeight * 0.5,
+                             text='Loading highscore...', font='b', tags=('load_highscore'))
+            scores = web_client.read_highscore()
+            keys = None
+            try:
+                keys = sorted(scores[0].keys())
+            except IndexError:
+                canv.itemconfig('load_highscore', text='No data available')
+            if keys:
+                delete_widget('load_highscore')
+
+                canv.create_text(xCenter, BOX_Y_MIN + 20,
+                                 text='Global highscore list', font='b', tags=('global_highscore'))
+                t = SimpleTable(master, N_HIGHSCORES + 1, len(keys))
+                t.place(x=self.infoBoxXMin + xDistToEdge, y=BOX_Y_MIN + 40,
+                        width=self.infoBoxWidth - 2 * xDistToEdge,
+                        height=self.boxHeight * 0.4)
+                t.headers(keys)
+                t.data(scores, keys)
+
+                canv.create_text(xCenter, BOX_Y_MIN + self.boxHeight * 0.5 + 20,
+                                 text='Personal highscore list', font='b', tags=('personal_highscore'))
+                canv.create_text(xCenter, BOX_Y_MIN + self.boxHeight * 0.75,
+                                 text='Not available', font='b', tags=('no_personal_highscore'))
+
         def _init_start(event):
             reset(self)
             yPos = (BOX_Y_MAX + FULL_HEIGHT) / 2
@@ -432,6 +502,8 @@ class SnakeWindow:
             master.unbind('<Return>')
             move()
             move_free_fox()
+            t1 = threading.Thread(target=display_highscore)
+            t1.start()
 
         def _quit(self):
             time.sleep(0.1)
@@ -477,7 +549,7 @@ class SnakeWindow:
             canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
             canv.itemconfig('starText', text=': ' + str(self._score))
             canv.itemconfig('eventInfoText', text=i18n.snakeEventInfo[i18n.lang()][0])
-            canv.coords('major', FULL_WIDTH / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2)
+            canv.coords('major', BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2)
             canv.majorImg = ImageTk.PhotoImage(majorImgObj.rotate(0))
             canv.itemconfig('major', image=canv.majorImg)
             _start(event)
