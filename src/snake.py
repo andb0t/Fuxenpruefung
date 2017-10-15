@@ -8,6 +8,7 @@ from collections import deque
 import tkinter as tk
 from PIL import Image
 from PIL import ImageTk
+from tkinter import simpledialog
 
 import files
 import gui_utils
@@ -60,10 +61,10 @@ class SnakeWindow:
 
     boxWidth = BOX_X_MAX - BOX_X_MIN
     boxHeight = BOX_Y_MAX - BOX_Y_MIN
-    infoBoxWidth = FULL_WIDTH - boxWidth
     infoBoxXMax = FULL_WIDTH
     infoBoxXMin = BOX_X_MAX
-    username = 'Michael'
+    bottomRowY = (BOX_Y_MAX + FULL_HEIGHT) / 2
+    userName = ''
 
     def __init__(self, master):
         gui_utils.center_window(master)
@@ -101,6 +102,12 @@ class SnakeWindow:
                 itemRegister.remove(name)
             except ValueError:
                 pass
+
+        def _set_username():
+            userName = simpledialog.askstring('User name', 'Enter your user name:')
+            if userName:
+                self.userName = userName
+                self.userNameButton['text'] = self.userName + ' (click to change)'
 
         def _draw_new_fox(newX=None, newY=None, name='fox', size=1):
             if not newX and not newY:
@@ -156,6 +163,9 @@ class SnakeWindow:
 
         canv = tk.Canvas(master, highlightthickness=0)
         canv.pack(fill='both', expand=True)
+
+        self.userNameButton = tk.Button(master, text='Set user name', command=_set_username)
+        self.userNameButton.place(x=FULL_WIDTH, y=BOX_Y_MIN * 0.4, anchor='e')
 
         majorImgObj = Image.open(files.majorImgPath)
         majorImgObj = majorImgObj.resize((MAJOR_SIZE, MAJOR_SIZE), Image.ANTIALIAS)
@@ -398,13 +408,14 @@ class SnakeWindow:
                 return (newX, newY)
 
         def post_score():
-            if not self.username:
+            if not self.userName:
+                _set_username()
+            if not self.userName:
                 return
-            web_client.post_score(username=self.username, score=self._score)
+            web_client.post_score(username=self.userName, score=self._score)
 
         def display_highscore():
-            xCenter = self.infoBoxXMin + self.infoBoxWidth * 0.5
-            canv.create_text(xCenter, BOX_Y_MIN + self.boxHeight * 0.5,
+            canv.create_text((self.infoBoxXMin + self.infoBoxXMax) * 0.5, BOX_Y_MIN + self.boxHeight * 0.5,
                              text='Loading highscore...', font='b', tags=('load_highscore'))
             scores = web_client.read_highscore()
             keys = None
@@ -428,28 +439,29 @@ class SnakeWindow:
                                  title='Global highscore list', tags='global_highscore', errText=errText)
 
             try:
-                userScores = [score for score in scores if score['username'] == self.username]
+                userScores = [score for score in scores if score['username'] == self.userName]
             except TypeError:
                 userScores = None
             lowBoxYMin = BOX_Y_MIN + self.boxHeight * 0.5 + vSpace * 0.5
             lowBoxYMax = lowBoxYMin + self.boxHeight * 0.4
+            if not self.userName:
+                errText = 'No user name set'
             gui_utils.draw_table(master, canv, subBoxXMin, subBoxXMax, lowBoxYMin, lowBoxYMax,
                                  headers=keys, values=userScores, nRows=N_HIGHSCORES + 1,
                                  title='Personal highscore list', tags='personal_highscore', errText=errText)
 
         def _init_start(event):
             reset(self)
-            yPos = (BOX_Y_MAX + FULL_HEIGHT) / 2
-            _draw_new_fox(BOX_X_MAX * 0.15, yPos, 'scoreFox', 0.5)
-            canv.create_text(BOX_X_MAX * 0.25, yPos,
+            _draw_new_fox(BOX_X_MAX * 0.15, self.bottomRowY, 'scoreFox', 0.5)
+            canv.create_text(BOX_X_MAX * 0.25, self.bottomRowY,
                              text=':' + str(self._nFoxes),
                              font='b', tags=('foxText'))
-            _draw_new_beer(BOX_X_MAX * 0.45, yPos, 'scoreBeer', 0.5)
-            canv.create_text(BOX_X_MAX * 0.55, yPos,
+            _draw_new_beer(BOX_X_MAX * 0.45, self.bottomRowY, 'scoreBeer', 0.5)
+            canv.create_text(BOX_X_MAX * 0.55, self.bottomRowY,
                              text=':' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
                              font='b', tags=('beerText'))
-            _draw_new_star(BOX_X_MAX * 0.75, yPos, 'scoreStar', 0.5)
-            canv.create_text(BOX_X_MAX * 0.85, yPos,
+            _draw_new_star(BOX_X_MAX * 0.75, self.bottomRowY, 'scoreStar', 0.5)
+            canv.create_text(BOX_X_MAX * 0.85, self.bottomRowY,
                              text=':' + str(self._nBeers),
                              font='b', tags=('starText'))
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN * 0.73, fill='red',
