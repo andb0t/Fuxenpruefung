@@ -189,3 +189,7 @@ snakeWebErr = {'ger': ['Keine Daten verfügbar', 'Webserver nicht erreichbar\nÜ
                'bay': ['Koane Datn do', 'Webserver antwoat ned\nBist überhabts verbunna?.',
                        'Koa Nom ned eigem'],
                }
+webNews = {'ger': 'Hole Neuigkeiten vom Server...',
+           'eng': 'Contacting news server...',
+           'bay': "Gibt's wos neis?",
+           }

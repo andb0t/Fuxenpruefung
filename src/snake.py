@@ -29,6 +29,7 @@ BOX_X_MIN = 0
 BOX_X_MAX = 500
 BOX_Y_MIN = 50
 BOX_Y_MAX = 550
+NEWS_HEIGHT = 50
 MAX_QUEUE_LEN = 2000
 TAIL_STEP_DISTANCE = 7
 MAJOR_SIZE = 110
@@ -61,10 +62,12 @@ N_HIGHSCORES = 10
 
 class SnakeWindow:
 
+    webNews = i18n.webNews[i18n.lang()]
     boxWidth = BOX_X_MAX - BOX_X_MIN
     boxHeight = BOX_Y_MAX - BOX_Y_MIN
     infoBoxXMax = FULL_WIDTH
     infoBoxXMin = BOX_X_MAX
+    newsBoxYMax = BOX_X_MIN + NEWS_HEIGHT
     bottomRowY = (BOX_Y_MAX + FULL_HEIGHT) / 2
     infoBoxXCenter = (infoBoxXMin + infoBoxXMax) / 2
     infoBoxWidth = infoBoxXMax - infoBoxXMin
@@ -218,9 +221,11 @@ class SnakeWindow:
 
         canv.create_line(0, BOX_Y_MIN, FULL_WIDTH, BOX_Y_MIN, fill='black', tags=('top'), width=10)
         canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_Y_MAX, fill='black', tags=('left'), width=10)
-        canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('middle'), width=10)
+        canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('center'), width=10)
         canv.create_line(FULL_WIDTH, BOX_Y_MIN, FULL_WIDTH, BOX_Y_MAX, fill='black', tags=('right'), width=10)
         canv.create_line(0, BOX_Y_MAX - 2, FULL_WIDTH, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
+        canv.create_line(self.infoBoxXMin, BOX_Y_MAX - self.newsBoxYMax, self.infoBoxXMax, BOX_Y_MAX - self.newsBoxYMax,
+                         fill='black', tags=('news_line'), width=10)
 
         canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN * 0.4, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font=("Times", 25, "bold"), fill='orange')
@@ -246,6 +251,8 @@ class SnakeWindow:
         instructionY += deltaY
         canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][2],
                          tags=('instructionText3'))
+        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax * 0.5,
+                         text=self.webNews, tags=('webNews'))
 
         instructionY += deltaY
         canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][3],
@@ -494,6 +501,10 @@ class SnakeWindow:
                                  headers=keys, values=userScores, nRows=N_HIGHSCORES + 1,
                                  title=i18n.snakeHighScore[i18n.lang()][1], tags='personal_highscore', errText=errText)
 
+        def display_news():
+            news = web_client.read_news()
+            canv.itemconfig('webNews', text=news['message'])
+
         def _init_start(event):
             reset(self)
             _start(event)
@@ -509,6 +520,8 @@ class SnakeWindow:
             delete_widget('instrFox')
             delete_widget('instructionEquals')
             delete_widget('instructionTimes')
+            delete_widget('news_line')
+            delete_widget('webNews')
             for idx in range(N_FREE_FOXES):
                 _draw_new_fox(name='fox' + str(idx))
             for idx in range(N_BEERS):
@@ -614,6 +627,8 @@ class SnakeWindow:
                 self._xVel = -MOVEMENT_STEP_SIZE
                 self._direction = event.keysym
 
+        t2 = threading.Thread(target=display_news)
+        t2.start()
         master.protocol("WM_DELETE_WINDOW", _click_quit)
         master.bind('<Up>', _init_start)
         master.bind('<Down>', _init_start)

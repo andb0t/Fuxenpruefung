@@ -64,7 +64,7 @@ def read_news():
     if news is None:
         return None
     print_table(news)
-    return news
+    return news[0]
 
 
 def main():
