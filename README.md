@@ -13,10 +13,10 @@ A quiz and a snake game are provided as well for leisure time entertainment.
 
 ### Content
 * [Installation](#installation)
-* [Languages](#Languages)
-* [The questionnaire generator](#the_questionnaire_generator)
-* [The fox snake game](#the_fox_snake_game)
-* [For the geeks](#for_the_geeks)
+* [Languages](#languages)
+* [The questionnaire generator](#the-questionnaire-generator)
+* [The fox snake game](#the-fox-snake-game)
+* [For the geeks](#for-the-geeks)
 * [Contributing](#contributing)
 
 
