@@ -479,6 +479,8 @@ class SnakeWindow:
         def display_highscore():
             canv.create_text(self.infoBoxXCenter, BOX_Y_MIN + self.boxHeight * 0.5,
                              text=i18n.snakeHighScore[i18n.lang()][0] + '...', font='b', tags=('load_highscore'))
+            alertThread.join()
+            newsThread.join()
             scores = web_client.read_highscore()
             keys = None
             errText = None
@@ -513,6 +515,7 @@ class SnakeWindow:
                                  title=i18n.snakeHighScore[i18n.lang()][1], tags='personal_highscore', errText=errText)
 
         def display_news():
+            alertThread.join()
             self.webNews = web_client.read_news()['message']
             canv.itemconfig('webNews', text=utils.break_lines(self.webNews, MAX_INFO_LINE_CHARS))
 
@@ -565,8 +568,8 @@ class SnakeWindow:
             master.unbind('<Return>')
             move()
             move_free_fox()
-            t1 = threading.Thread(target=display_highscore)
-            t1.start()
+            highScoreThread = threading.Thread(target=display_highscore)
+            highScoreThread.start()
 
         def _quit(self):
             time.sleep(0.1)
@@ -647,10 +650,10 @@ class SnakeWindow:
                 self._xVel = -MOVEMENT_STEP_SIZE
                 self._direction = event.keysym
 
-        t1 = threading.Thread(target=display_alerts)
-        t1.start()
-        t2 = threading.Thread(target=display_news)
-        t2.start()
+        alertThread = threading.Thread(target=display_alerts)
+        alertThread.start()
+        newsThread = threading.Thread(target=display_news)
+        newsThread.start()
         master.protocol("WM_DELETE_WINDOW", _click_quit)
         master.bind('<Up>', _init_start)
         master.bind('<Down>', _init_start)
