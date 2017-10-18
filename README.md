@@ -25,13 +25,13 @@ A quiz and a snake game are provided as well for leisure time entertainment.
 The [releases](https://github.com/andb0t/Fuxenpruefung/releases) page contains all necessary downloads. You will also find there a `.zip` file containing example questions to get you started with the questionnaire.
 
 ### Windows
-*No installation necessary!* Simply download the compiled windows executable and click!
+*No installation necessary!* Simply download the compiled windows executable [here](https://github.com/andb0t/Fuxenpruefung/releases) and click!
 
 ### Mac
 Not available yet! If you'd like to help, you are more than welcome! See [Contributing](#contributing) for instructions.
 
 ### Linux
-See chapter [For the geeks](#for-the-geeks). I guess you and me belong there :)
+See chapter [for the geeks](#for-the-geeks). I guess you and me belong there :)
 
 
 
