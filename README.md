@@ -22,7 +22,7 @@ A quiz and a snake game are provided as well for leisure time entertainment.
 
 
 ## Installation
-*No installation necessary!* The distributed ZIP file `fuxenpruefung.zip` in the [releases](https://github.com/andb0t/Fuxenpruefung/releases) contains the compiled windows executable. It also contains a directory of example questions. Simply download, extract and click.
+*No installation necessary!* Download the compiled windows executable on the [releases](https://github.com/andb0t/Fuxenpruefung/releases) page! You will also find a zip file containing example questions to get you started with the questionnaire.
 
 
 
