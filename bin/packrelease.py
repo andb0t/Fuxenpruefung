@@ -1,31 +1,45 @@
 import os
 import functools
-from optparse import OptionParser
+import argparse
 
-parser = OptionParser()
-parser.add_option("-p", "--public", dest="ispublic", default=True,
-                  action="store_false",
-                  help="Include example question catalogue instead of real")
-(options, args) = parser.parse_args()
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument("--public", default=True, action="store_false",
+                    help="Include example question catalogue instead of real")
+parser.add_argument("--all", default=False, action="store_true",
+                    help="Include executable in zip")
+args = parser.parse_args()
 
 
 # First pack release in unencrypted zip
-command = 'cd ../questions & 7z a -tzip'
-archivename = 'fuxenpruefung.zip'
-files = [r'"C:\Users\Andreas Maier\Documents\Fuxenpruefung\dist\fuxenpruefung.exe"']
+command = '7z a -tzip'
+distPath = 'dist'
+if args.all:
+    archivename = 'fuxenpruefung.zip'
+    files = [r'"C:\Users\Andreas Maier\Documents\Fuxenpruefung\dist\fuxenpruefung.exe"']
+    prefix = 'questions/'
+    preCmd = ''
+    mvCmd = None
+else:
+    archivename = 'questions.zip'
+    files = []
+    prefix = ''
+    preCmd = 'cd questions & '
+    mvCmd = ('questions/' + archivename, archivename)
 question_file = ""
-question_file = 'questions/fragensammlung_beispiel.txt'
+question_file = prefix + 'fragensammlung_beispiel.txt'
 files.append(question_file)
-question_file = 'questions/example_questions.txt'
+question_file = prefix + 'example_questions.txt'
 files.append(question_file)
-question_file = 'questions/fragensammlung_beispiel.zip'
+question_file = prefix + 'fragensammlung_beispiel.zip'
 files.append(question_file)
-if not options.ispublic:
-    question_file = 'questions/fragensammlung.txt'
+if not args.public:
+    question_file = prefix + 'fragensammlung.txt'
     files.append(question_file)
 allfiles = functools.reduce(lambda a, b: a + ' ' + b, files)
 os.system('del '+archivename)
-os.system(command+' '+archivename+' '+allfiles)
+os.system(preCmd + command + ' ' + archivename + ' ' + allfiles)
+if mvCmd:
+    os.rename(*mvCmd)
 
 # then encrypt secret question file
 print('Also recreate encrypted question file? (Y/[n]):')
@@ -35,4 +49,5 @@ if input() == 'Y':
     print('Enter password to encrypt question file:')
     passwd = input()
     command = 'cd questions & 7z a -tzip -p'+passwd+' '+archivename+' fragensammlung.txt'
+    # command = 'cd questions & 7z a -tzip -p'+passwd+' '+archivename+' fragensammlung.txt'
     os.system(command)
