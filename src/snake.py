@@ -580,16 +580,8 @@ class SnakeWindow:
                 master.after_cancel(self._job[job])
             self._job = {}
 
-        def remove_items():
-            # keepItems = ['scoreFox', 'scoreBeer', 'scoreStar']
-            # for item in itemRegister:
-            #     if item not in keepItems:
-            #         canv.delete(item)
-            pass
-
         def _end_game():
             cancel()
-            remove_items()
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.4,
                              fill='red', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
@@ -637,7 +629,7 @@ class SnakeWindow:
             if event.keysym == 'd':
                 event.keysym = 'Right'
             if not self._nFoxes:
-                self._direction = 'measingless'
+                self._direction = 'meaningless'
             if event.keysym == 'Up' and self._direction != 'Down':
                 self._yVel = -MOVEMENT_STEP_SIZE
                 self._xVel = 0
