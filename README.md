@@ -22,17 +22,24 @@ A quiz and a snake game are provided as well for leisure time entertainment.
 
 
 ## Installation
-*No installation necessary!* Download the compiled windows executable on the [releases](https://github.com/andb0t/Fuxenpruefung/releases) page! You will also find a zip file containing example questions to get you started with the questionnaire.
+The [releases](https://github.com/andb0t/Fuxenpruefung/releases) page contains all necessary downloads. You will also find there a `.zip` file containing example questions to get you started with the questionnaire.
 
+### Windows
+*No installation necessary!* Simply download the compiled windows executable and click!
+
+### Mac
+Not available yet! If you'd like to help, you are more than welcome! See [Contributing](#contributing) for instructions.
+
+### Linux
+See chapter [For the geeks](#for-the-geeks). I guess you and me belong there :)
 
 
 
 ## Languages
-The program is available in those languages:
+The program is available in those languages. Clicking the flag icon in the main window switches the language.
 * German <img src="src/images/ger.png" height="12">
 * English <img src="src/images/eng.png" height="12">
 * Bavarian <img src="src/images/bay.png" height="12">
-Pressing <l> in the main window or clicking the flag icons switches the language.
 
 
 ## The questionnaire generator
@@ -83,7 +90,7 @@ Earn points by catching foxes but do not collide with your own tail.
 
 
 ## For the geeks
-If you would like to test it, tweak it, build it yourself or contribute, this is for you!
+If you would like to test it, tweak it, build it yourself or contribute, this is for you! Fork the project, clone it and start playing!
 
 ### Alternative execution
 If you would like to execute it via the shell use this:
