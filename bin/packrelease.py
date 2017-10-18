@@ -12,7 +12,7 @@ parser.add_option("-p", "--public", dest="ispublic", default=True,
 # First pack release in unencrypted zip
 command = 'cd ../questions & 7z a -tzip'
 archivename = 'fuxenpruefung.zip'
-files = [r'"C:\Users\Andreas Maier\Dropbox\Projects\Python\Fuxenpruefung\dist\fuxenpruefung.exe"']
+files = [r'"C:\Users\Andreas Maier\Documents\Fuxenpruefung\dist\fuxenpruefung.exe"']
 question_file = ""
 question_file = 'questions/fragensammlung_beispiel.txt'
 files.append(question_file)
