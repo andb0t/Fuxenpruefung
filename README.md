@@ -32,7 +32,7 @@ The program is available in those languages:
 * German <img src="src/images/ger.png" height="12">
 * English <img src="src/images/eng.png" height="12">
 * Bavarian <img src="src/images/bay.png" height="12">
-
+Pressing <m> in the main window or clicking the flag icons switches the language.
 
 
 ## The questionnaire generator
