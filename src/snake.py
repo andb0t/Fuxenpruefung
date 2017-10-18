@@ -29,7 +29,7 @@ BOX_X_MIN = 0
 BOX_X_MAX = 500
 BOX_Y_MIN = 50
 BOX_Y_MAX = 550
-NEWS_HEIGHT = 50
+NEWS_HEIGHT = 100
 MAX_QUEUE_LEN = 2000
 TAIL_STEP_DISTANCE = 7
 MAJOR_SIZE = 110
@@ -58,11 +58,12 @@ MAX_TUMBLE_ANGLE = 45
 N_TUMBLE_STEPS = 10
 
 N_HIGHSCORES = 10
+MAX_INFO_LINE_CHARS = 60
 
 
 class SnakeWindow:
 
-    webNews = i18n.webNews[i18n.lang()]
+    webNews = i18n.webNews[i18n.lang()][0]
     boxWidth = BOX_X_MAX - BOX_X_MIN
     boxHeight = BOX_Y_MAX - BOX_Y_MIN
     infoBoxXMax = FULL_WIDTH
@@ -224,8 +225,6 @@ class SnakeWindow:
         canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('center'), width=10)
         canv.create_line(FULL_WIDTH, BOX_Y_MIN, FULL_WIDTH, BOX_Y_MAX, fill='black', tags=('right'), width=10)
         canv.create_line(0, BOX_Y_MAX - 2, FULL_WIDTH, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
-        canv.create_line(self.infoBoxXMin, BOX_Y_MAX - self.newsBoxYMax, self.infoBoxXMax, BOX_Y_MAX - self.newsBoxYMax,
-                         fill='black', tags=('news_line'), width=10)
 
         canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN * 0.4, text=i18n.snakeWelcome[i18n.lang()],
                          tags=('welcomeText'), font=("Times", 25, "bold"), fill='orange')
@@ -251,12 +250,16 @@ class SnakeWindow:
         instructionY += deltaY
         canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][2],
                          tags=('instructionText3'))
-        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax * 0.5,
-                         text=self.webNews, tags=('webNews'))
 
         instructionY += deltaY
         canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][3],
                          tags=('instructionText4'))
+
+        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax,
+                         text=i18n.webNews[i18n.lang()][1], tags=('webNewsHeader'),
+                         fill='orange', font=("Times", 25, "bold"))
+        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax * 0.5,
+                         text=self.webNews, tags=('webNews'))
 
         canv.create_image(BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg,
                           tags=('major'))
@@ -502,8 +505,13 @@ class SnakeWindow:
                                  title=i18n.snakeHighScore[i18n.lang()][1], tags='personal_highscore', errText=errText)
 
         def display_news():
-            news = web_client.read_news()
-            canv.itemconfig('webNews', text=news['message'])
+            self.webNews = web_client.read_news()['message']
+            pieces = []
+            while self.webNews:
+                pieces.append(self.webNews[:MAX_INFO_LINE_CHARS-1])
+                self.webNews = self.webNews[MAX_INFO_LINE_CHARS-1:]
+            self.webNews = '\n'.join(pieces)
+            canv.itemconfig('webNews', text=self.webNews)
 
         def _init_start(event):
             reset(self)
