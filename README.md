@@ -13,11 +13,11 @@ A quiz and a snake game are provided as well for leisure time entertainment.
 
 ### Content
 * [Installation](#installation)
-
-
-
-## Usage:
-The program requires a question file, structured like the example question files in `questions` directory contained in the project and explained under *Question file syntax* below. It can also read input from an encrypted ZIP file, such as the one delivered within the project (password: *password*). This is useful if you do not want to risk your students to get hold of the answers.
+* [Languages](#Languages)
+* [The questionnaire generator](#the_questionnaire_generator)
+* [The fox snake game](#the_fox_snake_game)
+* [For the geeks](#for_the_geeks)
+* [Contributing](#contributing)
 
 
 
@@ -27,7 +27,7 @@ The program requires a question file, structured like the example question files
 
 
 
-## Languages:
+## Languages
 The program is available in those languages:
 * German <img src="src/images/ger.png" height="12">
 * English <img src="src/images/eng.png" height="12">
@@ -35,8 +35,13 @@ The program is available in those languages:
 
 
 
+## The questionnaire generator
+The program requires a question file, structured like the example question files in `questions` directory contained in the project and explained under *Question file syntax* below. It can also read input from an encrypted ZIP file, such as the one delivered within the project (password: *password*). This is useful if you do not want to risk your students to get hold of the answers.
 
-## Keybindings:
+
+
+
+### Keybindings
 * `<Escape>`    close the current window
 * `<Up>`        radio button up
 * `<Down>`      radio button down
@@ -47,7 +52,7 @@ The program is available in those languages:
 
 
 
-## Question file syntax
+### Question file syntax
 The program expects questions in the following format, each part separated by a hash (#) from the other:
 ```
 [Difficulty] # [Question] # [Answer] # [Category] # [Empty lines for answer]
@@ -77,13 +82,8 @@ Earn points by catching foxes but do not collide with your own tail.
 
 
 
-## For the geeks:
+## For the geeks
 If you would like to test it, tweak it, build it yourself or contribute, this is for you!
-
-### Contributing
-Suggestions, tips, issues, feature requests or merge requests are always welcome!
-
-Simply create your own branch and go for it! An early pull request with the `WIP:` label allows us to discuss the change before it is time to merge.
 
 ### Alternative execution
 If you would like to execute it via the shell use this:
@@ -119,6 +119,13 @@ Then compile executable:
 pyinstaller src/fuxenpruefung.spec
 ```
 
+
+
+
+## Contributing
+Suggestions, tips, issues, feature requests or merge requests are always welcome!
+
+Simply create your own branch and go for it! An early pull request with the `WIP:` label allows us to discuss the change before it is time to merge.
 
 ### Contributors
 The program has been designed and developed by
