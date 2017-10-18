@@ -11,6 +11,9 @@ The selection of questions is randomized, and so is the order of appearance. The
 
 A quiz and a snake game are provided as well for leisure time entertainment.
 
+### Content
+* [Installation](#installation)
+
 
 
 ## Usage:
