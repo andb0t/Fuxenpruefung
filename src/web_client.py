@@ -3,9 +3,12 @@ import requests
 
 import tabulate
 
+import version
+
 URL_READ = 'https://fuxenserver.herokuapp.com/highscore'
 URL_POST = 'https://fuxenserver.herokuapp.com/scores'
 URL_NEWS = 'https://fuxenserver.herokuapp.com/daily'
+URL_MESSAGES = 'https://fuxenserver.herokuapp.com/messages'
 
 
 def print_table(dictionary):
@@ -67,9 +70,25 @@ def read_news():
     return news[0]
 
 
+def read_alerts():
+    print('Retrieving info from', URL_MESSAGES, '...')
+    messages = get_response_json(URL_MESSAGES)
+    if messages is None:
+        return None
+    alerts = []
+    for message in messages:
+        categoryCheck = message['category'] == 'alert'
+        versionCheck = message['version'] == 'all' or float(message['version']) > version.version
+        if not categoryCheck or not versionCheck:
+            continue
+        alerts.append(message)
+    print_table(alerts)
+    return alerts
+
+
 def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('task', choices=['read', 'post', 'news'], help='Type of server interaction')
+    parser.add_argument('task', choices=['read', 'post', 'news', 'alerts'], help='Type of server interaction')
     parser.add_argument('--name', default='', help='Name of user')
     parser.add_argument('--msg', default='', help='Optional message')
     parser.add_argument('--score', default=0, type=int, help='Achieved score')
@@ -81,6 +100,8 @@ def main():
         read_highscore()
     elif args.task == 'news':
         read_news()
+    elif args.task == 'alerts':
+        read_alerts()
 
 
 if __name__ == '__main__':

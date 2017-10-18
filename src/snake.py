@@ -16,6 +16,7 @@ import files
 import gui_utils
 import i18n
 import maths
+import utils
 import web_client
 try:
     import sound_win as sound
@@ -64,6 +65,7 @@ MAX_INFO_LINE_CHARS = 60
 class SnakeWindow:
 
     webNews = i18n.webNews[i18n.lang()][0]
+    webAlerts = None
     boxWidth = BOX_X_MAX - BOX_X_MIN
     boxHeight = BOX_Y_MAX - BOX_Y_MIN
     infoBoxXMax = FULL_WIDTH
@@ -231,11 +233,17 @@ class SnakeWindow:
 
         deltaY = self.boxHeight * 0.07
         instructionY = BOX_Y_MIN + self.boxHeight * 0.35
+
         canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][0],
+                         tags=('instructionHeader'),
+                         fill='green', font=("Times", 25, "bold"))
+
+        instructionY += deltaY
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][1],
                          tags=('instructionText'))
 
         instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][1] + ':',
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][2] + ':',
                          tags=('instructionText2'))
 
         instructionY += deltaY
@@ -248,11 +256,11 @@ class SnakeWindow:
         _draw_new_fox(self.infoBoxXMin + self.infoBoxWidth * 0.70, instructionY, "instrFox", 0.5)
 
         instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][2],
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][3],
                          tags=('instructionText3'))
 
         instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][3],
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][4],
                          tags=('instructionText4'))
 
         canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax,
@@ -506,12 +514,19 @@ class SnakeWindow:
 
         def display_news():
             self.webNews = web_client.read_news()['message']
-            pieces = []
-            while self.webNews:
-                pieces.append(self.webNews[:MAX_INFO_LINE_CHARS-1])
-                self.webNews = self.webNews[MAX_INFO_LINE_CHARS-1:]
-            self.webNews = '\n'.join(pieces)
-            canv.itemconfig('webNews', text=self.webNews)
+            canv.itemconfig('webNews', text=utils.break_lines(self.webNews, MAX_INFO_LINE_CHARS))
+
+        def display_alerts():
+            self.webAlerts = web_client.read_alerts()
+            if not self.webAlerts:
+                return
+            canv.create_text(self.infoBoxXCenter, BOX_Y_MIN + self.newsBoxYMax * 0.5,
+                             text=i18n.webNews[i18n.lang()][2], tags=('webAlertsHeader'),
+                             fill='red', font=("Times", 25, "bold"))
+            for alert in self.webAlerts:
+                alert = alert['message']
+                canv.create_text(self.infoBoxXCenter, BOX_Y_MIN + self.newsBoxYMax,
+                                 text=utils.break_lines(alert, MAX_INFO_LINE_CHARS), tags=('webAlerts'))
 
         def _init_start(event):
             reset(self)
@@ -523,13 +538,18 @@ class SnakeWindow:
             delete_widget('instructionText2')
             delete_widget('instructionText3')
             delete_widget('instructionText4')
+            delete_widget('instructionHeader')
             delete_widget('instrStar')
             delete_widget('instrBeer')
             delete_widget('instrFox')
             delete_widget('instructionEquals')
             delete_widget('instructionTimes')
             delete_widget('news_line')
-            delete_widget('webNews')
+            for widgetID in canv.find_all():
+                widget = canv.gettags(widgetID)[0]
+                if 'webAlerts' in widget or 'webNews' in widget:
+                    print('Deleting', widget)
+                    delete_widget(widget)
             for idx in range(N_FREE_FOXES):
                 _draw_new_fox(name='fox' + str(idx))
             for idx in range(N_BEERS):
@@ -571,13 +591,13 @@ class SnakeWindow:
             cancel()
             remove_items()
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.4,
-                             fill='orange', font=("Times", 25, "bold"),
+                             fill='red', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.5,
-                             fill='orange', font=("Times", 25, "bold"),
+                             fill='red', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][1], tags=('gameOverCancelText'))
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6,
-                             fill='orange', font=("Times", 25, "bold"),
+                             fill='red', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][2], tags=('gameOverRestartText'))
             post_score()
             master.bind('<Return>', _restart)
@@ -602,9 +622,9 @@ class SnakeWindow:
                 if 'global_highscore' in widget:
                     print('Deleting', widget)
                     delete_widget(widget)
-                    if 'personal_highscore' in widget:
-                        print('Deleting', widget)
-                        delete_widget(widget)
+                if 'personal_highscore' in widget:
+                    print('Deleting', widget)
+                    delete_widget(widget)
             _start(event)
 
         def _change_direction(event):
@@ -635,6 +655,8 @@ class SnakeWindow:
                 self._xVel = -MOVEMENT_STEP_SIZE
                 self._direction = event.keysym
 
+        t1 = threading.Thread(target=display_alerts)
+        t1.start()
         t2 = threading.Thread(target=display_news)
         t2.start()
         master.protocol("WM_DELETE_WINDOW", _click_quit)
