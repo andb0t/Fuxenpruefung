@@ -28,7 +28,7 @@ The [releases](https://github.com/andb0t/Fuxenpruefung/releases) page contains a
 *No installation necessary!* Simply download the compiled windows executable [here](https://github.com/andb0t/Fuxenpruefung/releases) and click!
 
 ### Mac
-Not available yet! If you'd like to help, you are more than welcome! See [Contributing](#contributing) for instructions.
+Not available yet! If you'd like to help, you are more than welcome! See [the contribution section](#contributing) for instructions.
 
 ### Linux
 See chapter [for the geeks](#for-the-geeks). I guess you and me belong there :)

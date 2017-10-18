@@ -5,13 +5,24 @@ import tabulate
 
 URL_READ = 'https://fuxenserver.herokuapp.com/highscore'
 URL_POST = 'https://fuxenserver.herokuapp.com/scores'
+URL_NEWS = 'https://fuxenserver.herokuapp.com/daily'
 
 
-def read_highscore():
-    print('Retrieving info from', URL_READ, '...')
-
+def print_table(dictionary):
     try:
-        response = requests.get(URL_READ)
+        keys = sorted(dictionary[0].keys())
+    except IndexError:
+        print('No entry present')
+        return
+    table = []
+    for d in dictionary:
+        table.append([d[key] for key in keys])
+    print(tabulate.tabulate(table, headers=keys, tablefmt='grid'))
+
+
+def get_response_json(url):
+    try:
+        response = requests.get(url)
     except requests.exceptions.RequestException as e:
         print(e)
         print('Connection error. Return None.')
@@ -20,18 +31,17 @@ def read_highscore():
     if not response:
         print('Got no response from server. Return None.')
         return None
-    scores = response.json()
-
     print('Got response from server')
-    try:
-        keys = sorted(scores[0].keys())
-    except IndexError:
-        print('No entry present')
-        return
-    table = []
-    for s in scores:
-        table.append([s[key] for key in keys])
-    print(tabulate.tabulate(table, headers=keys, tablefmt='grid'))
+    resonseJson = response.json()
+    return resonseJson
+
+
+def read_highscore():
+    print('Retrieving info from', URL_READ, '...')
+    scores = get_response_json(URL_READ)
+    if scores is None:
+        return None
+    print_table(scores)
     return scores
 
 
@@ -48,9 +58,18 @@ def post_score(username, score, message=''):
     response.raise_for_status()
 
 
+def read_news():
+    print('Retrieving info from', URL_NEWS, '...')
+    news = get_response_json(URL_NEWS)
+    if news is None:
+        return None
+    print_table(news)
+    return news
+
+
 def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('task', choices=['read', 'post'], help='Type of server interaction')
+    parser.add_argument('task', choices=['read', 'post', 'news'], help='Type of server interaction')
     parser.add_argument('--name', default='', help='Name of user')
     parser.add_argument('--msg', default='', help='Optional message')
     parser.add_argument('--score', default=0, type=int, help='Achieved score')
@@ -60,6 +79,8 @@ def main():
         post_score(username=args.name, score=args.score, message=args.msg)
     elif args.task == 'read':
         read_highscore()
+    elif args.task == 'news':
+        read_news()
 
 
 if __name__ == '__main__':
