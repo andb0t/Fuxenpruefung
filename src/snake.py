@@ -187,102 +187,6 @@ class SnakeWindow:
             if name not in itemRegister:
                 itemRegister.append(name)
 
-        canv = tk.Canvas(master, highlightthickness=0)
-        canv.pack(fill='both', expand=True)
-
-        self.userNameButton = tk.Button(master, text=i18n.snakeUserNameRequest[i18n.lang()][0], command=_set_username)
-        if self.userName:
-            self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
-        self.userNameButton.place(x=FULL_WIDTH, y=BOX_Y_MIN * 0.4, anchor='e')
-
-        majorImgObj = Image.open(files.MAJOR_IMG_PATH)
-        majorImgObj = majorImgObj.resize((MAJOR_SIZE, MAJOR_SIZE), Image.ANTIALIAS)
-        canv.majorImg = ImageTk.PhotoImage(majorImgObj)
-
-        foxImgObj = Image.open(files.FOX_ICO_PATH)
-        foxImgObj = foxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
-
-        beerImgObj = Image.open(files.BEER_IMG_PATH)
-        beerImgObj = beerImgObj.resize((BEER_SIZE, BEER_SIZE), Image.ANTIALIAS)
-
-        starImgObj = Image.open(files.STAR_IMG_PATH)
-        starImgObj = starImgObj.resize((STAR_SIZE, STAR_SIZE), Image.ANTIALIAS)
-
-        bucketImgObj = Image.open(files.BUCKET_IMG_PATH)
-        bucketImgObj = bucketImgObj.resize((BUCKET_SIZE, BUCKET_SIZE), Image.ANTIALIAS)
-
-        floorImgObj = Image.open(files.FLOOR_IMG_PATH)
-        floorImgObj = floorImgObj.resize((BOX_X_MAX - BOX_X_MIN, BOX_Y_MAX - BOX_Y_MIN), Image.ANTIALIAS)
-        canv.floorImg = ImageTk.PhotoImage(floorImgObj)
-
-        canv.foxImg = {}
-        canv.beerImg = {}
-        canv.starImg = {}
-        canv.bucketImg = {}
-
-        canv.create_image((BOX_X_MAX + BOX_X_MIN) / 2, (BOX_Y_MAX + BOX_Y_MIN) / 2, image=canv.floorImg, tags=('floor'))
-
-        canv.create_line(0, BOX_Y_MIN, FULL_WIDTH, BOX_Y_MIN, fill='black', tags=('top'), width=10)
-        canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_Y_MAX, fill='black', tags=('left'), width=10)
-        canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('center'), width=10)
-        canv.create_line(FULL_WIDTH, BOX_Y_MIN, FULL_WIDTH, BOX_Y_MAX, fill='black', tags=('right'), width=10)
-        canv.create_line(0, BOX_Y_MAX - 2, FULL_WIDTH, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
-
-        canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN * 0.4, text=i18n.snakeWelcome[i18n.lang()],
-                         tags=('welcomeText'), font=("Times", 25, "bold"), fill='orange')
-
-        deltaY = self.boxHeight * 0.07
-        instructionY = BOX_Y_MIN + self.boxHeight * 0.35
-
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][0],
-                         tags=('instructionHeader'),
-                         fill='green', font=("Times", 25, "bold"))
-
-        instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][1],
-                         tags=('instructionText'))
-
-        instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][2] + ':',
-                         tags=('instructionText2'))
-
-        instructionY += deltaY
-        _draw_new_star(self.infoBoxXMin + self.infoBoxWidth * 0.30, instructionY, "instrStar", 0.5)
-        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.40, instructionY,
-                         text='=', tags=('instructionEquals'))
-        _draw_new_beer(self.infoBoxXMin + self.infoBoxWidth * 0.50, instructionY, "instrBeer", 0.5)
-        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.60, instructionY,
-                         text='X', tags=('instructionTimes'))
-        _draw_new_fox(self.infoBoxXMin + self.infoBoxWidth * 0.70, instructionY, "instrFox", 0.5)
-
-        instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][3],
-                         tags=('instructionText3'))
-
-        instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][4],
-                         tags=('instructionText4'))
-
-        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax,
-                         text=i18n.webNews[i18n.lang()][1], tags=('webNewsHeader'),
-                         fill='orange', font=("Times", 25, "bold"))
-        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax * 0.5,
-                         text=self.webNews, tags=('webNews'))
-
-        canv.create_image(BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg,
-                          tags=('major'))
-        itemRegister.append('major')
-
-        _draw_new_fox(FULL_WIDTH * 0.27, self.bottomRowY, 'scoreFox', 0.5)
-        canv.create_text(FULL_WIDTH * 0.30, self.bottomRowY, text=': ' + str(self._nFoxes),
-                         font='b', tags=('foxText'))
-        _draw_new_beer(FULL_WIDTH * 0.50, self.bottomRowY, 'scoreBeer', 0.5)
-        canv.create_text(FULL_WIDTH * 0.55, self.bottomRowY, text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
-                         font='b', tags=('beerText'))
-        _draw_new_star(FULL_WIDTH * 0.77, self.bottomRowY, 'scoreStar', 0.5)
-        canv.create_text(FULL_WIDTH * 0.80, self.bottomRowY, text=': ' + str(self._nBeers),
-                         font='b', tags=('starText'))
-
         def move_fox_tail():
             for idx in range(self._nFoxes):
                 thisFoxTag = 'tail' + str(idx)
@@ -649,6 +553,102 @@ class SnakeWindow:
                 self._yVel = 0
                 self._xVel = -MOVEMENT_STEP_SIZE
                 self._direction = event.keysym
+
+        canv = tk.Canvas(master, highlightthickness=0)
+        canv.pack(fill='both', expand=True)
+
+        self.userNameButton = tk.Button(master, text=i18n.snakeUserNameRequest[i18n.lang()][0], command=_set_username)
+        if self.userName:
+            self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
+        self.userNameButton.place(x=FULL_WIDTH, y=BOX_Y_MIN * 0.4, anchor='e')
+
+        majorImgObj = Image.open(files.MAJOR_IMG_PATH)
+        majorImgObj = majorImgObj.resize((MAJOR_SIZE, MAJOR_SIZE), Image.ANTIALIAS)
+        canv.majorImg = ImageTk.PhotoImage(majorImgObj)
+
+        foxImgObj = Image.open(files.FOX_ICO_PATH)
+        foxImgObj = foxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
+
+        beerImgObj = Image.open(files.BEER_IMG_PATH)
+        beerImgObj = beerImgObj.resize((BEER_SIZE, BEER_SIZE), Image.ANTIALIAS)
+
+        starImgObj = Image.open(files.STAR_IMG_PATH)
+        starImgObj = starImgObj.resize((STAR_SIZE, STAR_SIZE), Image.ANTIALIAS)
+
+        bucketImgObj = Image.open(files.BUCKET_IMG_PATH)
+        bucketImgObj = bucketImgObj.resize((BUCKET_SIZE, BUCKET_SIZE), Image.ANTIALIAS)
+
+        floorImgObj = Image.open(files.FLOOR_IMG_PATH)
+        floorImgObj = floorImgObj.resize((BOX_X_MAX - BOX_X_MIN, BOX_Y_MAX - BOX_Y_MIN), Image.ANTIALIAS)
+        canv.floorImg = ImageTk.PhotoImage(floorImgObj)
+
+        canv.foxImg = {}
+        canv.beerImg = {}
+        canv.starImg = {}
+        canv.bucketImg = {}
+
+        canv.create_image((BOX_X_MAX + BOX_X_MIN) / 2, (BOX_Y_MAX + BOX_Y_MIN) / 2, image=canv.floorImg, tags=('floor'))
+
+        canv.create_line(0, BOX_Y_MIN, FULL_WIDTH, BOX_Y_MIN, fill='black', tags=('top'), width=10)
+        canv.create_line(BOX_X_MIN, BOX_Y_MIN, BOX_X_MIN, BOX_Y_MAX, fill='black', tags=('left'), width=10)
+        canv.create_line(BOX_X_MAX - 1, BOX_Y_MIN, BOX_X_MAX - 1, BOX_Y_MAX, fill='black', tags=('center'), width=10)
+        canv.create_line(FULL_WIDTH, BOX_Y_MIN, FULL_WIDTH, BOX_Y_MAX, fill='black', tags=('right'), width=10)
+        canv.create_line(0, BOX_Y_MAX - 2, FULL_WIDTH, BOX_Y_MAX - 2, fill='black', tags=('bottom'), width=10)
+
+        canv.create_text(FULL_WIDTH / 2, BOX_Y_MIN * 0.4, text=i18n.snakeWelcome[i18n.lang()],
+                         tags=('welcomeText'), font=("Times", 25, "bold"), fill='orange')
+
+        deltaY = self.boxHeight * 0.07
+        instructionY = BOX_Y_MIN + self.boxHeight * 0.35
+
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][0],
+                         tags=('instructionHeader'),
+                         fill='green', font=("Times", 25, "bold"))
+
+        instructionY += deltaY
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][1],
+                         tags=('instructionText'))
+
+        instructionY += deltaY
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][2] + ':',
+                         tags=('instructionText2'))
+
+        instructionY += deltaY
+        _draw_new_star(self.infoBoxXMin + self.infoBoxWidth * 0.30, instructionY, "instrStar", 0.5)
+        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.40, instructionY,
+                         text='=', tags=('instructionEquals'))
+        _draw_new_beer(self.infoBoxXMin + self.infoBoxWidth * 0.50, instructionY, "instrBeer", 0.5)
+        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.60, instructionY,
+                         text='X', tags=('instructionTimes'))
+        _draw_new_fox(self.infoBoxXMin + self.infoBoxWidth * 0.70, instructionY, "instrFox", 0.5)
+
+        instructionY += deltaY
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][3],
+                         tags=('instructionText3'))
+
+        instructionY += deltaY
+        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][4],
+                         tags=('instructionText4'))
+
+        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax,
+                         text=i18n.webNews[i18n.lang()][1], tags=('webNewsHeader'),
+                         fill='orange', font=("Times", 25, "bold"))
+        canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax * 0.5,
+                         text=self.webNews, tags=('webNews'))
+
+        canv.create_image(BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg,
+                          tags=('major'))
+        itemRegister.append('major')
+
+        _draw_new_fox(FULL_WIDTH * 0.27, self.bottomRowY, 'scoreFox', 0.5)
+        canv.create_text(FULL_WIDTH * 0.30, self.bottomRowY, text=': ' + str(self._nFoxes),
+                         font='b', tags=('foxText'))
+        _draw_new_beer(FULL_WIDTH * 0.50, self.bottomRowY, 'scoreBeer', 0.5)
+        canv.create_text(FULL_WIDTH * 0.55, self.bottomRowY, text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
+                         font='b', tags=('beerText'))
+        _draw_new_star(FULL_WIDTH * 0.77, self.bottomRowY, 'scoreStar', 0.5)
+        canv.create_text(FULL_WIDTH * 0.80, self.bottomRowY, text=': ' + str(self._nBeers),
+                         font='b', tags=('starText'))
 
         alertThread = threading.Thread(target=display_alerts)
         alertThread.start()
