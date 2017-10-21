@@ -55,18 +55,16 @@ def read_highscore():
 def post_score(username, score, message=''):
     print('Posting info to', URL_POST, '...')
     try:
-        response = requests.post(URL_POST,
-                                 json={'username': username,
-                                       'score': score,
-                                       'message': message,
-                                       }
-                                 )
+        requests.post(URL_POST,
+                      json={'username': username,
+                            'score': score,
+                            'message': message,
+                            }
+                      )
     except requests.exceptions.RequestException as e:
         print(e)
         print('Connection error. Return None.')
         return None
-    # if request fails or throws error
-    response.raise_for_status()
 
 
 def read_news():
