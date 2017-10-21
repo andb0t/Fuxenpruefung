@@ -51,8 +51,7 @@ def read_highscore():
 def post_score(username, score, message=''):
     print('Posting info to', URL_POST, '...')
     response = requests.post(URL_POST,
-                             json={
-                                   'username': username,
+                             json={'username': username,
                                    'score': score,
                                    'message': message,
                                    }

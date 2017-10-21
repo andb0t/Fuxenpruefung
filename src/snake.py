@@ -125,15 +125,46 @@ class SnakeWindow:
             except ValueError:
                 pass
 
-        def _set_username():
-            userName = simpledialog.askstring(i18n.snakeUserNameRequest[i18n.lang()][2],
-                                              i18n.snakeUserNameRequest[i18n.lang()][0] + ':')
-            if not userName:
-                return
-            self.userName = userName
-            self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
-            with open(files.SNAKE_CONFIG_FILE, 'w') as outfile:
-                yaml.dump({'username': self.userName}, outfile, default_flow_style=False)
+        def _check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
+            if x > BOX_X_MAX - xSize / 2 or \
+               x < BOX_X_MIN + xSize / 2 or \
+               y > BOX_Y_MAX - ySize / 2 or \
+               y < BOX_Y_MIN + ySize / 2:
+                return True
+
+        def _check_clipping(x, y, xSize=MAJOR_SIZE, ySize=MAJOR_SIZE, exclude=[], include=[]):
+            for item in itemRegister:
+                if item in exclude:
+                    continue
+                if include and item not in include:
+                    continue
+                itemX, itemY = canv.coords(item)
+                x0, y0, x1, y1 = canv.bbox(item)
+                itemSizeX = x1 - x0
+                itemSizeY = y1 - y0
+                # print('New item x/y', round(x), '/', round(y), item, itemX, '/', itemY)
+                PROXIMITY = 3
+                isCloseX = abs(itemX - x) < xSize / PROXIMITY + itemSizeX / PROXIMITY
+                isCloseY = abs(itemY - y) < xSize / PROXIMITY + itemSizeY / PROXIMITY
+                if isCloseX and isCloseY:
+                    return item
+            return ''
+
+        def _get_new_random_pos(xSize, ySize):
+            nTries = 0
+            while True:
+                newX = BOX_X_MAX * random.random()
+                newY = BOX_Y_MAX * random.random()
+                # print(nTries, 'Trying newX newY', newX, '/', newY)
+                if nTries > MAX_POSITION_LOOPS:
+                    return (None, None)
+                else:
+                    nTries += 1
+                if _check_box_boundary(newX, newY, xSize, ySize):
+                    continue
+                if _check_clipping(newX, newY, xSize, ySize):
+                    continue
+                return (newX, newY)
 
         def _draw_new_fox(newX=None, newY=None, name='fox', size=1):
             if not newX and not newY:
@@ -197,6 +228,17 @@ class SnakeWindow:
                 except IndexError:
                     pass
 
+        def _keep_in_box(item):
+            itemX, itemY = canv.coords(item)
+            if itemX < BOX_X_MIN:
+                canv.coords(item, BOX_X_MAX, itemY)
+            if itemX > BOX_X_MAX:
+                canv.coords(item, BOX_X_MIN, itemY)
+            if itemY < BOX_Y_MIN:
+                canv.coords(item, itemX, BOX_Y_MAX)
+            if itemY > BOX_Y_MAX:
+                canv.coords(item, itemX, BOX_Y_MIN)
+
         def _move_free_fox():
             for idx in range(N_FREE_FOXES):
                 name = 'fox' + str(idx)
@@ -234,17 +276,6 @@ class SnakeWindow:
                 except ValueError:
                     pass
             return (newX, newY)
-
-        def _keep_in_box(item):
-            itemX, itemY = canv.coords(item)
-            if itemX < BOX_X_MIN:
-                canv.coords(item, BOX_X_MAX, itemY)
-            if itemX > BOX_X_MAX:
-                canv.coords(item, BOX_X_MIN, itemY)
-            if itemY < BOX_Y_MIN:
-                canv.coords(item, itemX, BOX_Y_MAX)
-            if itemY > BOX_Y_MAX:
-                canv.coords(item, itemX, BOX_Y_MIN)
 
         def _move():
             if self._direction is not None:
@@ -332,46 +363,15 @@ class SnakeWindow:
                     return
             self._job['move'] = master.after(int(1 / self._speed), _move)
 
-        def check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
-            if x > BOX_X_MAX - xSize / 2 or \
-               x < BOX_X_MIN + xSize / 2 or \
-               y > BOX_Y_MAX - ySize / 2 or \
-               y < BOX_Y_MIN + ySize / 2:
-                return True
-
-        def _check_clipping(x, y, xSize=MAJOR_SIZE, ySize=MAJOR_SIZE, exclude=[], include=[]):
-            for item in itemRegister:
-                if item in exclude:
-                    continue
-                if include and item not in include:
-                    continue
-                itemX, itemY = canv.coords(item)
-                x0, y0, x1, y1 = canv.bbox(item)
-                itemSizeX = x1 - x0
-                itemSizeY = y1 - y0
-                # print('New item x/y', round(x), '/', round(y), item, itemX, '/', itemY)
-                PROXIMITY = 3
-                isCloseX = abs(itemX - x) < xSize / PROXIMITY + itemSizeX / PROXIMITY
-                isCloseY = abs(itemY - y) < xSize / PROXIMITY + itemSizeY / PROXIMITY
-                if isCloseX and isCloseY:
-                    return item
-            return ''
-
-        def _get_new_random_pos(xSize, ySize):
-            nTries = 0
-            while True:
-                newX = BOX_X_MAX * random.random()
-                newY = BOX_Y_MAX * random.random()
-                # print(nTries, 'Trying newX newY', newX, '/', newY)
-                if nTries > MAX_POSITION_LOOPS:
-                    return (None, None)
-                else:
-                    nTries += 1
-                if check_box_boundary(newX, newY, xSize, ySize):
-                    continue
-                if _check_clipping(newX, newY, xSize, ySize):
-                    continue
-                return (newX, newY)
+        def _set_username():
+            userName = simpledialog.askstring(i18n.snakeUserNameRequest[i18n.lang()][2],
+                                              i18n.snakeUserNameRequest[i18n.lang()][0] + ':')
+            if not userName:
+                return
+            self.userName = userName
+            self.userNameButton['text'] = self.userName + ' ({0})'.format(i18n.snakeUserNameRequest[i18n.lang()][1])
+            with open(files.SNAKE_CONFIG_FILE, 'w') as outfile:
+                yaml.dump({'username': self.userName}, outfile, default_flow_style=False)
 
         def _post_score():
             if not self.userName:
@@ -435,11 +435,34 @@ class SnakeWindow:
                 canv.create_text(self.infoBoxXCenter, BOX_Y_MIN + self.newsBoxYMax,
                                  text=utils.break_lines(alert, MAX_INFO_LINE_CHARS), tags=('webAlerts'))
 
+        def _quit(event=None):
+            time.sleep(0.1)
+            master.quit()
+
+        def _cancel():
+            for job in self._job:
+                master.after_cancel(self._job[job])
+            self._job = {}
+
+        def _end_game():
+            _cancel()
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.4,
+                             fill='red', font=("Times", 25, "bold"),
+                             text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.5,
+                             fill='red', font=("Times", 25, "bold"),
+                             text=i18n.gameOver[i18n.lang()][1], tags=('gameOverCancelText'))
+            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6,
+                             fill='red', font=("Times", 25, "bold"),
+                             text=i18n.gameOver[i18n.lang()][2], tags=('gameOverRestartText'))
+            _post_score()
+            master.bind('<Return>', _restart)
+
         def _init_start(event):
             _reset(self)
-            _start(event)
+            _start()
 
-        def _start(event):
+        def _start():
             # _delete_widget('welcomeText')
             _delete_widget('instructionText')
             _delete_widget('instructionText2')
@@ -475,32 +498,6 @@ class SnakeWindow:
             highScoreThread = threading.Thread(target=_display_highscore)
             highScoreThread.start()
 
-        def _quit(self):
-            time.sleep(0.1)
-            master.quit()
-
-        def _click_quit():
-            _quit(self)
-
-        def _cancel():
-            for job in self._job:
-                master.after_cancel(self._job[job])
-            self._job = {}
-
-        def _end_game():
-            _cancel()
-            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.4,
-                             fill='red', font=("Times", 25, "bold"),
-                             text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
-            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.5,
-                             fill='red', font=("Times", 25, "bold"),
-                             text=i18n.gameOver[i18n.lang()][1], tags=('gameOverCancelText'))
-            canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6,
-                             fill='red', font=("Times", 25, "bold"),
-                             text=i18n.gameOver[i18n.lang()][2], tags=('gameOverRestartText'))
-            _post_score()
-            master.bind('<Return>', _restart)
-
         def _restart(event):
             _reset(self)
             _delete_widget('gameOverText')
@@ -524,7 +521,7 @@ class SnakeWindow:
                 if 'personal_highscore' in widget:
                     print('Deleting', widget)
                     _delete_widget(widget)
-            _start(event)
+            _start()
 
         def _change_direction(event):
             if event.keysym == 'w':
@@ -654,7 +651,7 @@ class SnakeWindow:
         alertThread.start()
         newsThread = threading.Thread(target=_display_news)
         newsThread.start()
-        master.protocol("WM_DELETE_WINDOW", _click_quit)
+        master.protocol("WM_DELETE_WINDOW", _quit)
         master.bind('<Up>', _init_start)
         master.bind('<Down>', _init_start)
         master.bind('<Right>', _init_start)
