@@ -33,10 +33,12 @@ BOX_Y_MAX = 550
 NEWS_HEIGHT = 100
 MAX_QUEUE_LEN = 2000
 TAIL_STEP_DISTANCE = 7
+
 MAJOR_SIZE = 110
 FOX_SIZE = 50
 BEER_SIZE = 50
 STAR_SIZE = 50
+SCORE_STAR_SIZE = 50
 BUCKET_SIZE = 40
 
 MAX_POSITION_LOOPS = 10000
@@ -49,6 +51,8 @@ N_BEERS = 3
 START_SPEED = 1 / 50
 MAX_SPEED = 4 / 50
 N_SPEED_STEPS = 10
+SCORE_STAR_SPEED = 1/25
+SCORE_STAR_MOVEMENT_STEP_SIZE = 5
 
 START_ROTATION_SPEED = 0.05
 MAX_ROTATION_SPEED = 0.10
@@ -95,6 +99,7 @@ class SnakeWindow:
         self._score = 0
         self._nFoxes = 0
         self._nBeers = 0
+        self._nScoreStars = 0
 
         def _reset(self):
             self._xPath = deque([], MAX_QUEUE_LEN)
@@ -107,6 +112,7 @@ class SnakeWindow:
             self._score = 0
             self._nFoxes = 0
             self._nBeers = 0
+            self._nScoreStars = 0
             self._speed = START_SPEED
             self._job = {}
             self._rotationSpeed = 0
@@ -178,6 +184,7 @@ class SnakeWindow:
             canv.create_image(newX, newY, image=canv.foxImg[name], tags=(name))
             if name not in itemRegister:
                 itemRegister.append(name)
+            raise_top_objects()
 
         def _draw_new_beer(newX=None, newY=None, name='beer', size=1):
             if not newX and not newY:
@@ -191,6 +198,7 @@ class SnakeWindow:
             canv.create_image(newX, newY, image=canv.beerImg[name], tags=(name))
             if name not in itemRegister:
                 itemRegister.append(name)
+            raise_top_objects()
 
         def _draw_new_bucket(newX=None, newY=None, name='bucket', size=1):
             if not newX and not newY:
@@ -204,6 +212,7 @@ class SnakeWindow:
             canv.create_image(newX, newY, image=canv.bucketImg[name], tags=(name))
             if name not in itemRegister:
                 itemRegister.append(name)
+            raise_top_objects()
 
         def _draw_new_star(newX=None, newY=None, name='star', size=1):
             if not newX and not newY:
@@ -212,11 +221,12 @@ class SnakeWindow:
                     print('Warning: no new free star position found!')
                     _end_game()
             _delete_widget(name)
-            thisStarImgObj = starImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
+            thisStarImgObj = starImgObj.resize((int(STAR_SIZE * size), int(STAR_SIZE * size)), Image.ANTIALIAS)
             canv.starImg[name] = ImageTk.PhotoImage(thisStarImgObj)
             canv.create_image(newX, newY, image=canv.starImg[name], tags=(name))
             if name not in itemRegister:
                 itemRegister.append(name)
+            raise_top_objects()
 
         def _move_fox_tail():
             for idx in range(self._nFoxes):
@@ -277,6 +287,32 @@ class SnakeWindow:
                     pass
             return (newX, newY)
 
+        def _move_score_star(name, origX, origY):
+            targetX, targetY = canv.coords('scoreStar')
+            itemX, itemY = canv.coords(name)
+            arrived = False
+            if itemX > targetX:
+                arrived = True
+            if arrived:
+                _delete_widget(name)
+                return
+            xVel = SCORE_STAR_MOVEMENT_STEP_SIZE
+            yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (origY - targetY) / (origX - targetX)
+            canv.move(name, xVel, yVel)
+
+            def helpFunc():
+                return _move_score_star(name, origX, origY)
+
+            self._job['move_' + name] = master.after(int(1 / SCORE_STAR_SPEED), helpFunc)
+
+        def raise_top_objects():
+            topItems = []
+            for item in itemRegister:
+                if item.startswith('scoreStar'):
+                    canv.tag_raise(item)
+            for item in topItems:
+                topItems.append(item)
+
         def _move():
             if self._direction is not None:
                 canv.move('major', self._xVelTumble, self._yVelTumble)
@@ -307,6 +343,9 @@ class SnakeWindow:
                         for beerName in beerList:
                             if random.random() < BEER_RESPAWN_CHANCE:
                                 _draw_new_beer(name=beerName)
+                    _draw_new_star(itemX, itemY, 'scoreStar' + str(self._nScoreStars), 0.5)
+                    _move_score_star('scoreStar' + str(self._nScoreStars), itemX, itemY)
+                    self._nScoreStars += 1
                 # drink beer
                 beerCollision = _check_clipping(itemX, itemY, include=beerList)
                 if beerCollision:
@@ -417,10 +456,14 @@ class SnakeWindow:
             gui_utils.draw_table(master, canv, subBoxXMin, subBoxXMax, lowBoxYMin, lowBoxYMax,
                                  headers=keys, values=userScores, nRows=N_HIGHSCORES + 1,
                                  title=i18n.snakeHighScore[i18n.lang()][1], tags='personal_highscore', errText=errText)
+            raise_top_objects()
 
         def _display_news():
             alertThread.join()
-            self.webNews = web_client.read_news()['message']
+            news = web_client.read_news()
+            if news is None:
+                return
+            self.webNews = news['message']
             canv.itemconfig('webNews', text=utils.break_lines(self.webNews, MAX_INFO_LINE_CHARS))
 
         def _display_alerts():
@@ -478,7 +521,6 @@ class SnakeWindow:
             for widgetID in canv.find_all():
                 widget = canv.gettags(widgetID)[0]
                 if 'webAlerts' in widget or 'webNews' in widget:
-                    print('Deleting', widget)
                     _delete_widget(widget)
             for idx in range(N_FREE_FOXES):
                 _draw_new_fox(name='fox' + str(idx))
@@ -516,10 +558,8 @@ class SnakeWindow:
             for widgetID in canv.find_all():
                 widget = canv.gettags(widgetID)[0]
                 if 'global_highscore' in widget:
-                    print('Deleting', widget)
                     _delete_widget(widget)
                 if 'personal_highscore' in widget:
-                    print('Deleting', widget)
                     _delete_widget(widget)
             _start()
 
