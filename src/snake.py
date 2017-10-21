@@ -302,7 +302,8 @@ class SnakeWindow:
                 _raise_score()
                 return
             xVel = SCORE_STAR_MOVEMENT_STEP_SIZE
-            yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (itemY - targetY) / (itemX - targetX)
+            # yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (itemY - targetY) / (itemX - targetX)  # direct
+            yVel = maths.get_parabola(origX, origY, targetX, targetY, itemX + xVel) - itemY
             canv.move(name, xVel, yVel)
 
             def helpFunc():
