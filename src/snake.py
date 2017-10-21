@@ -96,7 +96,7 @@ class SnakeWindow:
         self._nFoxes = 0
         self._nBeers = 0
 
-        def reset(self):
+        def _reset(self):
             self._xPath = deque([], MAX_QUEUE_LEN)
             self._yPath = deque([], MAX_QUEUE_LEN)
             self._xVel = 0
@@ -118,7 +118,7 @@ class SnakeWindow:
                 self._foxlastXvec.append(random.random())
                 self._foxlastYvec.append(random.random())
 
-        def delete_widget(name):
+        def _delete_widget(name):
             canv.delete(name)
             try:
                 itemRegister.remove(name)
@@ -137,11 +137,11 @@ class SnakeWindow:
 
         def _draw_new_fox(newX=None, newY=None, name='fox', size=1):
             if not newX and not newY:
-                newX, newY = get_new_random_pos(FOX_SIZE, FOX_SIZE)
+                newX, newY = _get_new_random_pos(FOX_SIZE, FOX_SIZE)
                 if not newX and not newY:
                     print('Warning: no new free fox position found!')
                     _end_game()
-            delete_widget(name)
+            _delete_widget(name)
             thisFoxImgObj = foxImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
             canv.foxImg[name] = ImageTk.PhotoImage(thisFoxImgObj)
             canv.create_image(newX, newY, image=canv.foxImg[name], tags=(name))
@@ -150,11 +150,11 @@ class SnakeWindow:
 
         def _draw_new_beer(newX=None, newY=None, name='beer', size=1):
             if not newX and not newY:
-                newX, newY = get_new_random_pos(BEER_SIZE, BEER_SIZE)
+                newX, newY = _get_new_random_pos(BEER_SIZE, BEER_SIZE)
                 if not newX and not newY:
                     print('Warning: no new free beer position found!')
                     _end_game()
-            delete_widget(name)
+            _delete_widget(name)
             thisBeerImgObj = beerImgObj.resize((int(BEER_SIZE * size), int(BEER_SIZE * size)), Image.ANTIALIAS)
             canv.beerImg[name] = ImageTk.PhotoImage(thisBeerImgObj)
             canv.create_image(newX, newY, image=canv.beerImg[name], tags=(name))
@@ -163,11 +163,11 @@ class SnakeWindow:
 
         def _draw_new_bucket(newX=None, newY=None, name='bucket', size=1):
             if not newX and not newY:
-                newX, newY = get_new_random_pos(BUCKET_SIZE, BUCKET_SIZE)
+                newX, newY = _get_new_random_pos(BUCKET_SIZE, BUCKET_SIZE)
                 if not newX and not newY:
                     print('Warning: no new free bucket position found!')
                     _end_game()
-            delete_widget(name)
+            _delete_widget(name)
             thisBucketImgObj = bucketImgObj.resize((int(BUCKET_SIZE * size), int(BEER_SIZE * size)), Image.ANTIALIAS)
             canv.bucketImg[name] = ImageTk.PhotoImage(thisBucketImgObj)
             canv.create_image(newX, newY, image=canv.bucketImg[name], tags=(name))
@@ -176,18 +176,18 @@ class SnakeWindow:
 
         def _draw_new_star(newX=None, newY=None, name='star', size=1):
             if not newX and not newY:
-                newX, newY = get_new_random_pos(STAR_SIZE, STAR_SIZE)
+                newX, newY = _get_new_random_pos(STAR_SIZE, STAR_SIZE)
                 if not newX and not newY:
                     print('Warning: no new free star position found!')
                     _end_game()
-            delete_widget(name)
+            _delete_widget(name)
             thisStarImgObj = starImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
             canv.starImg[name] = ImageTk.PhotoImage(thisStarImgObj)
             canv.create_image(newX, newY, image=canv.starImg[name], tags=(name))
             if name not in itemRegister:
                 itemRegister.append(name)
 
-        def move_fox_tail():
+        def _move_fox_tail():
             for idx in range(self._nFoxes):
                 thisFoxTag = 'tail' + str(idx)
                 try:
@@ -197,7 +197,7 @@ class SnakeWindow:
                 except IndexError:
                     pass
 
-        def move_free_fox():
+        def _move_free_fox():
             for idx in range(N_FREE_FOXES):
                 name = 'fox' + str(idx)
                 x, y = canv.coords(name)
@@ -209,19 +209,19 @@ class SnakeWindow:
                     if abs(angle) < MAX_ALLOWED_ANGLE:
                         break
                 x, y = x + xShift, y + yShift
-                if not check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude=name):
+                if not _check_clipping(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE, exclude=name):
                     self._foxlastXvec[idx] = xShift
                     self._foxlastYvec[idx] = yShift
                     canv.move(name, xShift, yShift)
-                    keep_in_box(name)
+                    _keep_in_box(name)
                 else:
                     self._foxlastXvec[idx] = -self._foxlastXvec[idx]
                     self._foxlastYvec[idx] = -self._foxlastYvec[idx]
                     canv.move(name, self._foxlastXvec[idx], self._foxlastYvec[idx])
-                    keep_in_box(name)
-            self._job['move_free_fox'] = master.after(int(1 / START_SPEED), move_free_fox)
+                    _keep_in_box(name)
+            self._job['move_free_fox'] = master.after(int(1 / START_SPEED), _move_free_fox)
 
-        def get_new_tail_pos():
+        def _get_new_tail_pos():
             newX, newY = canv.coords('major')
             try:
                 newX = self._xPath[(self._nFoxes) * TAIL_STEP_DISTANCE]
@@ -235,7 +235,7 @@ class SnakeWindow:
                     pass
             return (newX, newY)
 
-        def keep_in_box(item):
+        def _keep_in_box(item):
             itemX, itemY = canv.coords(item)
             if itemX < BOX_X_MIN:
                 canv.coords(item, BOX_X_MAX, itemY)
@@ -246,25 +246,25 @@ class SnakeWindow:
             if itemY > BOX_Y_MAX:
                 canv.coords(item, itemX, BOX_Y_MIN)
 
-        def move():
+        def _move():
             if self._direction is not None:
                 canv.move('major', self._xVelTumble, self._yVelTumble)
                 itemX, itemY = canv.coords('major')
                 self._xPath.appendleft(itemX)
                 self._yPath.appendleft(itemY)
-                keep_in_box('major')
-                move_fox_tail()
+                _keep_in_box('major')
+                _move_fox_tail()
                 beerList = list(map(lambda x: 'beer' + str(x), range(N_BEERS)))
                 freeFoxList = list(map(lambda x: 'fox' + str(x), range(N_FREE_FOXES)))
                 # catch foxes
-                foxCollision = check_clipping(itemX, itemY, include=freeFoxList)
+                foxCollision = _check_clipping(itemX, itemY, include=freeFoxList)
                 if foxCollision:
                     sound.play_sound(files.BLOP_WAV_PATH)
                     self._score += self._nBeers
                     self._nFoxes += 1
                     canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
                     canv.itemconfig('starText', text=': ' + str(self._score))
-                    newX, newY = get_new_tail_pos()
+                    newX, newY = _get_new_tail_pos()
                     _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes-1))
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
@@ -277,7 +277,7 @@ class SnakeWindow:
                             if random.random() < BEER_RESPAWN_CHANCE:
                                 _draw_new_beer(name=beerName)
                 # drink beer
-                beerCollision = check_clipping(itemX, itemY, include=beerList)
+                beerCollision = _check_clipping(itemX, itemY, include=beerList)
                 if beerCollision:
                     sound.play_sound(files.SLURP_WAV_PATH)
                     self._nBeers += 1
@@ -297,13 +297,13 @@ class SnakeWindow:
                     if random.random() < BEER_RESPAWN_CHANCE:
                         _draw_new_beer(name=beerCollision)
                     else:
-                        delete_widget(beerCollision)
+                        _delete_widget(beerCollision)
                 # hit bucket
-                if check_clipping(itemX, itemY, include='bucket'):
+                if _check_clipping(itemX, itemY, include='bucket'):
                     sound.play_sound(files.HICCUP_WAV_PATH)
                     self._nBeers = MAX_BEER - 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
-                    delete_widget('bucket')
+                    _delete_widget('bucket')
                     self._currentRotation = 0
                     self._rotationSpeed = 0
                     self._tumbleAngle = START_TUMBLE_ANGLE
@@ -321,16 +321,16 @@ class SnakeWindow:
                 # check tail overlap
                 noTailFoxes = [item for item in itemRegister if 'tail' not in item]
                 noTailFoxes.extend(['tail' + str(idx) for idx in range(2)])
-                crashFox = check_clipping(itemX, itemY, exclude=noTailFoxes,
-                                          xSize=MAJOR_SIZE * 0.1,
-                                          ySize=MAJOR_SIZE * 0.1)
+                crashFox = _check_clipping(itemX, itemY, exclude=noTailFoxes,
+                                           xSize=MAJOR_SIZE * 0.1,
+                                           ySize=MAJOR_SIZE * 0.1)
 
                 if crashFox:
                     sound.play_sound(files.BLAST_WAV_PATH)
                     print('Overlapping with tail', crashFox)
                     _end_game()
                     return
-            self._job['move'] = master.after(int(1 / self._speed), move)
+            self._job['move'] = master.after(int(1 / self._speed), _move)
 
         def check_box_boundary(x, y, xSize=FOX_SIZE, ySize=FOX_SIZE):
             if x > BOX_X_MAX - xSize / 2 or \
@@ -339,7 +339,7 @@ class SnakeWindow:
                y < BOX_Y_MIN + ySize / 2:
                 return True
 
-        def check_clipping(x, y, xSize=MAJOR_SIZE, ySize=MAJOR_SIZE, exclude=[], include=[]):
+        def _check_clipping(x, y, xSize=MAJOR_SIZE, ySize=MAJOR_SIZE, exclude=[], include=[]):
             for item in itemRegister:
                 if item in exclude:
                     continue
@@ -357,7 +357,7 @@ class SnakeWindow:
                     return item
             return ''
 
-        def get_new_random_pos(xSize, ySize):
+        def _get_new_random_pos(xSize, ySize):
             nTries = 0
             while True:
                 newX = BOX_X_MAX * random.random()
@@ -369,18 +369,18 @@ class SnakeWindow:
                     nTries += 1
                 if check_box_boundary(newX, newY, xSize, ySize):
                     continue
-                if check_clipping(newX, newY, xSize, ySize):
+                if _check_clipping(newX, newY, xSize, ySize):
                     continue
                 return (newX, newY)
 
-        def post_score():
+        def _post_score():
             if not self.userName:
                 _set_username()
             if not self.userName:
                 return
             web_client.post_score(username=self.userName, score=self._score)
 
-        def display_highscore():
+        def _display_highscore():
             canv.create_text(self.infoBoxXCenter, BOX_Y_MIN + self.boxHeight * 0.5,
                              text=i18n.snakeHighScore[i18n.lang()][0] + '...', font='b', tags=('load_highscore'))
             alertThread.join()
@@ -394,7 +394,7 @@ class SnakeWindow:
                 errText = i18n.snakeWebErr[i18n.lang()][0]
             except TypeError:
                 errText = i18n.snakeWebErr[i18n.lang()][1]
-            delete_widget('load_highscore')
+            _delete_widget('load_highscore')
             hSpace = 10
             vSpace = 20
             subBoxXMin = self.infoBoxXMin + hSpace
@@ -418,12 +418,12 @@ class SnakeWindow:
                                  headers=keys, values=userScores, nRows=N_HIGHSCORES + 1,
                                  title=i18n.snakeHighScore[i18n.lang()][1], tags='personal_highscore', errText=errText)
 
-        def display_news():
+        def _display_news():
             alertThread.join()
             self.webNews = web_client.read_news()['message']
             canv.itemconfig('webNews', text=utils.break_lines(self.webNews, MAX_INFO_LINE_CHARS))
 
-        def display_alerts():
+        def _display_alerts():
             self.webAlerts = web_client.read_alerts()
             if not self.webAlerts:
                 return
@@ -436,27 +436,27 @@ class SnakeWindow:
                                  text=utils.break_lines(alert, MAX_INFO_LINE_CHARS), tags=('webAlerts'))
 
         def _init_start(event):
-            reset(self)
+            _reset(self)
             _start(event)
 
         def _start(event):
-            # delete_widget('welcomeText')
-            delete_widget('instructionText')
-            delete_widget('instructionText2')
-            delete_widget('instructionText3')
-            delete_widget('instructionText4')
-            delete_widget('instructionHeader')
-            delete_widget('instrStar')
-            delete_widget('instrBeer')
-            delete_widget('instrFox')
-            delete_widget('instructionEquals')
-            delete_widget('instructionTimes')
-            delete_widget('news_line')
+            # _delete_widget('welcomeText')
+            _delete_widget('instructionText')
+            _delete_widget('instructionText2')
+            _delete_widget('instructionText3')
+            _delete_widget('instructionText4')
+            _delete_widget('instructionHeader')
+            _delete_widget('instrStar')
+            _delete_widget('instrBeer')
+            _delete_widget('instrFox')
+            _delete_widget('instructionEquals')
+            _delete_widget('instructionTimes')
+            _delete_widget('news_line')
             for widgetID in canv.find_all():
                 widget = canv.gettags(widgetID)[0]
                 if 'webAlerts' in widget or 'webNews' in widget:
                     print('Deleting', widget)
-                    delete_widget(widget)
+                    _delete_widget(widget)
             for idx in range(N_FREE_FOXES):
                 _draw_new_fox(name='fox' + str(idx))
             for idx in range(N_BEERS):
@@ -470,9 +470,9 @@ class SnakeWindow:
             master.bind('s', _change_direction)
             master.bind('d', _change_direction)
             master.unbind('<Return>')
-            move()
-            move_free_fox()
-            highScoreThread = threading.Thread(target=display_highscore)
+            _move()
+            _move_free_fox()
+            highScoreThread = threading.Thread(target=_display_highscore)
             highScoreThread.start()
 
         def _quit(self):
@@ -482,13 +482,13 @@ class SnakeWindow:
         def _click_quit():
             _quit(self)
 
-        def cancel():
+        def _cancel():
             for job in self._job:
                 master.after_cancel(self._job[job])
             self._job = {}
 
         def _end_game():
-            cancel()
+            _cancel()
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.4,
                              fill='red', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
@@ -498,18 +498,18 @@ class SnakeWindow:
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6,
                              fill='red', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][2], tags=('gameOverRestartText'))
-            post_score()
+            _post_score()
             master.bind('<Return>', _restart)
 
         def _restart(event):
-            reset(self)
-            delete_widget('gameOverText')
-            delete_widget('gameOverCancelText')
-            delete_widget('gameOverRestartText')
-            delete_widget('bucket')
+            _reset(self)
+            _delete_widget('gameOverText')
+            _delete_widget('gameOverCancelText')
+            _delete_widget('gameOverRestartText')
+            _delete_widget('bucket')
             tailFoxes = [item for item in itemRegister if 'tail' in item]
             for item in tailFoxes:
-                delete_widget(item)
+                _delete_widget(item)
             canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
             canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
             canv.itemconfig('starText', text=': ' + str(self._score))
@@ -520,10 +520,10 @@ class SnakeWindow:
                 widget = canv.gettags(widgetID)[0]
                 if 'global_highscore' in widget:
                     print('Deleting', widget)
-                    delete_widget(widget)
+                    _delete_widget(widget)
                 if 'personal_highscore' in widget:
                     print('Deleting', widget)
-                    delete_widget(widget)
+                    _delete_widget(widget)
             _start(event)
 
         def _change_direction(event):
@@ -650,9 +650,9 @@ class SnakeWindow:
         canv.create_text(FULL_WIDTH * 0.80, self.bottomRowY, text=': ' + str(self._nBeers),
                          font='b', tags=('starText'))
 
-        alertThread = threading.Thread(target=display_alerts)
+        alertThread = threading.Thread(target=_display_alerts)
         alertThread.start()
-        newsThread = threading.Thread(target=display_news)
+        newsThread = threading.Thread(target=_display_news)
         newsThread.start()
         master.protocol("WM_DELETE_WINDOW", _click_quit)
         master.bind('<Up>', _init_start)
