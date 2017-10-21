@@ -51,7 +51,7 @@ N_BEERS = 3
 START_SPEED = 1 / 50
 MAX_SPEED = 4 / 50
 N_SPEED_STEPS = 10
-SCORE_STAR_SPEED = 1/25
+SCORE_STAR_SPEED = 1/10
 SCORE_STAR_MOVEMENT_STEP_SIZE = 5
 
 START_ROTATION_SPEED = 0.05
@@ -287,6 +287,10 @@ class SnakeWindow:
                     pass
             return (newX, newY)
 
+        def _raise_score():
+            self._score += self._nBeers
+            canv.itemconfig('starText', text=': ' + str(self._score))
+
         def _move_score_star(name, origX, origY):
             targetX, targetY = canv.coords('scoreStar')
             itemX, itemY = canv.coords(name)
@@ -295,9 +299,10 @@ class SnakeWindow:
                 arrived = True
             if arrived:
                 _delete_widget(name)
+                _raise_score()
                 return
             xVel = SCORE_STAR_MOVEMENT_STEP_SIZE
-            yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (origY - targetY) / (origX - targetX)
+            yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (itemY - targetY) / (itemX - targetX)
             canv.move(name, xVel, yVel)
 
             def helpFunc():
@@ -327,10 +332,8 @@ class SnakeWindow:
                 foxCollision = _check_clipping(itemX, itemY, include=freeFoxList)
                 if foxCollision:
                     sound.play_sound(files.BLOP_WAV_PATH)
-                    self._score += self._nBeers
                     self._nFoxes += 1
                     canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
-                    canv.itemconfig('starText', text=': ' + str(self._score))
                     newX, newY = _get_new_tail_pos()
                     _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes-1))
                     for item in reversed(itemRegister):
@@ -343,9 +346,11 @@ class SnakeWindow:
                         for beerName in beerList:
                             if random.random() < BEER_RESPAWN_CHANCE:
                                 _draw_new_beer(name=beerName)
-                    _draw_new_star(itemX, itemY, 'scoreStar' + str(self._nScoreStars), 0.5)
-                    _move_score_star('scoreStar' + str(self._nScoreStars), itemX, itemY)
-                    self._nScoreStars += 1
+                    if self._nBeers > 0:
+                        starScale = min(0.3 + self._nBeers / MAX_BEER * 0.5, 0.7)
+                        _draw_new_star(itemX, itemY, 'scoreStar_' + str(self._nScoreStars), starScale)
+                        _move_score_star('scoreStar_' + str(self._nScoreStars), itemX, itemY)
+                        self._nScoreStars += 1
                 # drink beer
                 beerCollision = _check_clipping(itemX, itemY, include=beerList)
                 if beerCollision:
@@ -487,8 +492,16 @@ class SnakeWindow:
                 master.after_cancel(self._job[job])
             self._job = {}
 
+        def _remove_objects():
+            removeList = []
+            for item in itemRegister:
+                if item.startswith('scoreStar_'):
+                    removeList.append(item)
+            _delete_widget(item)
+
         def _end_game():
             _cancel()
+            _remove_objects()
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.4,
                              fill='red', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
