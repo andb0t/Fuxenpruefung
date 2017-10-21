@@ -10,8 +10,12 @@ URL_POST = 'https://fuxenserver.herokuapp.com/scores'
 URL_NEWS = 'https://fuxenserver.herokuapp.com/daily'
 URL_MESSAGES = 'https://fuxenserver.herokuapp.com/messages'
 
+VERBOSE = False
+
 
 def print_table(dictionary):
+    if not VERBOSE:
+        return
     try:
         keys = sorted(dictionary[0].keys())
     except IndexError:
@@ -50,12 +54,17 @@ def read_highscore():
 
 def post_score(username, score, message=''):
     print('Posting info to', URL_POST, '...')
-    response = requests.post(URL_POST,
-                             json={'username': username,
-                                   'score': score,
-                                   'message': message,
-                                   }
-                             )
+    try:
+        response = requests.post(URL_POST,
+                                 json={'username': username,
+                                       'score': score,
+                                       'message': message,
+                                       }
+                                 )
+    except requests.exceptions.RequestException as e:
+        print(e)
+        print('Connection error. Return None.')
+        return None
     # if request fails or throws error
     response.raise_for_status()
 
