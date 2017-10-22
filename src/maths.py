@@ -21,7 +21,7 @@ def parabola(x0, y0, x1, y1, peakX=None):
     return a, b, c
 
 
-def get_parabola(x0, y0, x1, y1, x):
-    a, b, c = parabola(x0, y0, x1, y1)
+def get_parabola(x0, y0, x1, y1, x, peakX=None):
+    a, b, c = parabola(x0, y0, x1, y1, peakX)
     y = a + b * x + c * x ** 2
     return y

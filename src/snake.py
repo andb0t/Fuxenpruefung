@@ -291,7 +291,7 @@ class SnakeWindow:
             self._score += self._nBeers
             canv.itemconfig('starText', text=': ' + str(self._score))
 
-        def _move_score_star(name, origX, origY):
+        def _move_score_star(name, origX, origY, peakX=None):
             targetX, targetY = canv.coords('scoreStar')
             itemX, itemY = canv.coords(name)
             arrived = False
@@ -303,11 +303,13 @@ class SnakeWindow:
                 return
             xVel = SCORE_STAR_MOVEMENT_STEP_SIZE
             # yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (itemY - targetY) / (itemX - targetX)  # direct
-            yVel = maths.get_parabola(origX, origY, targetX, targetY, itemX + xVel) - itemY
+            if peakX is None:
+                peakX = origX + random.random() * (targetX - origX) / 4
+            yVel = maths.get_parabola(origX, origY, targetX, targetY, itemX + xVel, peakX=peakX) - itemY
             canv.move(name, xVel, yVel)
 
             def helpFunc():
-                return _move_score_star(name, origX, origY)
+                return _move_score_star(name, origX, origY, peakX)
 
             self._job['move_' + name] = master.after(int(1 / SCORE_STAR_SPEED), helpFunc)
 
@@ -502,7 +504,6 @@ class SnakeWindow:
 
         def _end_game():
             _cancel()
-            _remove_objects()
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.4,
                              fill='red', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
@@ -512,6 +513,7 @@ class SnakeWindow:
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6,
                              fill='red', font=("Times", 25, "bold"),
                              text=i18n.gameOver[i18n.lang()][2], tags=('gameOverRestartText'))
+            _remove_objects()
             _post_score()
             master.bind('<Return>', _restart)
 
