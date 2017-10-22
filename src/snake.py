@@ -51,7 +51,7 @@ N_BEERS = 3
 START_SPEED = 1 / 50
 MAX_SPEED = 4 / 50
 N_SPEED_STEPS = 10
-SCORE_STAR_SPEED = 1/10
+SCORE_STAR_SPEED = 1/5
 SCORE_STAR_MOVEMENT_STEP_SIZE = 5
 
 START_ROTATION_SPEED = 0.05
@@ -350,7 +350,7 @@ class SnakeWindow:
                             if random.random() < BEER_RESPAWN_CHANCE:
                                 _draw_new_beer(name=beerName)
                     if self._nBeers > 0:
-                        starScale = min(0.3 + self._nBeers / MAX_BEER * 0.5, 0.7)
+                        starScale = min(0.3 + self._nBeers / MAX_BEER * 0.3, 0.7)
                         _draw_new_star(itemX, itemY, 'scoreStar_' + str(self._nScoreStars), starScale)
                         _move_score_star('scoreStar_' + str(self._nScoreStars), itemX, itemY)
                         self._nScoreStars += 1
