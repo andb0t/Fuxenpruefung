@@ -47,7 +47,7 @@ MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
 N_FREE_FOXES = 5
 N_BEERS = 3
-GOLD_FOX_CHANCE = 0.5
+GOLD_FOX_CHANCE = 0.1
 GOLD_FOX_LIFE_STEPS = 50
 GOLD_FOX_SCORE_MULTIPLIER = 3
 
@@ -364,7 +364,7 @@ class SnakeWindow:
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
                     goldFox = False
-                    if self._goldFox is None and random.random() > GOLD_FOX_CHANCE:
+                    if self._goldFox is None and random.random() < GOLD_FOX_CHANCE:
                         goldFox = True
                         self._goldFox = foxCollision
                     _draw_new_fox(name=foxCollision, gold=goldFox)
