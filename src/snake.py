@@ -301,7 +301,7 @@ class SnakeWindow:
                 _delete_widget(name)
                 _raise_score()
                 return
-            xVel = SCORE_STAR_MOVEMENT_STEP_SIZE
+            xVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (targetX - origX) / targetX
             # yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (itemY - targetY) / (itemX - targetX)  # direct
             if peakX is None:
                 peakX = origX + random.random() * (targetX - origX) / 4
@@ -499,8 +499,10 @@ class SnakeWindow:
             removeList = []
             for item in itemRegister:
                 if item.startswith('scoreStar_'):
+                    _raise_score()
                     removeList.append(item)
-            _delete_widget(item)
+            for item in removeList:
+                _delete_widget(item)
 
         def _end_game():
             _cancel()
