@@ -17,6 +17,7 @@ a = Analysis(['fuxenpruefung.py'],
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 a.datas += [(r'images\fox.ico', r'src\images\fox.ico', 'DATA')]
+a.datas += [(r'images\gold_fox.png', r'src\images\gold_fox.png', 'DATA')]
 a.datas += [(r'images\fox.png', r'src\images\fox.png', 'DATA')]
 a.datas += [(r'images\floor.jpg', r'src\images\floor.jpg', 'DATA')]
 a.datas += [(r'images\major.png', r'src\images\major.png', 'DATA')]

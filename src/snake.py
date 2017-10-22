@@ -47,6 +47,9 @@ MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
 N_FREE_FOXES = 5
 N_BEERS = 3
+GOLD_FOX_CHANCE = 0.5
+GOLD_FOX_LIFE_STEPS = 50
+GOLD_FOX_SCORE_MULTIPLIER = 3
 
 START_SPEED = 1 / 50
 MAX_SPEED = 4 / 50
@@ -100,6 +103,8 @@ class SnakeWindow:
         self._nFoxes = 0
         self._nBeers = 0
         self._nScoreStars = 0
+        self._goldFox = None
+        self._goldFoxLife = 0
 
         def _reset(self):
             self._xPath = deque([], MAX_QUEUE_LEN)
@@ -120,6 +125,8 @@ class SnakeWindow:
             self._tumbleAngle = START_TUMBLE_ANGLE
             self._foxlastXvec = []
             self._foxlastYvec = []
+            self._goldFox = None
+            self._goldFoxLife = 0
             for idx in range(N_FREE_FOXES):
                 self._foxlastXvec.append(random.random())
                 self._foxlastYvec.append(random.random())
@@ -172,14 +179,17 @@ class SnakeWindow:
                     continue
                 return (newX, newY)
 
-        def _draw_new_fox(newX=None, newY=None, name='fox', size=1):
+        def _draw_new_fox(newX=None, newY=None, name='fox', size=1, gold=False):
             if not newX and not newY:
                 newX, newY = _get_new_random_pos(FOX_SIZE, FOX_SIZE)
                 if not newX and not newY:
                     print('Warning: no new free fox position found!')
                     _end_game()
             _delete_widget(name)
-            thisFoxImgObj = foxImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
+            if gold:
+                thisFoxImgObj = goldFoxImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
+            else:
+                thisFoxImgObj = foxImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
             canv.foxImg[name] = ImageTk.PhotoImage(thisFoxImgObj)
             canv.create_image(newX, newY, image=canv.foxImg[name], tags=(name))
             if name not in itemRegister:
@@ -271,6 +281,13 @@ class SnakeWindow:
                     self._foxlastYvec[idx] = -self._foxlastYvec[idx]
                     canv.move(name, self._foxlastXvec[idx], self._foxlastYvec[idx])
                     _keep_in_box(name)
+                if self._goldFox == name:
+                    self._goldFoxLife += 1
+                    if self._goldFoxLife > GOLD_FOX_LIFE_STEPS:
+                        self._goldFox = None
+                        self._goldFoxLife = 0
+                        _delete_widget(name)
+                        _draw_new_fox(x, y, name)
             self._job['move_free_fox'] = master.after(int(1 / START_SPEED), _move_free_fox)
 
         def _get_new_tail_pos():
@@ -287,8 +304,9 @@ class SnakeWindow:
                     pass
             return (newX, newY)
 
-        def _raise_score():
-            self._score += self._nBeers
+        def _raise_score(name):
+            value = int(name.split('value_')[-1])
+            self._score += value
             canv.itemconfig('starText', text=': ' + str(self._score))
 
         def _move_score_star(name, origX, origY, peakX=None):
@@ -299,7 +317,7 @@ class SnakeWindow:
                 arrived = True
             if arrived:
                 _delete_widget(name)
-                _raise_score()
+                _raise_score(name)
                 return
             xVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (targetX - origX) / targetX
             # yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (itemY - targetY) / (itemX - targetX)  # direct
@@ -337,11 +355,19 @@ class SnakeWindow:
                     sound.play_sound(files.BLOP_WAV_PATH)
                     self._nFoxes += 1
                     canv.itemconfig('foxText', text=': ' + str(self._nFoxes))
+                    goldFoxTail = False
+                    if foxCollision == self._goldFox:
+                        goldFoxTail = True
+                        self._goldFox = None
                     newX, newY = _get_new_tail_pos()
-                    _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes-1))
+                    _draw_new_fox(newX=newX, newY=newY, name='tail' + str(self._nFoxes-1), gold=goldFoxTail)
                     for item in reversed(itemRegister):
                         canv.tag_raise(item)
-                    _draw_new_fox(name=foxCollision)
+                    goldFox = False
+                    if self._goldFox is None and random.random() > GOLD_FOX_CHANCE:
+                        goldFox = True
+                        self._goldFox = foxCollision
+                    _draw_new_fox(name=foxCollision, gold=goldFox)
                     foxIdx = int(foxCollision.lstrip('fox'))
                     self._foxlastXvec[foxIdx] = random.random()
                     self._foxlastYvec[foxIdx] = random.random()
@@ -350,10 +376,19 @@ class SnakeWindow:
                             if random.random() < BEER_RESPAWN_CHANCE:
                                 _draw_new_beer(name=beerName)
                     if self._nBeers > 0:
+                        foxValue = self._nBeers
                         starScale = min(0.3 + self._nBeers / MAX_BEER * 0.3, 0.7)
-                        _draw_new_star(itemX, itemY, 'scoreStar_' + str(self._nScoreStars), starScale)
-                        _move_score_star('scoreStar_' + str(self._nScoreStars), itemX, itemY)
-                        self._nScoreStars += 1
+                        if goldFoxTail:
+                            for idx in range(GOLD_FOX_SCORE_MULTIPLIER):
+                                starName = 'scoreStar_' + str(self._nScoreStars) + '_value_' + str(foxValue)
+                                _draw_new_star(itemX, itemY, starName, starScale)
+                                _move_score_star(starName, itemX, itemY)
+                                self._nScoreStars += 1
+                        else:
+                            starName = 'scoreStar_' + str(self._nScoreStars) + '_value_' + str(foxValue)
+                            _draw_new_star(itemX, itemY, starName, starScale)
+                            _move_score_star(starName, itemX, itemY)
+                            self._nScoreStars += 1
                 # drink beer
                 beerCollision = _check_clipping(itemX, itemY, include=beerList)
                 if beerCollision:
@@ -499,7 +534,7 @@ class SnakeWindow:
             removeList = []
             for item in itemRegister:
                 if item.startswith('scoreStar_'):
-                    _raise_score()
+                    _raise_score(item)
                     removeList.append(item)
             for item in removeList:
                 _delete_widget(item)
@@ -623,6 +658,9 @@ class SnakeWindow:
 
         foxImgObj = Image.open(files.FOX_ICO_PATH)
         foxImgObj = foxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
+
+        goldFoxImgObj = Image.open(files.GOLD_FOX_ICO_PATH)
+        goldFoxImgObj = goldFoxImgObj.resize((FOX_SIZE, FOX_SIZE), Image.ANTIALIAS)
 
         beerImgObj = Image.open(files.BEER_IMG_PATH)
         beerImgObj = beerImgObj.resize((BEER_SIZE, BEER_SIZE), Image.ANTIALIAS)
