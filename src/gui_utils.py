@@ -44,7 +44,10 @@ class SimpleTable(tk.Frame):
 
     def headers(self, headers):
         for col, header in enumerate(headers):
-            self.set(0, col, i18n.translate(header).capitalize(), font='bold')
+            try:
+                self.set(0, col, i18n.translate(header).capitalize(), font='bold')
+            except AttributeError:
+                self.set(0, col, header.capitalize(), font='bold')
 
     def data(self, scores, keys):
         for row, score in enumerate(scores):
@@ -76,11 +79,29 @@ def draw_table(master, canv, subBoxXMin, subBoxXMax, boxYMin, boxYMax, headers, 
             errText = 'Not available'
         canv.create_text(xCenter, (minY + maxY) / 2, text=errText, tags=(tags + '_empty'))
         return
-    if not nRows:
+    if nRows is None:
         nRows = len(values)
     t = SimpleTable(master, nRows, len(headers))
-    t.place(x=subBoxXMin + distToSubBox, y=boxYMin + vSpace + distToSubBox,
-            width=subBoxXMax - subBoxXMin - distToSubBox,
-            height=boxHeight - distToSubBox)
     t.headers(headers)
     t.data(values, headers)
+    canv.create_window((subBoxXMin + distToSubBox, boxYMin + vSpace + distToSubBox),
+                       window=t, anchor='nw',
+                       width=subBoxXMax - subBoxXMin - distToSubBox,
+                       height=boxHeight - distToSubBox,
+                       tags=(tags + '_table'))
+
+
+def main():
+    print('Only plotting table and object!')
+    root = tk.Tk()
+    canv = tk.Canvas(root, highlightthickness=0)
+    canv.pack(fill='both', expand=True)
+    header = ['apple', 'orange', 'banana']
+    data = [{'apple': [1, 2, 3], 'orange': [4, 5, 6], 'banana': [7, 8, 9]}]
+    draw_table(root, canv, 0, 400, 0, 200, header, data)
+    root.mainloop()
+    root.destroy()
+
+
+if __name__ == '__main__':
+    main()

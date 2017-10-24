@@ -313,7 +313,9 @@ class SnakeWindow:
             targetX, targetY = canv.coords('scoreStar')
             itemX, itemY = canv.coords(name)
             arrived = False
-            if itemX > targetX:
+            if origX < targetX and itemX > targetX:
+                arrived = True
+            elif origX > targetX and itemX < targetX:
                 arrived = True
             if arrived:
                 _delete_widget(name)
@@ -332,12 +334,9 @@ class SnakeWindow:
             self._job['move_' + name] = master.after(int(1 / SCORE_STAR_SPEED), helpFunc)
 
         def raise_top_objects():
-            topItems = []
             for item in itemRegister:
                 if item.startswith('scoreStar'):
                     canv.tag_raise(item)
-            for item in topItems:
-                topItems.append(item)
 
         def _move():
             if self._direction is not None:
@@ -733,15 +732,18 @@ class SnakeWindow:
                           tags=('major'))
         itemRegister.append('major')
 
-        _draw_new_fox(FULL_WIDTH * 0.28, self.bottomRowY, 'scoreFox', 0.5)
-        canv.create_text(FULL_WIDTH * 0.30, self.bottomRowY, text=': ' + str(self._nFoxes),
+        _draw_new_fox(BOX_X_MIN + self.boxWidth * 0.25, self.bottomRowY, 'scoreFox', 0.5)
+        canv.create_text(BOX_X_MIN + self.boxWidth * 0.28, self.bottomRowY,
+                         text=': ' + str(self._nFoxes),
                          font='b', tags=('foxText'), anchor="w")
-        _draw_new_beer(FULL_WIDTH * 0.54, self.bottomRowY, 'scoreBeer', 0.5)
-        canv.create_text(FULL_WIDTH * 0.55, self.bottomRowY, text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
-                         font='b', tags=('beerText'), anchor="w")
-        _draw_new_star(FULL_WIDTH * 0.77, self.bottomRowY, 'scoreStar', 0.5)
-        canv.create_text(FULL_WIDTH * 0.79, self.bottomRowY, text=': ' + str(self._nBeers),
+        _draw_new_star(BOX_X_MIN + self.boxWidth * 0.5, self.bottomRowY, 'scoreStar', 0.5)
+        canv.create_text(BOX_X_MIN + self.boxWidth * 0.53, self.bottomRowY,
+                         text=': ' + str(self._nBeers),
                          font='b', tags=('starText'), anchor="w")
+        _draw_new_beer(BOX_X_MIN + self.boxWidth * 0.75, self.bottomRowY, 'scoreBeer', 0.5)
+        canv.create_text(BOX_X_MIN + self.boxWidth * 0.77, self.bottomRowY,
+                         text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
+                         font='b', tags=('beerText'), anchor="w")
 
         alertThread = threading.Thread(target=_display_alerts)
         alertThread.start()
