@@ -45,7 +45,7 @@ MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
 MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
-N_FREE_FOXES = 20
+N_FREE_FOXES = 5
 N_BEERS = 3
 GOLD_FOX_CHANCE = 1
 GOLD_FOX_LIFE_STEPS = 50
@@ -101,6 +101,7 @@ class SnakeWindow:
         itemRegister = []
         self._score = 0
         self._nFoxes = 0
+        self._activeFoxes = []
         self._nBeers = 0
         self._nScoreStars = 0
         self._goldFox = None
@@ -116,6 +117,7 @@ class SnakeWindow:
             self._direction = None
             self._score = 0
             self._nFoxes = 0
+            self._activeFoxes = []
             self._nBeers = 0
             self._nScoreStars = 0
             self._speed = START_SPEED
@@ -184,7 +186,7 @@ class SnakeWindow:
                 newX, newY = _get_new_random_pos(FOX_SIZE, FOX_SIZE)
                 if not newX and not newY:
                     print('Warning: no new free fox position found!')
-                    _end_game()
+                    return
             _delete_widget(name)
             if gold:
                 thisFoxImgObj = goldFoxImgObj.resize((int(FOX_SIZE * size), int(FOX_SIZE * size)), Image.ANTIALIAS)
@@ -201,7 +203,7 @@ class SnakeWindow:
                 newX, newY = _get_new_random_pos(BEER_SIZE, BEER_SIZE)
                 if not newX and not newY:
                     print('Warning: no new free beer position found!')
-                    _end_game()
+                    return
             _delete_widget(name)
             thisBeerImgObj = beerImgObj.resize((int(BEER_SIZE * size), int(BEER_SIZE * size)), Image.ANTIALIAS)
             canv.beerImg[name] = ImageTk.PhotoImage(thisBeerImgObj)
@@ -215,7 +217,7 @@ class SnakeWindow:
                 newX, newY = _get_new_random_pos(BUCKET_SIZE, BUCKET_SIZE)
                 if not newX and not newY:
                     print('Warning: no new free bucket position found!')
-                    _end_game()
+                    return
             _delete_widget(name)
             thisBucketImgObj = bucketImgObj.resize((int(BUCKET_SIZE * size), int(BEER_SIZE * size)), Image.ANTIALIAS)
             canv.bucketImg[name] = ImageTk.PhotoImage(thisBucketImgObj)
@@ -229,7 +231,7 @@ class SnakeWindow:
                 newX, newY = _get_new_random_pos(STAR_SIZE, STAR_SIZE)
                 if not newX and not newY:
                     print('Warning: no new free star position found!')
-                    _end_game()
+                    return
             _delete_widget(name)
             thisStarImgObj = starImgObj.resize((int(STAR_SIZE * size), int(STAR_SIZE * size)), Image.ANTIALIAS)
             canv.starImg[name] = ImageTk.PhotoImage(thisStarImgObj)
@@ -246,7 +248,8 @@ class SnakeWindow:
                                 self._xPath[(idx + 1) * TAIL_STEP_DISTANCE],
                                 self._yPath[(idx + 1) * TAIL_STEP_DISTANCE])
                 except IndexError:
-                    pass
+                    return
+                self._activeFoxes.append(idx)
 
         def _keep_in_box(item):
             itemX, itemY = canv.coords(item)
@@ -435,6 +438,7 @@ class SnakeWindow:
                 # check tail overlap
                 noTailFoxes = [item for item in itemRegister if 'tail' not in item]
                 noTailFoxes.extend(['tail' + str(idx) for idx in range(2)])
+                noTailFoxes.extend(['tail' + str(idx) for idx in range(self._nFoxes) if idx not in self._activeFoxes])
                 crashFox = _check_clipping(itemX, itemY, exclude=noTailFoxes,
                                            xSize=MAJOR_SIZE * 0.1,
                                            ySize=MAJOR_SIZE * 0.1)
