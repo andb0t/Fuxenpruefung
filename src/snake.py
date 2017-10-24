@@ -733,15 +733,15 @@ class SnakeWindow:
                           tags=('major'))
         itemRegister.append('major')
 
-        _draw_new_fox(FULL_WIDTH * 0.27, self.bottomRowY, 'scoreFox', 0.5)
+        _draw_new_fox(FULL_WIDTH * 0.28, self.bottomRowY, 'scoreFox', 0.5)
         canv.create_text(FULL_WIDTH * 0.30, self.bottomRowY, text=': ' + str(self._nFoxes),
-                         font='b', tags=('foxText'))
-        _draw_new_beer(FULL_WIDTH * 0.50, self.bottomRowY, 'scoreBeer', 0.5)
+                         font='b', tags=('foxText'), anchor="w")
+        _draw_new_beer(FULL_WIDTH * 0.54, self.bottomRowY, 'scoreBeer', 0.5)
         canv.create_text(FULL_WIDTH * 0.55, self.bottomRowY, text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1),
-                         font='b', tags=('beerText'))
+                         font='b', tags=('beerText'), anchor="w")
         _draw_new_star(FULL_WIDTH * 0.77, self.bottomRowY, 'scoreStar', 0.5)
-        canv.create_text(FULL_WIDTH * 0.80, self.bottomRowY, text=': ' + str(self._nBeers),
-                         font='b', tags=('starText'))
+        canv.create_text(FULL_WIDTH * 0.79, self.bottomRowY, text=': ' + str(self._nBeers),
+                         font='b', tags=('starText'), anchor="w")
 
         alertThread = threading.Thread(target=_display_alerts)
         alertThread.start()
