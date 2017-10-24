@@ -42,33 +42,31 @@ SCORE_STAR_SIZE = 50
 BUCKET_SIZE = 40
 JAEGER_SIZE = 50
 
-MAX_POSITION_LOOPS = 10000
-MOVEMENT_STEP_SIZE = 5
+N_BEERS = 3
+N_FREE_FOXES = 5
 MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
-N_FREE_FOXES = 5
-N_BEERS = 3
 
 JAEGER_CHANCE = 0.1
 JAEGER_MULTIPLIER = 5
-
 GOLD_FOX_CHANCE = 0.1
 GOLD_FOX_LIFE_STEPS = 50
 GOLD_FOX_SCORE_MULTIPLIER = 3
 
+MAX_POSITION_LOOPS = 10000
+MOVEMENT_STEP_SIZE = 5
 START_SPEED = 1 / 50
-MAX_SPEED = 7 / 50
+MAX_SPEED = 5 / 50
 N_SPEED_STEPS = 20
-SCORE_STAR_SPEED = 1/10
-SCORE_STAR_MOVEMENT_STEP_SIZE = 5
-
 START_ROTATION_SPEED = 0.05
-MAX_ROTATION_SPEED = 0.15
+MAX_ROTATION_SPEED = 0.12
 N_ROTATION_SPEED_STEPS = 20
-
 START_TUMBLE_ANGLE = 5
 MAX_TUMBLE_ANGLE = 45
 N_TUMBLE_STEPS = 10
+
+SCORE_STAR_SPEED = 1/10
+SCORE_STAR_MOVEMENT_STEP_SIZE = 5
 
 N_HIGHSCORES = 10
 MAX_INFO_LINE_CHARS = 60
@@ -438,10 +436,10 @@ class SnakeWindow:
                 if beerCollision:
                     sound.play_sound(files.SLURP_WAV_PATH)
                     self._nBeers += 1
-                    canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     set_alc_effect()
+                    canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     if self._nBeers >= MAX_BEER + 5 and self._nBucket == 0:
-                        _draw_new_bucket()
+                        _draw_new_bucket(name='bucket')
                     if random.random() < BEER_RESPAWN_CHANCE:
                         _draw_new_beer(name=beerCollision)
                     else:
@@ -454,10 +452,10 @@ class SnakeWindow:
                 if _check_clipping(itemX, itemY, include='jaeger'):
                     sound.play_sound(files.SLURP_WAV_PATH)
                     self._nBeers += JAEGER_MULTIPLIER
-                    canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     set_alc_effect(JAEGER_MULTIPLIER)
+                    canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     if self._nBeers >= MAX_BEER + 5 and self._nBucket == 0:
-                        _draw_new_bucket()
+                        _draw_new_bucket(name='bucket')
                         self._nBucket += 1
                     _delete_widget('jaeger')
                     self._nJaegers -= 1
