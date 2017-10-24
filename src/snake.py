@@ -45,16 +45,16 @@ MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
 MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
-N_FREE_FOXES = 5
+N_FREE_FOXES = 20
 N_BEERS = 3
-GOLD_FOX_CHANCE = 0.1
+GOLD_FOX_CHANCE = 1
 GOLD_FOX_LIFE_STEPS = 50
 GOLD_FOX_SCORE_MULTIPLIER = 3
 
 START_SPEED = 1 / 50
 MAX_SPEED = 4 / 50
 N_SPEED_STEPS = 10
-SCORE_STAR_SPEED = 1/5
+SCORE_STAR_SPEED = 1/10
 SCORE_STAR_MOVEMENT_STEP_SIZE = 5
 
 START_ROTATION_SPEED = 0.05
@@ -309,27 +309,29 @@ class SnakeWindow:
             self._score += value
             canv.itemconfig('starText', text=': ' + str(self._score))
 
-        def _move_score_star(name, origX, origY, peakX=None):
+        def _move_score_star(name, origX, origY, randVar=None):
             targetX, targetY = canv.coords('scoreStar')
             itemX, itemY = canv.coords(name)
             arrived = False
-            if origX < targetX and itemX > targetX:
-                arrived = True
-            elif origX > targetX and itemX < targetX:
+            if itemY > targetY:
                 arrived = True
             if arrived:
                 _delete_widget(name)
                 _raise_score(name)
                 return
-            xVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (targetX - origX) / targetX
-            # yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (itemY - targetY) / (itemX - targetX)  # direct
-            if peakX is None:
-                peakX = origX + random.random() * (targetX - origX) / 4
-            yVel = maths.get_parabola(origX, origY, targetX, targetY, itemX + xVel, peakX=peakX) - itemY
+            if randVar is None:
+                randVar = 1 - 2 * random.random()
+            if targetX != origX:
+                xVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (targetX - origX) / targetX * (1 + randVar * 0.25)
+                peakX = origX + randVar * (targetX - origX) / 4
+                yVel = maths.get_parabola(origX, origY, targetX, targetY, itemX + xVel, peakX=peakX) - itemY
+            else:
+                xVel = 0
+                yVel = SCORE_STAR_MOVEMENT_STEP_SIZE * (1 + abs(origY - itemY) / targetY) * (1 + randVar * 0.25)
             canv.move(name, xVel, yVel)
 
             def helpFunc():
-                return _move_score_star(name, origX, origY, peakX)
+                return _move_score_star(name, origX, origY, randVar)
 
             self._job['move_' + name] = master.after(int(1 / SCORE_STAR_SPEED), helpFunc)
 
