@@ -83,9 +83,10 @@ def read_alerts():
         return None
     alerts = []
     for message in messages:
-        categoryCheck = message['category'] == 'alert'
-        versionCheck = message['version'] == 'all' or float(message['version']) > version.version
-        if not categoryCheck or not versionCheck:
+        categoryCheck = (message['category'] == 'alert')
+        higherRelease = (message['version'] == 'all' or float(message['version']) > version.version)
+        versionCheck = (message['category'] == 'release') and higherRelease
+        if not categoryCheck and not versionCheck:
             continue
         alerts.append(message)
     print_table(alerts)
