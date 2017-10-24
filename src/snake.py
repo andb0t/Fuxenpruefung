@@ -403,6 +403,9 @@ class SnakeWindow:
                         for beerName in beerList:
                             if random.random() < BEER_RESPAWN_CHANCE:
                                 _draw_new_beer(name=beerName)
+                    if self._nJaegers == 0 and random.random() < JAEGER_CHANCE:
+                        _draw_new_jaeger(name='jaeger')
+                        self._nJaegers += 1
                     if self._nBeers > 0:
                         foxValue = self._nBeers
                         starScale = min(0.3 + self._nBeers / MAX_BEER * 0.3, 0.7)
@@ -443,7 +446,7 @@ class SnakeWindow:
                         _draw_new_beer(name=beerCollision)
                     else:
                         _delete_widget(beerCollision)
-                    if random.random() < JAEGER_CHANCE and self._nJaegers == 0:
+                    if self._nJaegers == 0 and random.random() < JAEGER_CHANCE:
                         _draw_new_jaeger(name='jaeger')
                         self._nJaegers += 1
 
