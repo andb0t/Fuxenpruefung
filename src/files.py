@@ -24,6 +24,7 @@ FOX_IMG_PATH = resource_path('', r'images\fox.png')
 GITHUB_IMG_PATH = resource_path('', 'images\github.png')
 MAJOR_IMG_PATH = resource_path('', r'images\major.png')
 STAR_IMG_PATH = resource_path('', r'images\star.png')
+JAEGER_IMG_PATH = resource_path('', r'images\jaeger.png')
 
 SONG_WAV_PATH = resource_path('', r'sounds\Ehr_unser_Zier.wav')
 BLOP_WAV_PATH = resource_path('', r'sounds\Blop.wav')

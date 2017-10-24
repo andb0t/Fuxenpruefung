@@ -40,6 +40,7 @@ BEER_SIZE = 50
 STAR_SIZE = 50
 SCORE_STAR_SIZE = 50
 BUCKET_SIZE = 40
+JAEGER_SIZE = 50
 
 MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
@@ -47,6 +48,10 @@ MAX_BEER = 11
 BEER_RESPAWN_CHANCE = 0.7
 N_FREE_FOXES = 5
 N_BEERS = 3
+
+JAEGER_CHANCE = 0.1
+JAEGER_MULTIPLIER = 5
+
 GOLD_FOX_CHANCE = 0.1
 GOLD_FOX_LIFE_STEPS = 50
 GOLD_FOX_SCORE_MULTIPLIER = 3
@@ -103,6 +108,8 @@ class SnakeWindow:
         self._nFoxes = 0
         self._activeFoxes = []
         self._nBeers = 0
+        self._nJaegers = 0
+        self._nBucket = 0
         self._nScoreStars = 0
         self._goldFox = None
         self._goldFoxLife = 0
@@ -119,6 +126,8 @@ class SnakeWindow:
             self._nFoxes = 0
             self._activeFoxes = []
             self._nBeers = 0
+            self._nJaegers = 0
+            self._nBucket = 0
             self._nScoreStars = 0
             self._speed = START_SPEED
             self._job = {}
@@ -222,6 +231,20 @@ class SnakeWindow:
             thisBucketImgObj = bucketImgObj.resize((int(BUCKET_SIZE * size), int(BEER_SIZE * size)), Image.ANTIALIAS)
             canv.bucketImg[name] = ImageTk.PhotoImage(thisBucketImgObj)
             canv.create_image(newX, newY, image=canv.bucketImg[name], tags=(name))
+            if name not in itemRegister:
+                itemRegister.append(name)
+            raise_top_objects()
+
+        def _draw_new_jaeger(newX=None, newY=None, name='jaeger', size=1):
+            if not newX and not newY:
+                newX, newY = _get_new_random_pos(JAEGER_SIZE, JAEGER_SIZE)
+                if not newX and not newY:
+                    print('Warning: no new free jaeger position found!')
+                    return
+            _delete_widget(name)
+            thisJaegerImgObj = jaegerImgObj.resize((int(JAEGER_SIZE * size), int(BEER_SIZE * size)), Image.ANTIALIAS)
+            canv.jaegerImg[name] = ImageTk.PhotoImage(thisJaegerImgObj)
+            canv.create_image(newX, newY, image=canv.jaegerImg[name], tags=(name))
             if name not in itemRegister:
                 itemRegister.append(name)
             raise_top_objects()
@@ -394,37 +417,59 @@ class SnakeWindow:
                             _draw_new_star(itemX, itemY, starName, starScale)
                             _move_score_star(starName, itemX, itemY)
                             self._nScoreStars += 1
+
+                def set_alc_effect(weight=1):
+                    for idx in range(weight):
+                        step = (MAX_SPEED - START_SPEED) / N_SPEED_STEPS
+                        self._speed = min(self._speed + step, MAX_SPEED)
+                        if self._nBeers == MAX_BEER or (self._rotationSpeed == 0 and self._nBeers > MAX_BEER):
+                            self._rotationSpeed = START_ROTATION_SPEED
+                        elif self._nBeers > MAX_BEER:
+                            step = (MAX_ROTATION_SPEED - START_ROTATION_SPEED) / N_ROTATION_SPEED_STEPS
+                            self._rotationSpeed = min(self._rotationSpeed + step, MAX_ROTATION_SPEED)
+                            step = (MAX_TUMBLE_ANGLE - START_TUMBLE_ANGLE) / N_TUMBLE_STEPS
+                            self._tumbleAngle = min(self._tumbleAngle + step, MAX_TUMBLE_ANGLE)
+
                 # drink beer
                 beerCollision = _check_clipping(itemX, itemY, include=beerList)
                 if beerCollision:
                     sound.play_sound(files.SLURP_WAV_PATH)
                     self._nBeers += 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
-                    canv.itemconfig('starText', text=': ' + str(self._score))
-                    step = (MAX_SPEED - START_SPEED) / N_SPEED_STEPS
-                    self._speed = min(self._speed + step, MAX_SPEED)
-                    if self._nBeers == MAX_BEER:
-                        self._rotationSpeed = START_ROTATION_SPEED
-                    elif self._nBeers > MAX_BEER:
-                        step = (MAX_ROTATION_SPEED - START_ROTATION_SPEED) / N_ROTATION_SPEED_STEPS
-                        self._rotationSpeed = min(self._rotationSpeed + step, MAX_ROTATION_SPEED)
-                        step = (MAX_TUMBLE_ANGLE - START_TUMBLE_ANGLE) / N_TUMBLE_STEPS
-                        self._tumbleAngle = min(self._tumbleAngle + step, MAX_TUMBLE_ANGLE)
-                    if self._nBeers == MAX_BEER + 5:
+                    set_alc_effect()
+                    if self._nBeers >= MAX_BEER + 5 and self._nBucket == 0:
                         _draw_new_bucket()
                     if random.random() < BEER_RESPAWN_CHANCE:
                         _draw_new_beer(name=beerCollision)
                     else:
                         _delete_widget(beerCollision)
+                    if random.random() < JAEGER_CHANCE and self._nJaegers == 0:
+                        _draw_new_jaeger(name='jaeger')
+                        self._nJaegers += 1
+
+                # drink jaeger
+                if _check_clipping(itemX, itemY, include='jaeger'):
+                    sound.play_sound(files.SLURP_WAV_PATH)
+                    self._nBeers += JAEGER_MULTIPLIER
+                    canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
+                    set_alc_effect(JAEGER_MULTIPLIER)
+                    if self._nBeers >= MAX_BEER + 5 and self._nBucket == 0:
+                        _draw_new_bucket()
+                        self._nBucket += 1
+                    _delete_widget('jaeger')
+                    self._nJaegers -= 1
+
                 # hit bucket
                 if _check_clipping(itemX, itemY, include='bucket'):
                     sound.play_sound(files.HICCUP_WAV_PATH)
                     self._nBeers = MAX_BEER - 1
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     _delete_widget('bucket')
+                    self._nBucket -= 1
                     self._currentRotation = 0
                     self._rotationSpeed = 0
                     self._tumbleAngle = START_TUMBLE_ANGLE
+
                 # rotate major and its direction
                 # print('speed', self._speed, 'rotationSpeed', self._rotationSpeed, 'tumbleDegree', self._tumbleAngle)
                 self._currentRotation += self._rotationSpeed
@@ -605,6 +650,7 @@ class SnakeWindow:
             _delete_widget('gameOverCancelText')
             _delete_widget('gameOverRestartText')
             _delete_widget('bucket')
+            _delete_widget('jaeger')
             tailFoxes = [item for item in itemRegister if 'tail' in item]
             for item in tailFoxes:
                 _delete_widget(item)
@@ -677,6 +723,9 @@ class SnakeWindow:
         bucketImgObj = Image.open(files.BUCKET_IMG_PATH)
         bucketImgObj = bucketImgObj.resize((BUCKET_SIZE, BUCKET_SIZE), Image.ANTIALIAS)
 
+        jaegerImgObj = Image.open(files.JAEGER_IMG_PATH)
+        jaegerImgObj = jaegerImgObj.resize((JAEGER_SIZE, JAEGER_SIZE), Image.ANTIALIAS)
+
         floorImgObj = Image.open(files.FLOOR_IMG_PATH)
         floorImgObj = floorImgObj.resize((BOX_X_MAX - BOX_X_MIN, BOX_Y_MAX - BOX_Y_MIN), Image.ANTIALIAS)
         canv.floorImg = ImageTk.PhotoImage(floorImgObj)
@@ -685,6 +734,7 @@ class SnakeWindow:
         canv.beerImg = {}
         canv.starImg = {}
         canv.bucketImg = {}
+        canv.jaegerImg = {}
 
         canv.create_image((BOX_X_MAX + BOX_X_MIN) / 2, (BOX_Y_MAX + BOX_Y_MIN) / 2, image=canv.floorImg, tags=('floor'))
 
