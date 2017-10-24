@@ -57,14 +57,14 @@ GOLD_FOX_LIFE_STEPS = 50
 GOLD_FOX_SCORE_MULTIPLIER = 3
 
 START_SPEED = 1 / 50
-MAX_SPEED = 4 / 50
-N_SPEED_STEPS = 10
+MAX_SPEED = 7 / 50
+N_SPEED_STEPS = 20
 SCORE_STAR_SPEED = 1/10
 SCORE_STAR_MOVEMENT_STEP_SIZE = 5
 
 START_ROTATION_SPEED = 0.05
-MAX_ROTATION_SPEED = 0.10
-N_ROTATION_SPEED_STEPS = 10
+MAX_ROTATION_SPEED = 0.15
+N_ROTATION_SPEED_STEPS = 20
 
 START_TUMBLE_ANGLE = 5
 MAX_TUMBLE_ANGLE = 45
@@ -613,7 +613,6 @@ class SnakeWindow:
             _start()
 
         def _start():
-            # _delete_widget('welcomeText')
             _delete_widget('instructionText')
             _delete_widget('instructionText2')
             _delete_widget('instructionText3')
