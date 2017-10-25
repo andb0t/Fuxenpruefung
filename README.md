@@ -79,14 +79,7 @@ would result in a multiple choice question with two bullet points and no space a
 
 
 ## The fox snake game
-Earn points by catching foxes but do not collide with your own tail.
-
-* <img src="src/images/fox.png" height="20"> Appends a fox to your tail and spawns a new beer in case there isn't any left
-* <img src="src/images/beer.png" height="20"> Raises the amount of points earned per fox, but increases the difficulty of nagivation. After consuming a beer there is a chance for another one to spawn.
-* <img src="src/images/bucket.png" height="20"> The bucket resets the negative effects of beers but also reduces the beer count. Be careful, one more beer and you loose control!
-
-
-
+Earn points by catching foxes but do not collide with your own tail. Besides that, follow the in-game instructions.
 
 
 ## For the geeks
