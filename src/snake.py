@@ -51,7 +51,7 @@ JAEGER_CHANCE = 0.1
 JAEGER_MULTIPLIER = 5
 GOLD_FOX_CHANCE = 0.1
 GOLD_FOX_LIFE_STEPS = 50
-GOLD_FOX_SCORE_MULTIPLIER = 3
+GOLD_FOX_MULTIPLIER = 3
 
 MAX_POSITION_LOOPS = 10000
 MOVEMENT_STEP_SIZE = 5
@@ -408,7 +408,7 @@ class SnakeWindow:
                         foxValue = self._nBeers
                         starScale = min(0.3 + self._nBeers / MAX_BEER * 0.3, 0.7)
                         if goldFoxTail:
-                            for idx in range(GOLD_FOX_SCORE_MULTIPLIER):
+                            for idx in range(GOLD_FOX_MULTIPLIER):
                                 starName = 'scoreStar_' + str(self._nScoreStars) + '_value_' + str(foxValue)
                                 _draw_new_star(itemX, itemY, starName, starScale)
                                 _move_score_star(starName, itemX, itemY)
@@ -595,13 +595,13 @@ class SnakeWindow:
             _cancel()
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.4,
                              fill='red', font=("Times", 25, "bold"),
-                             text=i18n.gameOver[i18n.lang()][0], tags=('gameOverText'))
+                             text=i18n.hitKey[i18n.lang()][1], tags=('gameOverText'))
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.5,
                              fill='red', font=("Times", 25, "bold"),
-                             text=i18n.gameOver[i18n.lang()][1], tags=('gameOverCancelText'))
+                             text=i18n.hitKey[i18n.lang()][2], tags=('gameOverCancelText'))
             canv.create_text(BOX_X_MAX / 2, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) * 0.6,
                              fill='red', font=("Times", 25, "bold"),
-                             text=i18n.gameOver[i18n.lang()][2], tags=('gameOverRestartText'))
+                             text=i18n.hitKey[i18n.lang()][3], tags=('gameOverRestartText'))
             _remove_objects()
             _post_score()
             master.bind('<Return>', _restart)
@@ -611,16 +611,18 @@ class SnakeWindow:
             _start()
 
         def _start():
-            _delete_widget('instructionText')
+            _delete_widget('startKeystrokeText')
+            _delete_widget('instructionText1')
             _delete_widget('instructionText2')
             _delete_widget('instructionText3')
             _delete_widget('instructionText4')
+            _delete_widget('instructionText5')
             _delete_widget('instructionHeader')
-            _delete_widget('instrStar')
             _delete_widget('instrBeer')
             _delete_widget('instrFox')
-            _delete_widget('instructionEquals')
-            _delete_widget('instructionTimes')
+            _delete_widget('instrGoldFox')
+            _delete_widget('instrJaeger')
+            _delete_widget('instrBucket')
             _delete_widget('news_line')
             for widgetID in canv.find_all():
                 widget = canv.gettags(widgetID)[0]
@@ -755,29 +757,25 @@ class SnakeWindow:
                          fill='green', font=("Times", 25, "bold"))
 
         instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][1],
-                         tags=('instructionText'))
-
+        _draw_new_beer(self.infoBoxXMin + self.infoBoxWidth * 0.15, instructionY, "instrBeer", 0.5)
+        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.2, instructionY, tags=('instructionText1'),
+                         anchor='w', text=i18n.snakeInstruction[i18n.lang()][1])
         instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][2] + ':',
-                         tags=('instructionText2'))
-
+        _draw_new_fox(self.infoBoxXMin + self.infoBoxWidth * 0.15, instructionY, "instrFox", 0.5)
+        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.2, instructionY, tags=('instructionText2'),
+                         anchor='w', text=i18n.snakeInstruction[i18n.lang()][2])
         instructionY += deltaY
-        _draw_new_star(self.infoBoxXMin + self.infoBoxWidth * 0.30, instructionY, "instrStar", 0.5)
-        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.40, instructionY,
-                         text='=', tags=('instructionEquals'))
-        _draw_new_beer(self.infoBoxXMin + self.infoBoxWidth * 0.50, instructionY, "instrBeer", 0.5)
-        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.60, instructionY,
-                         text='X', tags=('instructionTimes'))
-        _draw_new_fox(self.infoBoxXMin + self.infoBoxWidth * 0.70, instructionY, "instrFox", 0.5)
-
+        _draw_new_fox(self.infoBoxXMin + self.infoBoxWidth * 0.15, instructionY, "instrGoldFox", 0.5, gold=True)
+        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.2, instructionY, tags=('instructionText3'),
+                         anchor='w', text=i18n.snakeInstruction[i18n.lang()][3].format(GOLD_FOX_MULTIPLIER))
         instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][3],
-                         tags=('instructionText3'))
-
+        _draw_new_jaeger(self.infoBoxXMin + self.infoBoxWidth * 0.15, instructionY, "instrJaeger", 0.5)
+        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.2, instructionY, tags=('instructionText4'),
+                         anchor='w', text=i18n.snakeInstruction[i18n.lang()][4].format(JAEGER_MULTIPLIER))
         instructionY += deltaY
-        canv.create_text(self.infoBoxXCenter, instructionY, text=i18n.snakeInstruction[i18n.lang()][4],
-                         tags=('instructionText4'))
+        _draw_new_bucket(self.infoBoxXMin + self.infoBoxWidth * 0.15, instructionY, "instrBucket", 0.5)
+        canv.create_text(self.infoBoxXMin + self.infoBoxWidth * 0.2, instructionY, tags=('instructionText5'),
+                         anchor='w', text=i18n.snakeInstruction[i18n.lang()][5])
 
         canv.create_text(self.infoBoxXCenter, BOX_Y_MAX - self.newsBoxYMax,
                          text=i18n.webNews[i18n.lang()][1], tags=('webNewsHeader'),
@@ -788,6 +786,10 @@ class SnakeWindow:
         canv.create_image(BOX_X_MIN + self.boxWidth * 0.5, BOX_Y_MIN + (BOX_Y_MAX - BOX_Y_MIN) / 2, image=canv.majorImg,
                           tags=('major'))
         itemRegister.append('major')
+
+        canv.create_text(BOX_X_MAX * 0.5, BOX_Y_MIN + self.boxHeight * 0.75,
+                         fill='orange', font=("Times", 25, "bold"),
+                         text=i18n.hitKey[i18n.lang()][0], tags=('startKeystrokeText'))
 
         _draw_new_fox(BOX_X_MIN + self.boxWidth * 0.25, self.bottomRowY, 'scoreFox', 0.5)
         canv.create_text(BOX_X_MIN + self.boxWidth * 0.28, self.bottomRowY,
