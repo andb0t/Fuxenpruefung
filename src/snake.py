@@ -441,6 +441,7 @@ class SnakeWindow:
                     canv.itemconfig('beerText', text=': ' + str(self._nBeers) + ' / ' + str(MAX_BEER - 1))
                     if self._nBeers >= MAX_BEER + 5 and self._nBucket == 0:
                         _draw_new_bucket(name='bucket')
+                        self._nBucket += 1
                     if random.random() < BEER_RESPAWN_CHANCE:
                         _draw_new_beer(name=beerCollision)
                     else:
