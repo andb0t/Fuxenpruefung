@@ -137,7 +137,7 @@ class SnakeWindow:
             self._foxlastYvec = []
             self._goldFox = None
             self._goldFoxLife = 0
-            for idx in range(N_FREE_FOXES):
+            for _ in range(N_FREE_FOXES):
                 self._foxlastXvec.append(random.random())
                 self._foxlastYvec.append(random.random())
 
@@ -155,7 +155,7 @@ class SnakeWindow:
                y < BOX_Y_MIN + ySize / 2:
                 return True
 
-        def _check_clipping(x, y, xSize=MAJOR_SIZE, ySize=MAJOR_SIZE, exclude=[], include=[]):
+        def _check_clipping(x, y, xSize=MAJOR_SIZE, ySize=MAJOR_SIZE, exclude=[None], include=[None]):
             for item in itemRegister:
                 if item in exclude:
                     continue
@@ -168,7 +168,7 @@ class SnakeWindow:
                 # print('New item x/y', round(x), '/', round(y), item, itemX, '/', itemY)
                 PROXIMITY = 3
                 isCloseX = abs(itemX - x) < xSize / PROXIMITY + itemSizeX / PROXIMITY
-                isCloseY = abs(itemY - y) < xSize / PROXIMITY + itemSizeY / PROXIMITY
+                isCloseY = abs(itemY - y) < ySize / PROXIMITY + itemSizeY / PROXIMITY
                 if isCloseX and isCloseY:
                     return item
             return ''
@@ -409,7 +409,7 @@ class SnakeWindow:
                         foxValue = self._nBeers
                         starScale = min(0.3 + self._nBeers / MAX_BEER * 0.3, 0.7)
                         if goldFoxTail:
-                            for idx in range(GOLD_FOX_MULTIPLIER):
+                            for _ in range(GOLD_FOX_MULTIPLIER):
                                 starName = 'scoreStar_' + str(self._nScoreStars) + '_value_' + str(foxValue)
                                 _draw_new_star(itemX, itemY, starName, starScale)
                                 _move_score_star(starName, itemX, itemY)
@@ -421,7 +421,7 @@ class SnakeWindow:
                             self._nScoreStars += 1
 
                 def set_alc_effect(weight=1):
-                    for idx in range(weight):
+                    for _ in range(weight):
                         step = (MAX_SPEED - START_SPEED) / N_SPEED_STEPS
                         self._speed = min(self._speed + step, MAX_SPEED)
                         if self._nBeers == MAX_BEER or (self._rotationSpeed == 0 and self._nBeers > MAX_BEER):
