@@ -5,7 +5,7 @@ CURRENT_LANGUAGE = 'ger'
 
 
 class dictionary:
-    def __init__():
+    def __init__(self):
         pass
     score = {'ger': 'Punkte',
              'bay': 'Punkte',

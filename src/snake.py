@@ -103,40 +103,54 @@ class SnakeWindow:
         master.resizable(0, 0)
 
         itemRegister = []
-        self._score = 0
-        self._nFoxes = 0
         self._activeFoxes = []
-        self._nBeers = 0
-        self._nJaegers = 0
-        self._nBucket = 0
-        self._nScoreStars = 0
+        self._currentRotation = 0
+        self._direction = None
+        self._foxlastXvec = []
+        self._foxlastYvec = []
         self._goldFox = None
         self._goldFoxLife = 0
+        self._job = {}
+        self._nBeers = 0
+        self._nBucket = 0
+        self._nFoxes = 0
+        self._nJaegers = 0
+        self._nScoreStars = 0
+        self._rotationSpeed = 0
+        self._score = 0
+        self._speed = START_SPEED
+        self._tumbleAngle = START_TUMBLE_ANGLE
+        self._xPath = deque([], MAX_QUEUE_LEN)
+        self._xVel = 0
+        self._xVelTumble = 0
+        self._yPath = deque([], MAX_QUEUE_LEN)
+        self._yVel = 0
+        self._yVelTumble = 0
 
         def _reset(self):
-            self._xPath = deque([], MAX_QUEUE_LEN)
-            self._yPath = deque([], MAX_QUEUE_LEN)
-            self._xVel = 0
-            self._yVel = 0
-            self._xVelTumble = 0
-            self._yVelTumble = 0
-            self._direction = None
-            self._score = 0
-            self._nFoxes = 0
             self._activeFoxes = []
-            self._nBeers = 0
-            self._nJaegers = 0
-            self._nBucket = 0
-            self._nScoreStars = 0
-            self._speed = START_SPEED
-            self._job = {}
-            self._rotationSpeed = 0
             self._currentRotation = 0
-            self._tumbleAngle = START_TUMBLE_ANGLE
+            self._direction = None
             self._foxlastXvec = []
             self._foxlastYvec = []
             self._goldFox = None
             self._goldFoxLife = 0
+            self._job = {}
+            self._nBeers = 0
+            self._nBucket = 0
+            self._nFoxes = 0
+            self._nJaegers = 0
+            self._nScoreStars = 0
+            self._rotationSpeed = 0
+            self._score = 0
+            self._speed = START_SPEED
+            self._tumbleAngle = START_TUMBLE_ANGLE
+            self._xPath = deque([], MAX_QUEUE_LEN)
+            self._xVel = 0
+            self._xVelTumble = 0
+            self._yPath = deque([], MAX_QUEUE_LEN)
+            self._yVel = 0
+            self._yVelTumble = 0
             for _ in range(N_FREE_FOXES):
                 self._foxlastXvec.append(random.random())
                 self._foxlastYvec.append(random.random())
@@ -155,9 +169,9 @@ class SnakeWindow:
                y < BOX_Y_MIN + ySize / 2:
                 return True
 
-        def _check_clipping(x, y, xSize=MAJOR_SIZE, ySize=MAJOR_SIZE, exclude=[None], include=[None]):
+        def _check_clipping(x, y, xSize=MAJOR_SIZE, ySize=MAJOR_SIZE, exclude=None, include=None):
             for item in itemRegister:
-                if item in exclude:
+                if exclude and item in exclude:
                     continue
                 if include and item not in include:
                     continue

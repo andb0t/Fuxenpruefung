@@ -16,10 +16,10 @@ except ImportError:
 def change_catagories(category, categoryUpdate):
     for key in categoryUpdate.keys():
         try:
-            idx = list(map(lambda a: a[2], category)).index(key)
+            catIdx = list(map(lambda a: a[2], category)).index(key)
         except ValueError:
             continue
-        category[idx][0] = categoryUpdate[key]
+        category[catIdx][0] = categoryUpdate[key]
     return category
 
 
@@ -31,14 +31,13 @@ categoryUpdate = {}
 
 
 while True:
-    categories = [
-                  [16, i18n.longNames[i18n.lang()][0], i18n.shortNames[i18n.lang()][0]],
+    categories = [[16, i18n.longNames[i18n.lang()][0], i18n.shortNames[i18n.lang()][0]],
                   [6, i18n.longNames[i18n.lang()][1], i18n.shortNames[i18n.lang()][1]],
                   [4, i18n.longNames[i18n.lang()][2], i18n.shortNames[i18n.lang()][2]],
                   [1000, i18n.longNames[i18n.lang()][3], i18n.shortNames[i18n.lang()][3]],
                   [5, i18n.longNames[i18n.lang()][4], i18n.shortNames[i18n.lang()][4]],
                   [0, i18n.longNames[i18n.lang()][5], i18n.shortNames[i18n.lang()][5]],
-                 ]
+                  ]
     change_catagories(categories, categoryUpdate)
     category_numbers = map(lambda x: x[0], categories)
     mainroot = tk.Tk()

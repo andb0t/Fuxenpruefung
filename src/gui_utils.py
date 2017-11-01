@@ -51,7 +51,7 @@ class SimpleTable(tk.Frame):
 
     def data(self, scores, keys):
         for row, score in enumerate(scores):
-            for col, val in enumerate(score.keys()):
+            for col in range(len(score)):
                 try:
                     self.set(row + 1, col, score[keys[col]])
                 except IndexError:

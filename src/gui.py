@@ -174,9 +174,9 @@ class InfoWindow:
             if isinstance(line, str):
                 one_msg = tk.Message(master, text=line, width=200)
                 one_msg.grid(row=_row_count, columnspan=3)
-            elif isinstance(line, list) or isinstance(line, tuple):
+            elif isinstance(line, (list, tuple)):
                 _col_count = 0
-                for item in line:
+                for _ in line:
                     multi_msg = tk.Message(master, text=line[_col_count],
                                            width=_widths[_col_count])
                     multi_msg.grid(row=_row_count, column=_col_count,
@@ -347,7 +347,7 @@ class QuizWindow:
         self._quit_button = tk.Button(master, text=i18n.quizButton[i18n.lang()][3] + ' [esc]',
                                       command=_quit, width=15, fg="red", font="bold")
 
-        def print_question(one_msg):
+        def print_question():
             self._row_count = 0
             splitlist = questionList[self.currentQuestion.get()].split('\\\\')
             for idx, item in enumerate(splitlist):
@@ -366,13 +366,13 @@ class QuizWindow:
                 msg = one_msg.pop()
                 msg.grid_forget()
 
-        print_question(self.one_msg)
+        print_question()
 
         def _new_question():
             augment(thisCurrentQuestion)
             remove_question(self.one_msg)
             try:
-                print_question(self.one_msg)
+                print_question()
             except IndexError:
                 master.quit()
 
@@ -414,9 +414,9 @@ class ResultWindow:
             if isinstance(line, str):
                 one_msg = tk.Message(master, text=line, width=200)
                 one_msg.grid(row=_row_count, columnspan=3)
-            elif isinstance(line, list) or isinstance(line, tuple):
+            elif isinstance(line, (list, tuple)):
                 _col_count = 0
-                for item in line:
+                for _ in line:
                     multi_msg = tk.Message(master, text=line[_col_count],
                                            width=_widths[_col_count])
                     multi_msg.grid(row=_row_count, column=_col_count,
