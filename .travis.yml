@@ -8,7 +8,7 @@ before_install:
 
 install:
   - "pip install pipenv"
-  - "pipenv --three install"
+  - "pipenv install"
   # - "pipenv shell"
 
 script:
