@@ -3,9 +3,13 @@ language: python
 python:
   - "3.5"
 
+before_install:
+  - "sudo apt-get install portaudio19-dev"  # for pyaudio
+
 install:
   - "pip install pipenv"
   - "pipenv install"
+  - "pipenv shell"
 
 script:
   - cd src
