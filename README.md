@@ -39,7 +39,7 @@ brew bundle install
 Install Python dependencies with [Pipenv](https://docs.pipenv.org/):
 
 ```shell
-pipenv install
+pipenv --three install
 ```
 
 Not fully working yet! Known issues:
