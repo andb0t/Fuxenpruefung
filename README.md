@@ -145,7 +145,7 @@ Suggestions, tips, issues, feature requests or merge requests are always welcome
 Simply create your own branch and go for it! An early pull request with the `WIP:` label allows us to discuss the change before it is time to merge.
 
 ### Continuous Integration
-[![Build status](https://travis-ci.org/andb0t/travis-lab.svg?master)](https://travis-ci.org/andb0t)
+[![Build status](https://travis-ci.org/andb0t/iprofiler.png?branch=master)](https://travis-ci.org/andb0t)
 
 ### Contributors
 The program has been designed and developed by
