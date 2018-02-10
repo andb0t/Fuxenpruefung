@@ -5,11 +5,11 @@ python:
 
 before_install:
   - sudo apt-get install portaudio19-dev  # for pyaudio
+  - sudo apt install pulseaudio
 
 install:
   - pip install pipenv
   - pipenv install
-  - sudo apt install pulseaudio
 
 before_script:
   - "export DISPLAY=:99.0"
@@ -19,4 +19,4 @@ before_script:
 script:
   - cd src
   - pipenv run python test_travis.py
-  - pipenv run python fuxenpruefung.py
+  - pipenv run python fuxenpruefung.py --headless

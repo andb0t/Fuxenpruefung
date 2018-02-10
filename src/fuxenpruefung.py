@@ -1,5 +1,6 @@
 import sys
 
+import argparse
 import tkinter as tk
 
 import data
@@ -23,12 +24,19 @@ def change_catagories(category, categoryUpdate):
     return category
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--headless', action="store_true", default=False)
+args = parser.parse_args()
+
 sound.start_sound()
 taskVar = 0
 zipPasswd = ''
 questionFile = ''
 categoryUpdate = {}
 
+if (args.headless):
+    print('Finish early, headless GUI testing not yet implemented!')
+    sys.exit()
 
 while True:
     categories = [[16, i18n.longNames[i18n.lang()][0], i18n.shortNames[i18n.lang()][0]],
