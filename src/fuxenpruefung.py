@@ -2,16 +2,22 @@ import sys
 
 import argparse
 import tkinter as tk
+try:
+    import pyautogui
+    develop_mode = True
+    pyautogui.PAUSE = 2.5
+except ImportError:
+    develop_mode = False
 
 import data
 import i18n
 import gui
 import files
-import tasks
 try:
     import sound_win as sound
 except ImportError:
     import sound_linux as sound
+import tasks
 
 
 def change_catagories(category, categoryUpdate):
@@ -55,6 +61,7 @@ while True:
     mainapp = gui.InitWindow(mainroot, category_numbers, taskVar)
     mainroot.focus_force()
     mainroot.mainloop()
+    # TODO: http://pyautogui.readthedocs.io/en/latest/cheatsheet.html
     taskVar = mainapp.radio_var.get()
     idx = 0
     questNumbers = {}
