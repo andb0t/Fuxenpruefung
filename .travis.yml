@@ -4,12 +4,12 @@ python:
   - "3.5"
 
 before_install:
-  - "sudo apt-get install portaudio19-dev"  # for pyaudio
+  - sudo apt-get install portaudio19-dev  # for pyaudio
 
 install:
-  - "pip install pipenv"
-  - "pipenv install"
-  - "sudo apt install pulseaudio"
+  - pip install pipenv
+  - pipenv install
+  - sudo apt install pulseaudio
 
 script:
   - cd src
