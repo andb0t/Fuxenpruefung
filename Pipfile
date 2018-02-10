@@ -7,11 +7,12 @@ name = "pypi"
 
 [packages]
 
-pillow = "*"
+Pillow = "*"
 tabulate = "*"
-pyyaml = "*"
+PyYAML = "*"
 requests = "*"
-pyaudio = "*"
+PyAudio = "*"
 
 
 [dev-packages]
+
