@@ -5,18 +5,18 @@ python:
 
 before_install:
   - sudo apt-get install portaudio19-dev  # for pyaudio
-  - sudo apt install pulseaudio
+  - sudo apt install pulseaudio  # setting up dummy sound device
 
 install:
   - pip install pipenv
   - pipenv install
 
 before_script:
+  # set up dummy GUI
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 
 script:
   - cd src
-  - pipenv run python test_travis.py
   - pipenv run python fuxenpruefung.py --headless
