@@ -9,8 +9,8 @@ before_install:
 install:
   - "pip install pipenv"
   - "pipenv install"
-  # - "pipenv shell"
 
 script:
+  - pipenv shell
   - cd src
   - python test_travis.py
