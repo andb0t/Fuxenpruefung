@@ -1,4 +1,5 @@
 import pyaudio
+import traceback
 import wave
 
 import files
@@ -92,6 +93,7 @@ def play_sound(sound):
         stream.start_stream()
     except wave.Error:
         print('Warning: caught wave.Error!')
+        traceback.print_exc()
 
 
 def main():
