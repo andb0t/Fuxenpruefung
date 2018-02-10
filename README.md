@@ -3,6 +3,9 @@
 
 # Fuxenprüfungsgenerator
 
+[![Build status](https://travis-ci.org/andb0t/Fuxenpruefung.svg?branch=master)](https://travis-ci.org/andb0t)
+
+
 ### A program for random questionnaires
 
 This is a small program to create a random questionnaire from a list of questions. It is primarily written for easily compiling and correcting exams.
@@ -144,8 +147,6 @@ Suggestions, tips, issues, feature requests or merge requests are always welcome
 
 Simply create your own branch and go for it! An early pull request with the `WIP:` label allows us to discuss the change before it is time to merge.
 
-### Continuous Integration
-[![Build status](https://travis-ci.org/andb0t/Fuxenpruefung.svg?branch=master)](https://travis-ci.org/andb0t)
 
 ### Contributors
 The program has been designed and developed by
