@@ -118,7 +118,7 @@ python3 snake.py
 ```
 
 ### Dependencies and compilation
-Most of the packages used in this project are part of the standard python distribution, the others are available via package managers like `anaconda` or `pip`. The project uses python3.
+Most of the packages used in this project are part of the standard python distribution, the others are available via package managers like `anaconda` or `pip`. The project uses python3. We recommend to use `pipenv` to manage the dependencies.
 
 #### Linux
 Package manager packages are listed in `requirements.txt`. Some packages are not available via `pip` and have to be installed differently. The entire setup should look like this:
