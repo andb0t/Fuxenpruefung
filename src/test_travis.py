@@ -1,14 +1,19 @@
+import wave
 import pyaudio
-import requests
+
+import files
 
 
 print('Hello travis world!')
 
 pa = pyaudio.PyAudio()
+wf = wave.open(files.SONG_WAV_PATH, 'rb')
 
 print('Survived it! Now play sound...')
 
-# define callback (2)
+print('define callback')
+
+
 def callback(in_data, frame_count, time_info, status):
     data = wf.readframes(frame_count)
     return (data, pyaudio.paContinue)
