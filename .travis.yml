@@ -11,6 +11,5 @@ install:
   - "pipenv install"
 
 script:
-  - pipenv shell
   - cd src
-  - python test_travis.py
+  - pipenv run python test_travis.py
