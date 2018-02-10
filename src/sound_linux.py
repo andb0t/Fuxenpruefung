@@ -3,12 +3,13 @@ import wave
 
 import files
 
+
 SOUND_IS_ON = False
 
 wf = wave.open(files.SONG_WAV_PATH, 'rb')
 
 # instantiate PyAudio (1)
-p = pyaudio.PyAudio()
+pa = pyaudio.PyAudio()
 
 
 # define callback (2)
@@ -18,11 +19,11 @@ def callback(in_data, frame_count, time_info, status):
 
 
 # open stream using callback (3)
-stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                channels=wf.getnchannels(),
-                rate=wf.getframerate(),
-                output=True,
-                stream_callback=callback)
+stream = pa.open(format=pa.get_format_from_width(wf.getsampwidth()),
+                 channels=wf.getnchannels(),
+                 rate=wf.getframerate(),
+                 output=True,
+                 stream_callback=callback)
 
 stream.stop_stream()
 
@@ -73,7 +74,7 @@ def play_sound(sound):
         wf = wave.open(sound, 'rb')
 
         # instantiate PyAudio (1)
-        p = pyaudio.PyAudio()
+        pa = pyaudio.PyAudio()
 
         # define callback (2)
         def callback(in_data, frame_count, time_info, status):
@@ -81,11 +82,11 @@ def play_sound(sound):
             return (data, pyaudio.paContinue)
 
         # open stream using callback (3)
-        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                        channels=wf.getnchannels(),
-                        rate=wf.getframerate(),
-                        output=True,
-                        stream_callback=callback)
+        stream = pa.open(format=pa.get_format_from_width(wf.getsampwidth()),
+                         channels=wf.getnchannels(),
+                         rate=wf.getframerate(),
+                         output=True,
+                         stream_callback=callback)
 
         # start the stream (4)
         stream.start_stream()
