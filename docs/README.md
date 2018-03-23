@@ -6,7 +6,9 @@
 
 <img src="fox.png" width="19"><img src="fox.png" width="50"><img src="fox.png" width="100"><img src="fox.png" width="50"><img src="fox.png" width="20">
 
-### Introduction
+
+
+## Summary
 
 This is a small program to create a random questionnaire from a list of questions. It is primarily written for easily compiling and correcting exams.
 
@@ -32,9 +34,19 @@ You will also find there a `.zip` file containing example questions to get you s
 
 
 ## The fox snake game
-Earn points by catching foxes but do not collide with your own tail. Besides that, follow the in-game instructions.
+Earn points by catching foxes but do not collide with your own tail. Follow the in-game instructions for more information.
+
+![Screenshot snake game](fox_snake.png)
 
 
+### Online high score
+By entering your name your points will be submitted to the online high score list where eternal glory awaits you.
+
+
+### Keybindings
+* `<Escape>`    close the current window
+* `<ArrowKeys>` Move your fox major in the indicated direction or start the game
+* `<Return>`    start the game
 
 
 
