@@ -34,7 +34,7 @@ You will also find there a `.zip` file containing example questions to get you s
 
 
 ## The fox snake game
-Earn points by catching foxes but do not collide with your own tail. Follow the in-game instructions for more information.
+You are the fox major. Earn points by catching foxes but do not collide with your own tail! Follow the in-game instructions for more information.
 
 ![Screenshot snake game](fox_snake.png)
 
