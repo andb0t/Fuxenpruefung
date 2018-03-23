@@ -26,7 +26,7 @@ The program is available in those languages: <img src="ger.png" height="12"> <im
 
 
 ## Download
-*No installation necessary!* Simply download the ready-made windows executable [here](https://github.com/andb0t/Fuxenpruefung/releases) and click!
+*No installation necessary!* Simply download the ready-made windows executable [here](https://github.com/andb0t/Fuxenpruefung/releases) and double-click the `fuxenpruefung.exe` executable!
 
 You will also find there a `.zip` file containing example questions to get you started with the questionnaire.
 
