@@ -1,21 +1,18 @@
-<img src="../src/images/fox.png" width="19"><img src="../src/images/fox.png" width="50"><img src="../src/images/fox.png" width="100"><img src="../src/images/fox.png" width="50"><img src="../src/images/fox.png" width="20">
 
 
 # Fuxenprüfungsgenerator
 
 [![Build status](https://travis-ci.org/andb0t/Fuxenpruefung.svg?branch=master)](https://travis-ci.org/andb0t)
 
+<img src="fox.png" width="19"><img src="fox.png" width="50"><img src="fox.png" width="100"><img src="fox.png" width="50"><img src="fox.png" width="20">
 
-### A program for random questionnaires
+### Introduction
 
 This is a small program to create a random questionnaire from a list of questions. It is primarily written for easily compiling and correcting exams.
 
 A quiz and a snake game are provided as well for leisure time entertainment.
 
-The program is available in those languages. Clicking the flag icon in the main window switches the language.
-* German <img src="../src/images/ger.png" height="12">
-* English <img src="../src/images/eng.png" height="12">
-* Bavarian <img src="../src/images/bay.png" height="12">
+The program is available in those languages: <img src="ger.png" height="12"> <img src="eng.png" height="12"> <img src="bay.png" height="12">
 
 
 ### Content
@@ -27,8 +24,6 @@ The program is available in those languages. Clicking the flag icon in the main 
 
 
 ## Download
-The [releases](https://github.com/andb0t/Fuxenpruefung/releases) page contains all necessary downloads.
-
 *No installation necessary!* Simply download the ready-made windows executable [here](https://github.com/andb0t/Fuxenpruefung/releases) and click!
 
 You will also find there a `.zip` file containing example questions to get you started with the questionnaire.
