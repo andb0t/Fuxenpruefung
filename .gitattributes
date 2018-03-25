@@ -1,0 +1,15 @@
+# Handle line endings automatically for files detected as text
+# and leave all files detected as binary untouched.
+* text=auto
+
+# ...Unless the name matches the following
+# overriding patterns
+
+# Definitively text files
+*.txt text
+*.py text
+*.yml text
+
+# Ensure those won't be messed with
+*.jpg binary
+*.png binary
