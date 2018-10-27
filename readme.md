@@ -36,6 +36,13 @@ Most of the packages used in this project are part of the standard python distri
 
 
 ### Windows
+To run the program from the shell:
+```shell
+pipenv install
+cd src
+python fuxenpruefung.py
+```
+
 If you want to compile the project from source first install the dependencies:
 ```shell
 pip install requests==2.5.1  # pyinstaller 3.2.1 still has a bug with newer versions of requests
