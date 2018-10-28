@@ -84,14 +84,15 @@ def play_sound(sound):
 
         # open stream using callback (3)
         stream = pa.open(format=pa.get_format_from_width(wf.getsampwidth()),
-                         channels=wf.getnchannels(),
-                         rate=wf.getframerate(),
-                         output=True,
-                         stream_callback=callback)
-
+                        channels=wf.getnchannels(),
+                        rate=wf.getframerate(),
+                        output=True,
+                        stream_callback=callback)
+            
         # start the stream (4)
         stream.start_stream()
-    except wave.Error:
+    except:
+    #except wave.Error:
         print('Warning: caught wave.Error!')
         traceback.print_exc()
 
