@@ -15,5 +15,8 @@ build*
 desktop.ini
 dist*
 
+# Editors
+.idea
+
 # Python
 __pycache__
