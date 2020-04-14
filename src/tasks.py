@@ -11,7 +11,7 @@ import tkinter as tk
 import files
 import gui
 import i18n
-import snake
+import fuxensnake
 
 
 def randomize_questions(qdicts, questNumbers, exclude=''):
@@ -166,7 +166,7 @@ def play_snake():
     if sys.platform == 'win32':
         root.iconbitmap(files.FOX_ICO_PATH)
     root.title(i18n.snakeWelcome[i18n.lang()])
-    snake.SnakeWindow(root)
+    fuxensnake.SnakeWindow(root)
     root.focus_force()
     root.mainloop()
     root.destroy()
